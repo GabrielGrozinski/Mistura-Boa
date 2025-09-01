@@ -1,7 +1,18 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useState} from 'react';
+import {View, Text} from 'react-native';
+import { Provider } from 'react-redux';
+import store from './src/reducers';
+import Rotas from './src/navigation/rotas';
 
-const senha = 'ZW1Xws1NxqASgt8W';
-const usuario = 'gabrielgrozinski_MisturaBoa';
 
-AsyncStorage.setItem('Senha', senha);
-AsyncStorage.setItem('Usuario', usuario);
+
+
+
+export default function App() {
+
+    return (
+        <Provider store={store}>
+            <Rotas />
+        </Provider>
+    );
+}
