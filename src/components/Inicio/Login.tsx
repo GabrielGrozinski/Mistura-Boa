@@ -30,7 +30,7 @@ const db = getDatabase();
 
 
 export default function FlipCardLogin({navigation}: Props) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {email} = useAppSelector(state => state.autenticacao);
   
   // referências para nome, senha e email.
@@ -68,7 +68,7 @@ export default function FlipCardLogin({navigation}: Props) {
           await usuario.user.updateProfile({ displayName: nome });
           // Define o displayName como o nome do usuário.
 
-          const emailB64 = Base64.encode(email);
+          const emailB64: string = Base64.encode(email);
           const userRef = ref(db, `usuarios/${emailB64}`);
 
           // Cria o banco de dados com o nome e email (por padrão) do usuário.
@@ -168,7 +168,7 @@ export default function FlipCardLogin({navigation}: Props) {
           });
           // Conquistas dos três tipos de receitas do usuário (carnivoro, vegetariano, vegano).
 
-          navigation.reset({
+            navigation.reset({
             index: 0,
             routes: [{ name: 'CriarUsuario'}]
             });
@@ -433,7 +433,7 @@ export default function FlipCardLogin({navigation}: Props) {
           </TouchableOpacity>
           )}
           
-          <View className="flex-row">
+          <View className="flex-row mb-8">
             <Text style={{color: '#57371fff'}} className='pb-1 text-xl font-bold text-center mr-2'>
               Não tem conta?
             </Text>

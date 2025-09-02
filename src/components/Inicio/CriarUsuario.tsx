@@ -7,6 +7,7 @@ import { getDatabase, ref, set, update } from '@react-native-firebase/database';
 import { Base64 } from 'js-base64';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { TiposRotas } from '../../navigation/types';
+import LinearGradient from "react-native-linear-gradient";
 
 type Props = NativeStackScreenProps<TiposRotas, 'CriarUsuario'>;
 
@@ -18,61 +19,64 @@ const db = getDatabase(app);
 export default function CriarUsuario({navigation}: Props) {
   const [selected, setSelected] = useState<string[]>([]);
   const [identificador, setIdentificador] = useState(0);
-  const [choices, setChoices] = useState([
-    { label: 'Aprender a cozinhar', value: 'aprender_cozinhar' },
-    { label: 'Receitas diferentes', value: 'receitas_diferentes' },
-    { label: 'Me tornar vegano', value: 'tornar_vegano' },
-    { label: 'Controlar calorias', value: 'controlar_calorias' },
-    { label: 'Ficar fitness', value: 'ficar_fitness' },
+  type Escolha = { label: string, value: string, icone: string };
+  const [choices, setChoices] = useState<Escolha[]>([
+    { label: 'Aprender a cozinhar', value: 'aprender_cozinhar', icone: "👨‍🍳" },
+    { label: 'Receitas diferentes', value: 'receitas_diferentes', icone: "🍲" },
+    { label: 'Me tornar vegano', value: 'tornar_vegano', icone: "🍃" },
+    { label: 'Controlar calorias', value: 'controlar_calorias', icone: "⚖️" },
+    { label: 'Ficar fitness', value: 'ficar_fitness', icone: "🏃" },
+    { label: 'Ganhar Músculo', value: 'ganhar_musculo', icone: "🏋️‍♂️" },
   ]);
 
   useEffect(() => {
-     // Define todos os valores de respostas.   
+    if (!authInstance.currentUser) return;
+    // Define todos os valores de respostas.   
         if (identificador === 0) {
             setChoices([
-    { label: 'Aprender a cozinhar', value: 'aprender_cozinhar' },
-    { label: 'Receitas diferentes', value: 'receitas_diferentes' },
-    { label: 'Me tornar vegano', value: 'tornar_vegano' },
-    { label: 'Perder Peso', value: 'perder_peso' },
-    { label: 'Ficar fitness', value: 'ficar_fitness' },
-    { label: 'Ganhar Músculo', value: 'ganhar_musculo' },
+    { label: 'Aprender a cozinhar', value: 'aprender_cozinhar', icone: "👨‍🍳" },
+    { label: 'Receitas diferentes', value: 'receitas_diferentes', icone: "🍲" },
+    { label: 'Me tornar vegano', value: 'tornar_vegano', icone: "🍃" },
+    { label: 'Perder Peso', value: 'perder_peso', icone: "⚖️" },
+    { label: 'Ficar fitness', value: 'ficar_fitness', icone: "🏃" },
+    { label: 'Ganhar Músculo', value: 'ganhar_musculo', icone: "🏋️‍♂️" },
             ]);
       // Enquanto o "label" é o título da resposta que será mostrado ao usuário, o "value" é o valor que será mostrado no banco de dados.
 
         } else if (identificador === 1) {
             setChoices([
-    { label: 'Iniciante na cozinha', value: 'iniciante' },
-    { label: 'Intermediário (já cozinho algumas coisas)', value: 'intermediario' },
-    { label: 'Avançado (cozinho com frequência)', value: 'avancado' },
-    { label: 'Chef experiente', value: 'chef_experiente' },
-    { label: 'Nunca cozinhei', value: 'nunca_cozinhei' }
+    { label: 'Iniciante na cozinha', value: 'iniciante', icone: "🆕" },
+    { label: 'Intermediário (já cozinho algumas coisas)', value: 'intermediario', icone: "🍳" },
+    { label: 'Avançado (cozinho com frequência)', value: 'avancado', icone: "🥪" },
+    { label: 'Chef experiente', value: 'chef_experiente', icone: "🍛" },
+    { label: 'Nunca cozinhei', value: 'nunca_cozinhei', icone: "👑" }
             ]);
 
         } else if (identificador === 2) {
             setChoices([
-    { label: 'Vegetariano', value: 'vegetariano' },
-    { label: 'Vegano', value: 'vegano' },
-    { label: 'Carnívoro', value: 'carnivoro' },
-    { label: 'Outro', value: 'outro' }
+    { label: 'Vegetariano', value: 'vegetariano', icone: "🥗" },
+    { label: 'Vegano', value: 'vegano', icone: "🥑" },
+    { label: 'Carnívoro', value: 'carnivoro', icone: "🍖" },
+    { label: 'Outro', value: 'outro', icone: "🍽️" }
             ]);
 
         } else if (identificador === 3) {
             setChoices([
-    { label: 'Italiana', value: 'italiana' },
-    { label: 'Japonesa', value: 'japonesa' },
-    { label: 'Mexicana', value: 'mexicana' },
-    { label: 'Brasileira', value: 'brasileira' },
-    { label: 'Outra', value: 'outra' }
+    { label: 'Italiana', value: 'italiana', icone: "🍕" },
+    { label: 'Japonesa', value: 'japonesa', icone: "🍣" },
+    { label: 'Mexicana', value: 'mexicana', icone: "🌮" },
+    { label: 'Brasileira', value: 'brasileira', icone: "🍛" },
+    { label: 'Outra', value: 'outra', icone: "🥘" }
             ]);
 
         } else if (identificador === 4) {
             setChoices([
-    { label: 'Anúncios nas redes sociais', value: 'redes_sociais' },
-    { label: 'Indicação de amigos', value: 'indicacao_amigos' },
-    { label: 'Busca na internet', value: 'busca_internet' },
-    { label: 'Eventos e feiras', value: 'eventos_feiras' },
-    { label: 'Outro', value: 'outro' }
+    { label: 'Anúncios nas redes sociais', value: 'redes_sociais', icone: "📰" },
+    { label: 'Indicação de amigos', value: 'indicacao_amigos', icone: "🗣️" },
+    { label: 'Busca na internet', value: 'busca_internet', icone: "🌐" },
+    { label: 'Outro', value: 'outro', icone: "🔍" }
             ]);
+
         } else if (identificador === 5) {
           // Se o identificador é 5, significa que as perguntas terminaram.
 
@@ -87,7 +91,7 @@ export default function CriarUsuario({navigation}: Props) {
           // Nesse caso, é melhor usar o reset ao invés do navigate pois não é interessante o usuário voltar para essa tela.
         };
 
-  }, [identificador]);
+  }, [identificador, authInstance.currentUser]);
 
   const BotoesSelecionados = (valor: string) => {
       // Função que adiciona o valor selecionado com base no botão pressionado.
@@ -124,9 +128,9 @@ export default function CriarUsuario({navigation}: Props) {
 
         for (let i = 0; i < selected.length; i++) {
           let key: string = selected[i]  
-          const userRef = ref(db, `usuarios/cadastrados/${emailB64}/${informacao}`);
+          const userRef = ref(db, `usuarios/${emailB64}/${informacao}`);
             update(userRef, {
-                [key]: key,
+                [key]: 1,
             });
         };
         // Sempre ao clicar em avançar, adiciona as informações que o usuário colocou sobre a determinada informação.
@@ -139,7 +143,7 @@ export default function CriarUsuario({navigation}: Props) {
 
   return (
     <View className="flex-1 justify-center bg-white p-6 mb-6">
-      <Text className="text-2xl font-semibold text-center mb-8 text-[#323232]">
+      <Text className="text-3xl font-bold text-center mb-4 text-[#323232]">
         {identificador === 0
             ? 'Qual seu objetivo neste aplicativo?'
             : identificador === 1
@@ -153,13 +157,15 @@ export default function CriarUsuario({navigation}: Props) {
             : null
         }
       </Text>
+      <Text className="mb-4 text-lg font-semibold text-center text-neutral-700">
+        Isso vai nos ajudar a personalizar suas receitas
+      </Text>
       <View className="mx-4">
         {choices.map(choice => (
           <TouchableOpacity
             key={choice.value}
-            className="bg-[#f2f2f2] rounded-[12px] py-4 px-5 mb-4 items-center elevation-2"
+            className="bg-[#f2f2f2] rounded-[12px] py-4 px-5 mb-4 items-center elevation-2 flex-row"
             style={selected.includes(choice.value) && {backgroundColor: '#2d8cf0'}}
-              
             onPress={() => 
               identificador === 1 || identificador === 2 ? setSelected([choice.value]) :  
               BotoesSelecionados(choice.value)
@@ -168,15 +174,18 @@ export default function CriarUsuario({navigation}: Props) {
           {/* Nas perguntas referentes ao identificador 1 e 2, o usuário só poderá marcar UMA opção, por isso ao invés de chamar
             a função específica, apenas adiciona um único valor à variavel useState.
           */}
+            
+            <Text className="text-lg text-[#323232] mr-2">{choice.icone}</Text>
+
             <Text className="text-lg text-[#323232]"
-            style={selected.includes(choice.value) && {color: 'white',}}
+            style={selected.includes(choice.value) && {color: 'white'}}
             >{choice.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
+      
       <TouchableOpacity
-        className="mt-8 bg-[#ccc] py-4 rounded-[50px] items-center shadow-[3px]"
-        style = {selected.length > 0 && {backgroundColor: "#2d8cf0"}}
+        className="mt-8 items-center elevation-1 rounded-full h-[55px] w-[315px] self-center overflow-hidden"
         onPress={() => {
             PassarDados()
             setIdentificador(identificador + 1)
@@ -184,8 +193,17 @@ export default function CriarUsuario({navigation}: Props) {
         }
         disabled={selected.length === 0}
       >
+        <LinearGradient
+        colors={ selected.length !== 0 ? ['#4f46e5', '#9333ea'] : ['#ccc', '#ccc']}
+        className="w-[100%] h-[100%] items-center justify-center"
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        
+        >
         <Text className="text-lg font-semibold text-white">Avançar</Text>
+        </LinearGradient>
       </TouchableOpacity>
+      
     </View>
   );
 };
