@@ -1,14 +1,28 @@
 import "../../../global.css";
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { TiposRotas } from '../../navigation/types';
 import Loader from "../loading/loading";
+import { getApp } from '@react-native-firebase/app';
+import auth, {onAuthStateChanged} from '@react-native-firebase/auth';
+
+const app = getApp();
+const authInstance = auth(app);
 
 type Props = NativeStackScreenProps<TiposRotas, 'primeiraTela'>;
 
 export default function PrimeiraTela({navigation}: Props) {
     const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+      onAuthStateChanged(authInstance, user => {
+        if (user) navigation.reset({
+            index: 0,
+            routes: [{name: 'TelaPrincipal'}]
+        });
+      });
+    }, [authInstance]);
 
     if (loading) {
     return (

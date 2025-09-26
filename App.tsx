@@ -1,11 +1,7 @@
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
+import React from 'react';
 import { Provider } from 'react-redux';
 import store from './src/reducers';
 import Rotas from './src/navigation/rotas';
-
-
-
 
 
 export default function App() {
@@ -15,4 +11,4 @@ export default function App() {
             <Rotas />
         </Provider>
     );
-}
+};

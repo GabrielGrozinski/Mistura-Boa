@@ -83,7 +83,7 @@ export default function CriarUsuario({navigation}: Props) {
           try {
           navigation.reset({
             index: 0,
-            routes: [{name: 'primeiraTela'}]
+            routes: [{name: 'TelaPrincipal'}]
           });
         } catch (erro) {
           console.log('Motivo:', erro);
@@ -138,11 +138,11 @@ export default function CriarUsuario({navigation}: Props) {
         setSelected([]);
         // Reseta as informações.
         }
-      })
+      });
   };
 
   return (
-    <View className="flex-1 justify-center bg-white p-6 mb-6">
+    <View className="flex-1 justify-center bg-white p-6">
       <Text className="text-3xl font-bold text-center mb-4 text-[#323232]">
         {identificador === 0
             ? 'Qual seu objetivo neste aplicativo?'
@@ -178,8 +178,9 @@ export default function CriarUsuario({navigation}: Props) {
             <Text className="text-lg text-[#323232] mr-2">{choice.icone}</Text>
 
             <Text className="text-lg text-[#323232]"
-            style={selected.includes(choice.value) && {color: 'white'}}
-            >{choice.label}</Text>
+            style={selected.includes(choice.value) && {color: 'white'}}>
+            {choice.label}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -198,7 +199,6 @@ export default function CriarUsuario({navigation}: Props) {
         className="w-[100%] h-[100%] items-center justify-center"
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        
         >
         <Text className="text-lg font-semibold text-white">Avançar</Text>
         </LinearGradient>

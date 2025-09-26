@@ -13,7 +13,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../reducers/hooks';
 import { getApp } from '@react-native-firebase/app';
-import auth, {createUserWithEmailAndPassword, signInWithEmailAndPassword} from '@react-native-firebase/auth';
+import auth, {createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged} from '@react-native-firebase/auth';
 import { Base64 } from 'js-base64';
 import { getDatabase, ref, set } from '@react-native-firebase/database';
 import { modificaEmail } from '../../reducers/autenticacaoReducer';
@@ -21,6 +21,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { TiposRotas } from '../../navigation/types';
 import LoaderCompleto from "../loading/loadingCompleto";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import axios from 'axios';
 
 type Props = NativeStackScreenProps<TiposRotas, 'Login'>;
 
@@ -30,6 +31,13 @@ const db = getDatabase();
 
 
 export default function FlipCardLogin({navigation}: Props) {
+  const controller = new AbortController();
+  const api = axios.create({
+    timeout: 15000,
+    signal: controller.signal,
+    baseURL: 'http://192.168.1.36:3000'
+  });
+
   const dispatch = useDispatch();
   const {email} = useAppSelector(state => state.autenticacao);
   
@@ -48,18 +56,40 @@ export default function FlipCardLogin({navigation}: Props) {
 
 
   useEffect(() => {
+    onAuthStateChanged(authInstance, user => {
+      if (user) navigation.reset({
+        index: 0,
+        routes: [{name: 'TelaPrincipal'}]
+      });
+    });
+    
     const timer = setTimeout(() => {
       setLoading(false)
     }, 2000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [authInstance]);
 
   if (loading) return (
     <LoaderCompleto/>
   );
 
+  const CadastroMongoDB = async (email:string): Promise<boolean> => {
+    try {
+      const response = await api.post('/usuarios', {email});
+      console.log("Usuário criado:", response);
+      return true
+    } catch (erro) {
+      console.log('Erro:', erro);
+      return false
+    };
+  };
+
   const Cadastro = async (email: string, senha: string, nome: string): Promise<void> => {
-      // Função que executa o cadastro da pessoa.
+    const verificaCadastro = await CadastroMongoDB(email);
+    if (!verificaCadastro) return;
+    // Cria um usuário no MongoDb para manutenção de dias logados no aplicativo.  
+    
+    // Função que executa o cadastro da pessoa no firebase.
         try {
           setLoadingAuth(true);
           const usuario = await createUserWithEmailAndPassword(authInstance, email, senha);
@@ -81,6 +111,10 @@ export default function FlipCardLogin({navigation}: Props) {
             xp: 0, // Quantidade de xp do usuário.
             rankingAtual: 'NoRank', // Ranking atual do usuário.
             receitasGeradas: 0, // Quantidade de receitas geradas pelo usuário.
+            limites: {
+              limiteReceitasGeradas: 1,
+              limiteReceitasCriadas: 1,
+            }
           });
 
           // Lógica dos rankings e conquistas do usuário.
@@ -131,10 +165,8 @@ export default function FlipCardLogin({navigation}: Props) {
             'avaliacao_100': 0,
             'avaliacao_250': 0,
             'avaliacao_500': 0,
-            'avaliacao_1000': 0,
             'avaliacao_2500': 0,
             'avaliacao_5000': 0,
-            'avaliacao_7500': 0,
             'avaliacao_10000': 0,
           });
           // Conquistas de avaliações das receitas do usuário.
@@ -159,14 +191,14 @@ export default function FlipCardLogin({navigation}: Props) {
           });
           // Conquistas de receitas geradas pelo usuário.
 
-          await set(ref(db, `usuarios/${emailB64}/conquistas/carnivoro_vegano_vegetariano`), {
-            'carnivoro_vegano_vegetariano_1': 0,
-            'carnivoro_vegano_vegetariano_10': 0,
-            'carnivoro_vegano_vegetariano_50': 0,
-            'carnivoro_vegano_vegetariano_100': 0,
-            'carnivoro_vegano_vegetariano_1000': 0,
+          await set(ref(db, `usuarios/${emailB64}/conquistas/top`), {
+            'top_1': 0,
+            'top_5': 0,
+            'top_50': 0,
+            'top_100': 0,
+            'top_200': 0,
           });
-          // Conquistas dos três tipos de receitas do usuário (carnivoro, vegetariano, vegano).
+          // Conquistas da posição do usuário em eventos.
 
             navigation.reset({
             index: 0,
@@ -211,7 +243,7 @@ export default function FlipCardLogin({navigation}: Props) {
 
           navigation.reset({
             index: 0,
-            routes: [{ name: 'CriarUsuario' }],
+            routes: [{ name: 'TelaPrincipal' }],
           })
         } catch (erro: any) {
             console.log(erro.message);

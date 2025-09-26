@@ -9,6 +9,9 @@ module.exports = {
     extend: {
       colors: {
         tela: '#ffe1adff',
+        bronze500: '#db8a44',
+        bronze600: '#eca261ff',
+        bronze400: '#f7c593ff',
       },
     },
   },
