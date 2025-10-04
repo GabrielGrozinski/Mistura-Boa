@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, Modal, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAppDispatch } from '../../../reducers/hooks';
-import { modificaOrdenacao } from '../../../reducers/filtrarReducer';
+import { useAppSelector } from '../../../reducers/hooks';
+import { modificaOrdenacao, modificaRefeicao } from '../../../reducers/filtrarReducer';
 
 export default function Filtrar({corDoFiltro}: any) {
   const dispatch = useAppDispatch();
+  let {refeicao} = useAppSelector(state => state.filtro);
   const [modalVisivel, setModalVisivel] = useState(false);
   const [selected, setSelected] = useState('Ordenação Padrão');
-  const [cafeDaManha, setCafeDaManha] = useState<boolean>(false);
-  const [PratoPrincipal, setPratoPrincipal] = useState<boolean>(false);
-  const [aperitivo, setAperitivo] = useState<boolean>(false);
-  const [Bebidas, setBebidas] = useState<boolean>(false);
+  const [refeicaoSelected, setRefeicaoSelected] = useState('');
 
   const opcoes = [
     {
       label: 'Ordenação Padrão',
       icon: require('../../../../assets/Receitas/filtros/ordenacaoPadrao.png'),
-    },
-    {
-      label: 'Melhores Receitas',
-      icon: require('../../../../assets/Receitas/filtros/melhoresReceitas.png'),
     },
     {
       label: 'Calorias',
@@ -41,8 +36,17 @@ export default function Filtrar({corDoFiltro}: any) {
     {
       label: 'Emagrecer',
       icon: require('../../../../assets/Receitas/filtros/perderPeso.png'),
-    },
+    }, 
+    ...(corDoFiltro !== "#23d3ffff"
+      ? [
+          {
+            label: 'Melhores Receitas',
+            icon: require('../../../../assets/Receitas/filtros/melhoresReceitas.png'),
+          },
+        ]
+      : []),
   ];
+  // A verificação no final é importante pois na parte de Receitas Favoritas, não há o filtro de Melhores Receitas
 
   return (
     <View className="w-full p-4">
@@ -66,40 +70,73 @@ export default function Filtrar({corDoFiltro}: any) {
         <TouchableOpacity
           activeOpacity={0.7}
           className='rounded-full px-8 py-3 mr-4'
-          style={cafeDaManha ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
-          onPress={() => setCafeDaManha(!cafeDaManha)}
+          style={refeicao === 'cafe_da_manha' ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
+          onPress={() => {
+            if (refeicao === 'cafe_da_manha') {
+              setRefeicaoSelected('');
+              dispatch(modificaRefeicao('Todas'))
+            } else {
+              setRefeicaoSelected('cafe_da_manha');
+              dispatch(modificaRefeicao('cafe_da_manha'));
+            };
+
+          }}
         >
-          <Text className={`${cafeDaManha ? 'text-white' : 'text-black'} text-base font-medium`}>Café da Manhã</Text>
+          <Text className={`${refeicaoSelected === 'cafe_da_manha' ? 'text-white' : 'text-black'} text-base font-medium`}>Café da Manhã</Text>
         </TouchableOpacity>
 
-        {/* Pill 3 - PratoPrincipal */}
+        {/* Pill 3 - Prato Principal */}
         <TouchableOpacity
           activeOpacity={0.7}
           className='rounded-full px-8 py-3 mr-4'
-          style={PratoPrincipal ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
-          onPress={() => setPratoPrincipal(!PratoPrincipal)}
+          style={refeicao === 'prato_principal' ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
+          onPress={() => {
+            if (refeicao === 'prato_principal') {
+              setRefeicaoSelected('');
+              dispatch(modificaRefeicao('Todas'))
+            } else {
+              setRefeicaoSelected('prato_principal');
+              dispatch(modificaRefeicao('prato_principal'));
+            };
+          }}
         >
-          <Text className={`${PratoPrincipal ? 'text-white' : 'text-black'} text-base font-medium`}>Prato Principal</Text>
+          <Text className={`${refeicaoSelected === 'prato_principal' ? 'text-white' : 'text-black'} text-base font-medium`}>Prato Principal</Text>
         </TouchableOpacity>
         
-        {/* Pill 4 - Aperitivos */}
+        {/* Pill 4 - Sobremesa */}
         <TouchableOpacity
           activeOpacity={0.7}
           className='rounded-full px-8 py-3 mr-4'
-          style={aperitivo ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
-          onPress={() => setAperitivo(!aperitivo)}
+          style={refeicao === 'sobremesa' ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
+          onPress={() => {
+            if (refeicao === 'sobremesa') {
+              setRefeicaoSelected('');
+              dispatch(modificaRefeicao('Todas'))
+            } else {
+              setRefeicaoSelected('sobremesa');
+              dispatch(modificaRefeicao('sobremesa'));
+            };
+          }}
         >
-          <Text className={`${aperitivo ? 'text-white' : 'text-black'} text-base font-medium`}>Aperitivos</Text>
+          <Text className={`${refeicaoSelected === 'sobremesa' ? 'text-white' : 'text-black'} text-base font-medium`}>Sobremesa</Text>
         </TouchableOpacity>
         
-        {/* Pill 4 - Bebidas */}
+        {/* Pill 5 - Bebidas */}
         <TouchableOpacity
           activeOpacity={0.7}
           className='rounded-full px-8 py-3 mr-4'
-          style={Bebidas ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
-          onPress={() => setBebidas(!Bebidas)}
+          style={refeicao === 'bebida' ? { backgroundColor: corDoFiltro } : { backgroundColor: '#f3f4f6' }}
+          onPress={() => {
+            if (refeicao === 'bebida') {
+              setRefeicaoSelected('');
+              dispatch(modificaRefeicao('Todas'))
+            } else {
+              setRefeicaoSelected('bebida');
+              dispatch(modificaRefeicao('bebida'));
+            }; 
+          }}
         >
-          <Text className={`${Bebidas ? 'text-white' : 'text-black'} text-base font-medium`}>Bebidas</Text>
+          <Text className={`${refeicaoSelected === 'bebida' ? 'text-white' : 'text-black'} text-base font-medium`}>Bebida</Text>
         </TouchableOpacity>
 
         <View className="w-4" />

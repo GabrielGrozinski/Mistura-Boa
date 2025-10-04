@@ -6,9 +6,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Barra from "../../Barra/Barra";
 
 
-type Props = NativeStackScreenProps<TiposRotas, 'ReceitasVeganaAppBASE'>
+type Props = NativeStackScreenProps<TiposRotas, 'ReceitasVegetarianaUsuariosBASE'>
 
-export default function ReceitasVeganaAppBASE({navigation}: Props) {
+export default function ReceitasVegetarianaUsuariosBASE({navigation}: Props) {
   return (
     <ImageBackground
     source={require('../../../../assets/TelaPrincipal/capa2.png')}
@@ -16,8 +16,8 @@ export default function ReceitasVeganaAppBASE({navigation}: Props) {
     className="flex-1">
       <View className="flex-1 p-4">
         {/* Título */}
-        <Text style={{textShadowColor: 'black', textShadowRadius: 0.4}} className="text-6xl mt-10 font-bold mx-4 text-center text-yellow-500">
-          Receitas do Aplicativo
+        <Text style={{textShadowColor: 'black', textShadowRadius: 0.4}} className="text-6xl mt-10 font-bold mx-4 text-center text-green-600">
+          Receitas dos Usuários
         </Text>
 
         {/* Barra de busca */}
@@ -33,15 +33,15 @@ export default function ReceitasVeganaAppBASE({navigation}: Props) {
         {/* Categorias */}
         <View className="flex-row flex-wrap overflow-hidden justify-between mx-4 mt-5 opacity-98">
           <Pressable>
-            <Image className="h-20 w-[140px] border-[2px] border-black/60 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVeganasApp/sobremesas.jpg')} />
+            <Image className="h-20 w-[140px] border-[2px] border-black/60 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/sobremesas.jpg')} />
           </Pressable>
 
           <Pressable>
-            <Image className="h-20 w-[140px] border-[2px] border-black/60 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVeganasApp/pratosPrincipais.jpg')} />
+            <Image className="h-20 w-[140px] border-[2px] border-black/60 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/pratosPrincipais.jpg')} />
           </Pressable>
 
           <Pressable>
-            <Image className="h-20 w-[305px] border-[2px] border-black/70 mt-2 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVeganasApp/fitness.jpg')} />
+            <Image className="h-20 w-[305px] border-[2px] border-black/70 mt-2 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/fitness.jpg')} />
           </Pressable>
         </View>
 
@@ -50,26 +50,26 @@ export default function ReceitasVeganaAppBASE({navigation}: Props) {
           
           {/* Receita 1 */}
           <Image
-          source={require('../../../../assets/Receitas/ReceitasVeganasApp/brigadeiro.png')}
+          source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/brigadeiro.png')}
           className="h-[185px] w-[140px] mr-6 rounded-xl border-[3px] border-black/70"
           />
 
           {/* Receita 2 */}
           <Image
-          source={require('../../../../assets/Receitas/ReceitasVeganasApp/pizza.png')}
+          source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/pizza.png')}
           className="h-[185px] w-[140px] mr-6 rounded-xl border-[3px] border-black/70"
           />
 
           {/* Receita 3 */}
           <Image
-          source={require('../../../../assets/Receitas/ReceitasVeganasApp/paoDeQueijo.png')}
+          source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/paoDeQueijo.png')}
           className="h-[185px] w-[140px] mr-6 rounded-xl border-[3px] border-black/70"
           />
 
         </ScrollView>
 
-        <Pressable onPress={() => navigation.navigate('ReceitasVeganaApp')} className="mx-4 mb-20 items-center">
-          <Image className="h-20 w-[305px] border-[2px] border-black/70 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVeganasApp/todasReceitas.jpg')} />
+        <Pressable onPress={() => navigation.navigate('ReceitasVegetarianaUsuarios')} className="mx-4 mb-20 items-center">
+          <Image className="h-20 w-[305px] border-[2px] border-black/70 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVegetarianasApp/todasReceitas.jpg')} />
         </Pressable>
       </View>
 
