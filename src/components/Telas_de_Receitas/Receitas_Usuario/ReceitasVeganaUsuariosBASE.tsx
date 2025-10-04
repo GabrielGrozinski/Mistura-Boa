@@ -6,9 +6,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Barra from "../../Barra/Barra";
 
 
-type Props = NativeStackScreenProps<TiposRotas, 'ReceitasVeganaAppBASE'>
+type Props = NativeStackScreenProps<TiposRotas, 'ReceitasVeganaUsuariosBASE'>
 
-export default function ReceitasVeganaAppBASE({navigation}: Props) {
+export default function ReceitasVeganaUsuariosBASE({navigation}: Props) {
   return (
     <ImageBackground
     source={require('../../../../assets/TelaPrincipal/capa2.png')}
@@ -17,7 +17,7 @@ export default function ReceitasVeganaAppBASE({navigation}: Props) {
       <View className="flex-1 p-4">
         {/* Título */}
         <Text style={{textShadowColor: 'black', textShadowRadius: 0.4}} className="text-6xl mt-10 font-bold mx-4 text-center text-yellow-500">
-          Receitas do Aplicativo
+          Receitas dos Usuários
         </Text>
 
         {/* Barra de busca */}
@@ -68,7 +68,7 @@ export default function ReceitasVeganaAppBASE({navigation}: Props) {
 
         </ScrollView>
 
-        <Pressable onPress={() => navigation.navigate('ReceitasVeganaApp')} className="mx-4 mb-20 items-center">
+        <Pressable onPress={() => navigation.navigate('ReceitasVeganaUsuarios')} className="mx-4 mb-20 items-center">
           <Image className="h-20 w-[305px] border-[2px] border-black/70 rounded-xl" source={require('../../../../assets/Receitas/ReceitasVeganasApp/todasReceitas.jpg')} />
         </Pressable>
       </View>

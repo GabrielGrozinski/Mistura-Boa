@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import "../../../global.css";
-import { View, Text, Pressable, ScrollView, Image, Alert } from 'react-native';
+import { View, Text, Pressable, ScrollView, Image, ImageBackground, Alert, Modal, StatusBar, TouchableOpacity } from 'react-native';
 import { getApp } from '@react-native-firebase/app';
-import auth, {onAuthStateChanged, signOut} from '@react-native-firebase/auth';
+import auth, {onAuthStateChanged} from '@react-native-firebase/auth';
 import { 
-  QuantReceitas, DiasLogados_e_UltimoLogin_e_CriadoEm, QuantXP, 
+  QuantReceitas, DiasLogados_e_UltimoLogin_e_CriadoEm, QuantXP, buscaRequisitosCozinheiros, 
   QuantSeguidores, QuantSeguindo, NomeUsuario, RankingUsuario } from './buscaDados';
 import { getDatabase, ref, get, update, remove, set } from '@react-native-firebase/database';
 import { Base64 } from 'js-base64';
@@ -13,10 +13,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TiposRotas } from '../../navigation/types';
 import Barra from '../Barra/Barra';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import axios from 'axios';
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import LoaderCompleto from '../loading/loadingCompleto';
+import LinearGradient from 'react-native-linear-gradient';
+
  
 type Props = NativeStackScreenProps<TiposRotas, 'PerfilUsuario'>
  
@@ -27,21 +28,11 @@ const db = getDatabase(app);
 dayjs.locale("pt-br");
 
 export default function PerfilUsuario({route, navigation}: Props) {
-  const controller = new AbortController();
-  const api = axios.create({
-    timeout: 15000,
-    signal: controller.signal,
-    baseURL: 'http://192.168.1.36:3000'
-  });
-
   const [emailUserAtual, setEmailUserAtual] = useState<string>('');
   const [loadingReceita, setLoadingReceita] = useState<boolean>(true);
   const [loadingReceitaMostrar, setLoadingReceitaMostrar] = useState<boolean>(true);
   const [loadingConquista, setLoadingConquista] = useState<boolean>(true);
   const [loadingInfo, setLoadingInfo] = useState<boolean>(true);
-  const [carnivoros, setCarnivoros] = useState<any>([]);
-  const [veganos, setVeganos] = useState<any>([]);
-  const [vegetarianos, setVegetarianos] = useState<any>([]);
   // Parte de conquistas.
   const [conquistas, setConquistas] = useState<any>([]);
   const ImagensConquistas = [
@@ -69,6 +60,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
     require('../../../assets/Perfil/conquistas/Top100.png'),
     require('../../../assets/Perfil/conquistas/Top200.png'),
   ];
+  const conquistasRequisitos = useRef<number>(0); 
   // 
 
   const [seguidores, setSeguidores] = useState<number>(0);
@@ -81,13 +73,133 @@ export default function PerfilUsuario({route, navigation}: Props) {
   const [diasLogados, setDiasLogados] = useState<number>(0);
   const [ultimoLogin, setUltimoLogin] = useState<string>('');
   const [criadoEm, setCriadoEm] = useState<string>('');
+  const [requisitosCozinheiros, setRequisitosCozinheiros] = useState<boolean[]>([]);
   const [receitas_array, setReceitas_Array] = useState<boolean>(false);
   const [receitasUser, setReceitasUser] = useState<any>([]);
   const [cardCompletar, setCardCompletar] = useState<boolean>(false);
   const [info_user, setInfo] = useState<any>([]);
-  const [status_seguir, setStatus_Seguir] = useState<any>([]); 
+  const [status_seguir, setStatus_Seguir] = useState<any>([]);
+  const [modalVisivel, setModalVisivel] = useState<boolean>(false);
+  const [modalVisivelUser, setModalVisivelUser] = useState<boolean>(false);
+
+  const usuariosImagens = [
+    {
+      icone: require('../../../assets/Perfil/users/homemAdulto.png'),
+      nome: 'O Cozinheiro',
+      requisito: requisitosCozinheiros[0]
+    },
+    {
+      icone: require('../../../assets/Perfil/users/mulherAdulta.png'),
+      nome: 'A Cozinheira',
+      requisito: requisitosCozinheiros[1]
+    },
+    {
+      icone: require('../../../assets/Perfil/users/homemJovem.png'),
+      nome: 'Garoto',
+      requisito: requisitosCozinheiros[2]
+    },
+    {
+      icone: require('../../../assets/Perfil/users/mulherJovem.png'),
+      nome: 'Garota',
+      requisito: requisitosCozinheiros[3]
+    },
+    {
+      icone: require('../../../assets/Perfil/users/gato.png'),
+      nome: 'Gato',
+      requisito: requisitosCozinheiros[4],
+      requisitoTexto: 'Crie 5 receitas'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/cachorro.png'),
+      nome: 'Cachorro',
+      requisito: requisitosCozinheiros[5],
+      requisitoTexto: 'Tenha 500 Cookies'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/urso.png'),
+      nome: 'Urso',
+      requisito: requisitosCozinheiros[6],
+      requisitoTexto: 'Seja ranking Bronze'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/coelho.png'),
+      nome: 'Coelho',
+      requisito: requisitosCozinheiros[7],
+      requisitoTexto: 'Tenha 3 conquistas'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/dragao.png'),
+      nome: 'Dragão',
+      requisito: requisitosCozinheiros[8],
+      requisitoTexto: 'Crie 30 receitas'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/mago.png'),
+      nome: 'Mago',
+      requisito: requisitosCozinheiros[9],
+      requisitoTexto: 'Tenha 500 Cookies'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/fantasma.png'),
+      nome: 'Fantasma',
+      requisito: requisitosCozinheiros[10],
+      requisitoTexto: 'Seja ranking Ouro'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/fada.png'),
+      nome: 'Fada',
+      requisito: requisitosCozinheiros[11],
+      requisitoTexto: 'Tenha 10 conquistas'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/coelhoDaPascoa.png'),
+      nome: 'Coelho da Páscoa',
+      requisito: requisitosCozinheiros[12],
+      requisitoTexto: 'Gere 100 receitas'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/papaiNoel.png'),
+      nome: 'Papai Noel',
+      requisito: requisitosCozinheiros[13],
+      requisitoTexto: 'Avalie 1000 receitas'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/odin.png'),
+      nome: 'Odin',
+      poder: 'Receitas difíceis que você criar dão o dobro de Cookies',
+      cor: 'text-yellow-300',
+      requisito: requisitosCozinheiros[14],
+      requisitoTexto: 'É preciso ser assinante'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/osiris.png'),
+      nome: 'Osíris',
+      poder: 'Receitas longas que você criar dão o dobro de Cookies',
+      cor: 'text-green-300',
+      requisito: requisitosCozinheiros[15],
+      requisitoTexto: 'É preciso ser assinante'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/poseidon.png'),
+      nome: 'Poseidon',
+      poder: 'Você libera receitas exclusivas de frutos do mar',
+      cor: 'text-sky-300',
+      requisito: requisitosCozinheiros[16],
+      requisitoTexto: 'É preciso ser assinante'
+    },
+    {
+      icone: require('../../../assets/Perfil/users/demeter.png'),
+      nome: 'Deméter',
+      poder: 'Receitas veganas que você criar dão o dobro de Cookies',
+      cor: 'text-purple-300',
+      requisito: requisitosCozinheiros[17],
+      requisitoTexto: 'É preciso ser assinante'
+    },
+  ];
   
   const { status_usuario } = route.params;
+  // O status_usuario serve para definir se o perfil visitado é do próprio usuário, de um usuário que ele segue,
+  // de um usuário que o segue ou de um usuário que nenhum dos dois se seguem.
   const [state_status_usuario, setStatus_Usuario] = useState<any>(status_usuario);
   // Transforma o status_usuario em uma variável de estado.
 
@@ -114,25 +226,11 @@ export default function PerfilUsuario({route, navigation}: Props) {
     setLoadingReceita(false);
     async function pegarReceitas() {
       try {
-      // Pega as receitas carnívoras
-      const refCarnivoro = ref(db, `usuarios/${usuarioAtual}/receitas/carnivoro`);
-      const snapshotCarnivoro = await get(refCarnivoro);
-      if (snapshotCarnivoro.exists()) { 
-        setCarnivoros(snapshotCarnivoro.val().slice(1));
-      };
-
-      // Pega as receitas veganas
-      const refVegano = ref(db, `usuarios/${usuarioAtual}/receitas/vegano`);
-      const snapshotVegano = await get(refVegano);
-      if (snapshotVegano.exists()) {
-        setVeganos(snapshotVegano.val().slice(1));
-      }
-      
-      // Pega as receitas vegetarianas
-      const refVegetariano = ref(db, `usuarios/${usuarioAtual}/receitas/vegetariano`);
-      const snapshotVegetariano = await get(refVegetariano);
-      if (snapshotVegetariano.exists()) {
-        setVegetarianos(snapshotVegetariano.val().slice(1));
+      // Pega as receitas do usuário.
+      const refReceitas = ref(db, `usuarios/${usuarioAtual}/receitas`);
+      const snapshotReceitas = await get(refReceitas);
+      if (snapshotReceitas.exists()) { 
+        setReceitasUser(snapshotReceitas.val().filter(Boolean));
       };
       setLoadingReceita(false);
 
@@ -180,6 +278,10 @@ export default function PerfilUsuario({route, navigation}: Props) {
           return parseInt(numA, 10) - parseInt(numB, 10);
         });
 
+        // Soma a quantidade de conquistas que o usuário tem.
+        const conquistasRequisitosArray = conquistasArray.map((conquista) => conquista.valor)
+        conquistasRequisitos.current = conquistasRequisitosArray.reduce((acumulador, valorAtual) => acumulador + valorAtual, 0);
+
         // adiciona um id sequencial
         conquistasArray = conquistasArray.map((c, idx) => ({ id: idx, ...c }));
 
@@ -202,6 +304,9 @@ export default function PerfilUsuario({route, navigation}: Props) {
     // Função que pega os dados do usuário logado
     async function Dados_do_Usuario() {
       try {
+      const requisitosCozinheiros_ = await buscaRequisitosCozinheiros(usuarioAtual, conquistasRequisitos.current);
+      setRequisitosCozinheiros(requisitosCozinheiros_);
+
       const quantReceitas_ = await QuantReceitas(usuarioAtual);
       setQuantReceitas(quantReceitas_);
 
@@ -293,199 +398,26 @@ export default function PerfilUsuario({route, navigation}: Props) {
   {/* Definindo as informações do usuário */}
 
   useEffect(() => {
-    if (
-      !carnivoros ||
-      !veganos ||
-      !vegetarianos ||
-      carnivoros.length <= 0 ||
-      veganos.length <= 0 ||
-      vegetarianos.length <= 0
-    ) {
+    if (!receitasUser || receitasUser.length === 0) {
       setLoadingReceitaMostrar(false);
+      console.log('ruim')
       return;
-    }
-    const soma = carnivoros.length + veganos.length + vegetarianos.length;
+    };
+    const soma = receitasUser.length;
+    console.log('receitas', receitasUser)
+    console.log('soma', soma)
     if (soma >= 3) {
-        Receitas_a_mostrar();
-        setReceitas_Array(true);
-        // Só chama a função Receitas_a_mostrar se houver, ao menos, 3 receitas.
+      setReceitasUser(receitasUser.sort((a: any, b: any) => b.avaliacao.nota - a.avaliacao.nota));
+      setReceitas_Array(true);
+      setLoadingReceitaMostrar(false);
+      // Só chama a função Receitas_a_mostrar se houver, ao menos, 3 receitas.
     } else {
-        setReceitas_Array(false);
-        setLoadingReceitaMostrar(false);
+      setReceitas_Array(false);
+      setLoadingReceitaMostrar(false);
     };
 
-  }, [carnivoros, veganos, vegetarianos]);
+  }, [receitasUser]);
   {/* Verificando se o usuário têm três receitas ou não */}
-
-  const Receitas_a_mostrar = () => {
-    // Função que mostra 3 receitas aleatórias do usuário.
-    // É um função relativamente grande, mas o grande intuito dela é , em primeiro, pegar as receitas carnívoras, veganas e vegetarinas.
-    // Depois, verifica se há receitas de todos os tipos. Caso haja, pega uma de cada.
-    // Caso não haja, verifica quais tipos há e tenta pegar uma receita de cada tipo que houver.
-    // Caso haja apenas um tipo de receita, pega 3 receitas desse tipo.
-    // Existe uma outra função (numeroAleatorio) que gera um número aleatório baseado no tamanho do array de receitas.
-    // Obs: o usuário PRECISA ter, ao menos, 3 receitas.
-
-    try {
-
-    const NumeroCarnivoro = numeroAleatorio(carnivoros.length);
-    const NumeroVegano = numeroAleatorio(veganos.length);
-    const NumeroVegetariano = numeroAleatorio(vegetarianos.length);
-    if (
-      carnivoros.length > 0 &&
-      veganos.length > 0 &&
-      vegetarianos.length > 0
-    ) {
-      setReceitasUser([carnivoros[NumeroCarnivoro], veganos[NumeroVegano], vegetarianos[NumeroVegetariano]]);
-      // Se houver receitas de todos os tipos, pega uma de cada.
-    } else if (
-      carnivoros.length > 0 &&
-      veganos.length > 0
-    ) {
-      // Se houver receitas carnívoras e veganas, pega, pelo menos, uma de cada.
-        if (carnivoros.length > 1 && veganos.length === 1) {
-          setReceitasUser([carnivoros[NumeroCarnivoro], 
-            veganos[NumeroVegano], 
-            carnivoros[ NumeroCarnivoro === 0 ? NumeroCarnivoro + 1 : NumeroCarnivoro - 1 ]]);
-        } else if (carnivoros.length === 1 && veganos.length > 1) {
-            setReceitasUser([veganos[NumeroVegano], 
-              carnivoros[NumeroCarnivoro], 
-              veganos[ NumeroVegano === 0 ? NumeroVegano + 1 : NumeroVegano - 1 ]]);
-        } else {
-            setReceitasUser([carnivoros[NumeroCarnivoro], veganos[NumeroVegano], 
-              carnivoros.length > veganos.length ? carnivoros[ NumeroCarnivoro === 0 ? NumeroCarnivoro + 1 : NumeroCarnivoro - 1 ]
-            : 
-            carnivoros.length < veganos.length ? veganos[ NumeroVegano === 0 ? NumeroVegano + 1 : NumeroVegano - 1 ]
-            :
-            Math.random() < 0.5 ? carnivoros[ NumeroCarnivoro === 0 ? NumeroCarnivoro + 1 : NumeroCarnivoro - 1 ]
-            : veganos[ NumeroVegano === 0 ? NumeroVegano + 1 : NumeroVegano - 1 ]
-          ]);
-        };
-        // Faz mais uma verificação para saber se uma das receitas tem exatamente 1 receita.
-        // Por exemplo: se Veganos tiver só uma receita, pega uma receita vegana e duas Carnívoras. E vice-versa.
-        // Senão, pega uma de cada, e por fim, pega mais uma receita do tipo que tiver mais receitas entre si.
-        // Se a quantidade de receitas for igual, usa o Math.random para definir se a receita será Carnívora ou Vegana.
-    
-    } else if (
-      carnivoros.length > 0 &&
-      vegetarianos.length > 0 
-    ) {
-          if (carnivoros.length > 1 && vegetarianos.length === 1) {
-            setReceitasUser([carnivoros[NumeroCarnivoro], 
-              vegetarianos[NumeroVegetariano], 
-              carnivoros[ NumeroCarnivoro === 0 ? NumeroCarnivoro + 1 : NumeroCarnivoro - 1 ]]);
-          } else if (carnivoros.length === 1 && vegetarianos.length > 1) {
-              setReceitasUser([vegetarianos[NumeroVegetariano], 
-                carnivoros[NumeroCarnivoro], 
-                vegetarianos[ NumeroVegetariano === 0 ? NumeroVegetariano + 1 : NumeroVegetariano - 1 ]]);
-          } else {
-            setReceitasUser([carnivoros[NumeroCarnivoro], vegetarianos[NumeroVegetariano], carnivoros.length > vegetarianos.length ? carnivoros[ NumeroCarnivoro === 0 ? NumeroCarnivoro + 1 : NumeroCarnivoro - 1 ]
-            : 
-            carnivoros.length < vegetarianos.length ? vegetarianos[ NumeroVegetariano === 0 ? NumeroVegetariano + 1 : NumeroVegetariano - 1 ]
-            :
-            Math.random() < 0.5 ? carnivoros[ NumeroCarnivoro === 0 ? NumeroCarnivoro + 1 : NumeroCarnivoro - 1 ]
-            : vegetarianos[ NumeroVegetariano === 0 ? NumeroVegetariano + 1 : NumeroVegetariano - 1 ]
-          ]);
-        };
-          // Faz o mesmo, mas com Carnívoras e Vegetarianas.
-
-    } else if (
-      vegetarianos.length > 0 &&
-      veganos.length > 0
-    ) {
-          if (veganos.length > 1 && vegetarianos.length === 1) {
-            setReceitasUser([veganos[NumeroVegano], 
-              vegetarianos[NumeroVegetariano], 
-              veganos[ NumeroVegano === 0 ? NumeroVegano + 1 : NumeroVegano - 1 ]]);
-          } else if (veganos.length === 1 && vegetarianos.length > 1) {
-              setReceitasUser([vegetarianos[NumeroVegetariano], 
-                veganos[NumeroVegano], 
-                vegetarianos[ NumeroVegetariano === 0 ? NumeroVegetariano + 1 : NumeroVegetariano - 1 ]]);
-          } else {
-            setReceitasUser([vegetarianos[NumeroVegetariano], veganos[NumeroVegano], vegetarianos.length > veganos.length ? vegetarianos[ NumeroVegetariano === 0 ? NumeroVegetariano + 1 : NumeroVegetariano - 1 ]
-            : 
-            vegetarianos.length < veganos.length ? veganos[ NumeroVegano === 0 ? NumeroVegano + 1 : NumeroVegano - 1 ]
-            :
-            Math.random() < 0.5 ? vegetarianos[ NumeroVegetariano === 0 ? NumeroVegetariano + 1 : NumeroVegetariano - 1 ]
-            : veganos[ NumeroVegano === 0 ? NumeroVegano + 1 : NumeroVegano - 1 ]
-          ]);
-        };
-          // Faz o mesmo, mas com Vegetarianas e Veganas.
-
-    } else if (
-      carnivoros.length > 0
-    ) {
-      NumeroCarnivoro === 0 ? setReceitasUser([carnivoros[NumeroCarnivoro],
-      carnivoros[NumeroCarnivoro + 1],
-      carnivoros[NumeroCarnivoro + 2],
-    ]) 
-    : 
-    NumeroCarnivoro === 1 ?  setReceitasUser([carnivoros[NumeroCarnivoro - 1],
-      carnivoros[NumeroCarnivoro],
-      carnivoros[NumeroCarnivoro + 1],
-    ])
-    :
-    setReceitasUser([carnivoros[NumeroCarnivoro - 2],
-      carnivoros[NumeroCarnivoro - 1],
-      carnivoros[NumeroCarnivoro],
-    ]);
-    // Se houver apenas receitas carnívoras, pega 3 receitas carnívoras.
-    // Há mais verificações para evitar erros, como pegar uma receita que não existe. Por exemplo, se o carnivoros.length for 5,
-    // o NumeroCarnivoro pode ser 0, 1, 2, 3 ou 4.
-    // No caso, se o número aleatório for 0, pega a receita 0, 1 e 2.
-    // Se o número aleatório for 1, pega a receita 0, 1 e 2 também, mas evita pegar a receita -1, que não existe.
-    // Se o número aleatório for 2, pega a receita 0, 1 e 2 também, mas evita pegar a receita -1 ou -2, que não existem.
-      
-    } else if (
-      vegetarianos.length > 0
-    ) {
-      NumeroVegetariano === 0 ? setReceitasUser([vegetarianos[NumeroVegetariano],
-      vegetarianos[NumeroVegetariano + 1],
-      vegetarianos[NumeroVegetariano + 2],
-    ]) 
-    : 
-    NumeroVegetariano === 1 ?  setReceitasUser([vegetarianos[NumeroVegetariano - 1],
-      vegetarianos[NumeroVegetariano],
-      vegetarianos[NumeroVegetariano + 1],
-    ])
-    :
-    setReceitasUser([vegetarianos[NumeroVegetariano - 2],
-      vegetarianos[NumeroVegetariano - 1],
-      vegetarianos[NumeroVegetariano],
-    ]);
-    // Faz o mesmo, mas com receitas vegetarianas.
-      
-    } else if (
-      veganos.length > 0
-    ) {
-      NumeroVegano === 0 ? setReceitasUser([veganos[NumeroVegano],
-      veganos[NumeroVegano + 1],
-      veganos[NumeroVegano + 2],
-    ])
-    :
-    NumeroVegano === 1 ?  setReceitasUser([veganos[NumeroVegano - 1],
-      veganos[NumeroVegano],
-      veganos[NumeroVegano + 1],
-    ])
-    :
-    setReceitasUser([veganos[NumeroVegano - 2],
-      veganos[NumeroVegano - 1],
-      veganos[NumeroVegano],
-    ]);
-    // Faz o mesmo, mas com receitas veganas.
-
-    };
-    setLoadingReceitaMostrar(false);
-  } catch (erro: unknown) {
-        if (erro instanceof Error) console.log('Erro comum Receitas:', erro.message);
-        else
-        console.log('Erro desconhecido:', erro);
-      };
-  };
-
-  const numeroAleatorio = (array: number) => {
-    return Math.floor(Math.random() * array);
-  };
 
   const removerSeguidor = useCallback(async () => {
     // Função para remover um seguidor.
@@ -631,27 +563,107 @@ export default function PerfilUsuario({route, navigation}: Props) {
     <LoaderCompleto />
   );
 
+  if (modalVisivelUser) return (
+    <View className='flex-1'>
+      <StatusBar hidden/>
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1.1}} colors={['#1c6c9eff', '#24cae4ff']} className='h-full w-full'>
+      <Modal animationType='slide' transparent onRequestClose={() => setModalVisivelUser(false)} visible={modalVisivelUser}>
+        <ScrollView contentContainerStyle={{alignItems: 'center'}} className='w-full grow'>
+          <Image className='w-full h-[220px]' source={require('../../../assets/Perfil/users/usersCompletos/poseidon.png')} />
+          <Text className='text-center font-extrabold text-white text-4xl mt-2 mx-10'>
+              POSEIDON
+          </Text>
+          <Text className='font-medium text-center text-white text-2xl mt-2 mx-10'>
+              Deus dos mares e oceanos, senhor das águas profundas. Carrega seu tridente dourado e controla as tempestades, além de usá-lo como garfo pessoal!
+          </Text>
+          <Text className='font-extrabold text-center text-white text-3xl mt-8 mx-10 text-center'>
+                REQUISITOS PARA LIBERAR
+          </Text>
+          <View className="flex-row mt-4 justify-start w-full items-center">
+            <View className="h-10 w-10 ml-10 rounded-full self-start bg-green-400 items-center justify-center">
+              <Ionicons name="checkmark-sharp" size={30} color="#ffffffff" />
+            </View>
+            <Text className='text-xl font-medium text-white ml-1 text-center'>
+              Ser Assinante
+            </Text>
+          </View>
+          
+          <Text className='font-extrabold text-center text-[#ffff3bff] text-3xl mt-8 mx-10 text-center'>
+                VANTAGENS
+          </Text>
+
+          <View className="w-full items-center">
+            
+            <Text className='font-medium ml-10 text-center text-white text-xl mt-2 mx-10 text-center'>
+              Dobro de Cookies ao criar receitas com peixes
+            </Text>
+
+            <Text className='font-medium ml-10 text-center text-white text-xl mt-1 mx-10 text-center'>
+              Receitas exclusivas
+            </Text>
+
+            <Text className='font-medium ml-10 text-center text-white text-xl mt-1 mx-10 text-center'>
+              Suas receitas ficam com um destaque de Poseidon
+            </Text>
+
+          </View>
+
+          <TouchableOpacity onPress={() => setModalVisivelUser(false)} className='mt-6 mb-6 justify-center border-[3px] border-white bg-blue-400 w-[85%] h-12 rounded-2xl'>
+            <Text className="text-white font-medium text-center text-2xl">
+              Usar Poseidon
+            </Text>
+          </TouchableOpacity>
+
+        </ScrollView>
+      </Modal>
+      </LinearGradient>
+    </View>
+  );
+
   return (
     <View className="bg-[#132022] flex-1">
-      <ScrollView contentContainerClassName="grow pb-[250px] pt-2">
+      <ScrollView contentContainerClassName="grow pb-[130px] pt-2">
         <View className="absolute top-6 right-6">
           <Text className="text-[20px]">⚙️</Text>
         </View>
         {/* Cabeçalho com imagem/ícone do avatar */}
-        <View className='w-full h-1/4 bg-white'>
-        <Pressable onPress={async () => await signOut(authInstance)}>
+        <View className='w-full h-1/4 items-center justify-center bg-[#d56f39]'>
+        <Pressable onPress={() => setModalVisivel(true)}>
         <Image 
-        source={require('../../../assets/Perfil/user.jpg')}
-        className='w-full h-full'
+        source={require('../../../assets/Perfil/users/homemAdulto.png')}
+        className='w-[260px] h-[260px]'
         />
         </Pressable>
         </View>
 
+        <Modal animationType='slide' transparent={false} onRequestClose={() => setModalVisivel(false)} visible={modalVisivel}>
+              <View className="flex-1 bg-[#132022] items-center">
+                <Text className='text-white mt-10 text-3xl font-bold text-center mb-10'>Escolha o seu cozinheiro!</Text>
+                <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'space-around', flexDirection: 'row', flexWrap: 'wrap'}}>
+                  {usuariosImagens.map((user, index) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => {setModalVisivel(false); setModalVisivelUser(true);}}
+                      className="m-4"
+                    >
+
+                      <Image className={`rounded-full self-center h-[120px] w-[120px]`} source={user.icone} />
+                      <Text className={`font-bold text-white text-center self-center text-xl`}>
+                        {user.nome}
+                      </Text>
+
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </View>
+        </Modal>
+
         {/* Nome e usuário */}
         <Text style={{fontFamily: "monospace"}} 
         className="text-xl font-bold text-white text-start ml-8 mt-4">
-          {nome}</Text>
-        <Text style={{fontFamily: "monospace"}} className="text-lg text-yellow-700 tracking-tight text-start ml-8">
+          {nome}
+        </Text>
+        <Text style={{fontFamily: "monospace"}} className="text-lg text-yellow-500 tracking-tight text-start ml-8">
           {criadoEm}
         </Text>
 
@@ -668,7 +680,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
 
         {/* Botão adicionar amigos */} 
         <Pressable style={{backgroundColor: status_seguir.corBG}} 
-        className='bg-sky-500 elevation-1 self-start flex-row w-[65%] ml-8 items-center justify-center h-[42px] rounded-xl mb-5' 
+        className='bg-sky-500 elevation-1 border-2 border-b-[3.5px] border-black/10 self-start flex-row w-[65%] ml-8 items-center justify-center h-[42px] rounded-xl mb-5' 
         onPress={() => status_usuario ===  'Seguir de volta!' ? SeguirUsuario() : status_usuario === 'Seguindo' ? removerSeguidor()
           : status_usuario === 'Não Segue' ? SeguirUsuario() : false}>
           <Ionicons name={status_seguir.icone} color={status_seguir.iconeCor} size={24} />
@@ -729,9 +741,19 @@ export default function PerfilUsuario({route, navigation}: Props) {
               </Text>
             </View>
           </View>
+        
         ))}
 
         </View>
+
+        {/* Receitas Favoritas do usuário */}
+        {usuarioAtual === emailUserAtual && (
+          <TouchableOpacity onPress={() => navigation.navigate('ReceitasFavoritas', {nome: nome, usuarioAtual: emailUserAtual})} className='self-center rounded-xl items-center justify-center border-2 border-b-[3.5px] border-sky-600 w-[50%] h-[50px] bg-sky-500'>
+            <Text className='text-xl opacity-92 font-bold text-center text-white'>
+              Receitas Favoritas
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {/* Conquistas */}
         <Text className="ml-4 mb-2 text-2xl font-extrabold opacity-95 text-white mt-6">Conquistas</Text>
@@ -752,6 +774,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
         {!receitas_array && (
           <View>
             <Text className="ml-4 mb-2 text-2xl font-extrabold opacity-95 text-white mt-6">Suas Receitas</Text>
+            
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="ml-2 mb-10">
                 {quantReceitas === 0 && (
                   <Pressable onPress={() => Alert.alert(`É necessário criar mais ${3-quantReceitas} receita${3-quantReceitas !== 1 ? 's' : ''}!`)} className="flex-row">
@@ -767,9 +790,22 @@ export default function PerfilUsuario({route, navigation}: Props) {
 
                 {quantReceitas === 1 && (
                   <Pressable onPress={() => Alert.alert(`É necessário criar mais ${3-quantReceitas} receita${3-quantReceitas !== 1 ? 's' : ''}!`)} className="flex-row">
-                    <View className="bg-[#fff7ec] rounded-xl p-3 mr-3 items-center w-36">
-                      <Text className="text-[30px] mb-1">🍽️</Text>
-                    </View>
+                    <ImageBackground source={{uri: receitasUser[0].image}} 
+                    className='rounded-lg items-center justify-center w-36 p-3 mr-4 h-[100px]' 
+                    resizeMode='cover'
+                    >
+                      <LinearGradient
+                        colors={['transparent', 'black']}
+                        className='h-[100px] w-36 items-center justify-center'
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
+                      >
+                        <Text className='text-white text-center mx-1 font-bold text-2xl'>
+                          {receitasUser[0].title}
+                        </Text>
+                      </LinearGradient>
+                    </ImageBackground>
+
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
                     className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
@@ -780,12 +816,38 @@ export default function PerfilUsuario({route, navigation}: Props) {
 
                 {quantReceitas === 2 && (
                   <Pressable onPress={() => Alert.alert(`É necessário criar mais ${3-quantReceitas} receita${3-quantReceitas !== 1 ? 's' : ''}!`)} className="flex-row">
-                    <View className="bg-[#fff7ec] rounded-xl p-3 mr-3 items-center w-36">
-                      <Text className="text-[30px] mb-1">🍽️</Text>
-                    </View>
-                    <View className="bg-[#fff7ec] rounded-xl p-3 mr-3 items-center w-36">
-                      <Text className="text-[30px] mb-1">🍽️</Text>
-                    </View>
+                    <ImageBackground source={{uri: receitasUser[0].image}} 
+                    className='rounded-lg items-center justify-center w-36 p-3 mr-4 h-[100px]' 
+                    resizeMode='cover'
+                    >
+                      <LinearGradient
+                        colors={['transparent', 'black']}
+                        className='h-[100px] w-36 items-center justify-center'
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
+                      >
+                        <Text className='text-white text-center mx-1 font-bold text-2xl'>
+                          {receitasUser[0].title}
+                        </Text>
+                      </LinearGradient>
+                    </ImageBackground>
+                    
+                    <ImageBackground source={{uri: receitasUser[1].image}} 
+                    className='rounded-lg items-center justify-center w-36 p-3 mr-4 h-[100px]' 
+                    resizeMode='cover'
+                    >
+                      <LinearGradient
+                        colors={['transparent', 'black']}
+                        className='h-[100px] w-36 items-center justify-center'
+                        start={{x: 0, y: 0}}
+                        end={{x: 0, y: 1}}
+                      >
+                        <Text className='text-white text-center mx-1 font-bold text-2xl'>
+                          {receitasUser[1].title}
+                        </Text>
+                      </LinearGradient>
+                    </ImageBackground>
+
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
                     className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
                   </Pressable>
@@ -797,25 +859,74 @@ export default function PerfilUsuario({route, navigation}: Props) {
         )}
         {receitas_array && (
           <View>
-            <Text className="text-[15px] font-bold text-[#333] mb-2">Suas receitas</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="mb-10">
-            {receitasUser.map((receita: any, index: number) => (
-              <View key={index} className="bg-[#fff7ec] rounded-xl p-3 mr-3 items-center w-36">
-                <Text className="text-[30px] mb-1">🍽️</Text>
-                <Text className="text-[13px] font-bold text-[#333] text-center">{receita.title}</Text>
-              </View>
-            ))}
-              <Pressable onPress={() => false}>
-              <View className="bg-[#fff7ec] rounded-xl p-3 mr-3 items-center w-36 justify-center">
-                <Text className="text-[13px] font-bold text-[#333] text-center">Clique para ver todas as receitas!</Text>
-              </View>
+            <Text className="text-2xl font-bold text-neutral-100 ml-4 mb-2">Suas receitas</Text>
+            
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <Pressable className='rounded-xl items-center justify-center overflow-hidden w-36 p-3 mx-2 h-[100px]'>
+                <ImageBackground source={{uri: receitasUser[0].image}}
+                className='w-36 h-[100px]' 
+                resizeMode='cover'
+                > 
+                  <LinearGradient
+                  colors={['transparent', 'black']}
+                  className='w-36 h-[100px] items-center justify-center'
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1.4}}
+                  >
+                    <Text className='text-white text-center mx-1 font-bold text-2xl'>
+                      {receitasUser[0].title}
+                    </Text>
+                  </LinearGradient>
+                </ImageBackground>
               </Pressable>
+
+              <Pressable className='rounded-xl items-center justify-center overflow-hidden w-36 p-3 mx-2 h-[100px]'>
+                <ImageBackground source={{uri: receitasUser[1].image}}
+                className='w-36 h-[100px]' 
+                resizeMode='cover'
+                > 
+                  <LinearGradient
+                  colors={['transparent', 'black']}
+                  className='w-36 h-[100px] items-center justify-center'
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1.4}}
+                  >
+                    <Text className='text-white text-center mx-1 font-bold text-2xl'>
+                      {receitasUser[1].title}
+                    </Text>
+                  </LinearGradient>
+                </ImageBackground>
+              </Pressable>
+              
+              <Pressable className='rounded-xl items-center justify-center overflow-hidden w-36 p-3 mx-2 h-[100px]'>
+                <ImageBackground source={{uri: receitasUser[2].image}}
+                className='w-36 h-[100px]' 
+                resizeMode='cover'
+                > 
+                  <LinearGradient
+                  colors={['transparent', 'black']}
+                  className='w-36 h-[100px] items-center justify-center'
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1.4}}
+                  >
+                    <Text className='text-white text-center mx-1 font-bold text-2xl'>
+                      {receitasUser[2].title}
+                    </Text>
+                  </LinearGradient>
+                </ImageBackground>
+              </Pressable>
+
             </ScrollView>
+            
+            <Pressable onPress={() => navigation.navigate('ReceitasCriadas', {nome: nome, usuarioAtual: emailUserAtual})} className='mt-4 self-center rounded-xl items-center justify-center border-2 border-b-[3.5px] border-red-600 w-[50%] h-[50px] bg-red-500'>
+              <Text className='text-xl opacity-92 font-bold text-center text-white'>
+                Receitas Criadas
+              </Text>
+            </Pressable>
+
           </View>
         )}
         {/* Aqui é mostrado 3 receitas que o usuário criou */}
-
-          
 
       </ScrollView>
         <View className='absolute -bottom-1'>

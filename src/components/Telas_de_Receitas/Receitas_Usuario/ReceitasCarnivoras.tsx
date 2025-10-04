@@ -15,198 +15,38 @@ import { useAppDispatch } from '../../../reducers/hooks';
 import { modificaOrdenacao } from '../../../reducers/filtrarReducer';
 
 
-type Props = NativeStackScreenProps<TiposRotas, 'ReceitasCarnivoraApp'>
+type Props = NativeStackScreenProps<TiposRotas, 'ReceitasCarnivoraUsuarios'>
 
 const app = getApp();
 const authInstance = auth(app);
 const db = getDatabase(app);
 
-let recipesCarnivoras: any = [
-  {
-    email: '', // Não há email pois é uma receita padrão.
-    id: 1, // Identificador da receita.
-    title: 'Bife Grelhado com Alho', // Título.
-    description: 'Suculento bife temperado com alho e ervas.', // Descrição.
-    dif: 'Fácil de fazer!', // Dificuldade da receita.
-    time: '⏱️ 15 min', // Tempo de preparo da receita.
-    image: require('../../../../assets/Receitas/ReceitasCarnivoras/bifeComAlho.png'), // Imagem da receita.
-    autor: 'Mistura Boa', // Autor da receita. Como é uma receita padrão, o autor é o aplicativo.
-    tipo: 'carnivoro', // Tipo da receita.
-    refeicao: 'prato_principal', // Refeição que a receita se adequa.
-    ingredientes: [
-      { ing: 'Bife de contrafilé', quantidade: '200g', icone: '🥩' },
-      { ing: 'Alho picado', quantidade: '1', icone: '🧄' },
-      { ing: 'Azeite de oliva', quantidade: '20ml', icone: '🫒' },
-      { ing: 'Sal e pimenta', quantidade: '', icone: '🧂' },
-      { ing: 'Ervas frescas', quantidade: '', icone: '🌿' },
-    ], // Ingredientes da receita.
-    passos: [
-      'Tempere os bifes com sal, pimenta e alho.',
-      'Aqueça o azeite em uma frigideira.',
-      'Grelhe os bifes por 3-4 minutos de cada lado.',
-      'Finalize com ervas frescas e sirva.',
-    ], // Passos da receita.
-    avaliacao: 
-    { nota: 0, contador: 0, media: 0 }, // Sistema de avaliação da receita.
-    
-    // Esses três campos só servem para as receitas fitness.
-    calorias: 320, // Quantidade de calorias da receita.
-    peso: 350, // Peso em gramas ou quilos da receita.
-    proteina: 75, // Quantidade de proteína. Muito importante para ganhar músculo.
-  },
-  {
-    email: '',
-    id: 2,
-    title: 'Costela ao Forno',
-    description: 'Costela assada lentamente, super macia!',
-    dif: 'Um pouco complicada...',
-    time: '⏱️ 1 hora+',
-    image: require('../../../../assets/Receitas/ReceitasCarnivoras/costela.png'),
-    autor: 'Mistura Boa',
-    tipo: 'carnivoro',
-    refeicao: 'bebida',
-    ingredientes: [
-      { ing: 'Costela bovina', quantidade: '1 kg', icone: '🥩' },
-      { ing: 'Alho amassado', quantidade: '4 dentes', icone: '🧄' },
-      { ing: 'Cebola picada', quantidade: '1', icone: '🧅' },
-      { ing: 'Sal grosso', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Pimenta-do-reino', quantidade: 'a gosto', icone: '🌶️' },
-    ],
-    passos: [
-      'Tempere a costela com sal, pimenta, alho e cebola.',
-      'Envolva em papel alumínio e leve ao forno pré-aquecido a 180°C.',
-      'Asse por cerca de 2 horas até ficar macia.',
-      'Retire o papel e doure por mais 20 minutos.',
-    ],
-    avaliacao: 
-    { nota: 0, contador: 0, media: 0 },
-    calorias: 720,
-    peso: 350,
-    proteina: 60,
-  },
-  {
-    email: '',
-    id: 3,
-    title: 'Hambúrguer Artesanal',
-    description: 'Feito com carne de qualidade e tempero caseiro.',
-    dif: 'Difícil!',
-    time: '⏱️ 30 min',
-    image: require('../../../../assets/Receitas/ReceitasCarnivoras/hamburguer.png'),
-    autor: 'Mistura Boa',
-    tipo: 'carnivoro',
-    refeicao: 'cafe_da_manha',
-    ingredientes: [
-      { ing: 'Carne moída', quantidade: '400g', icone: '🥩' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Pão de hambúrguer', quantidade: '2', icone: '🍞' },
-      { ing: 'Queijo', quantidade: '2 fatias', icone: '🧀' },
-      { ing: 'Alface e tomate', quantidade: 'a gosto', icone: '🥬' },
-    ],
-    passos: [
-      'Tempere a carne moída com sal e pimenta.',
-      'Modele os hambúrgueres e grelhe até o ponto desejado.',
-      'Monte o hambúrguer com pão, queijo, alface e tomate.',
-      'Sirva imediatamente.',
-    ],
-    avaliacao:  
-    { nota: 0, contador: 0, media: 0 },
-    calorias: 700,
-    peso: 350,
-    proteina: 40,
-  },
-  {
-    email: '',
-    id: 4,
-    title: 'Wellington de Filé Mignon',
-    description: 'Uma receita digna de chef profissional.',
-    dif: 'Mestre-cuca!',
-    time: '⏱️ 2 horas+',
-    image: require('../../../../assets/Receitas/ReceitasCarnivoras/wellington.png'),
-    autor: 'Mistura Boa',
-    tipo: 'carnivoro',
-    refeicao: 'prato_principal',
-    ingredientes: [
-      { ing: 'Filé mignon', quantidade: '700g', icone: '🥩' },
-      { ing: 'Massa folhada', quantidade: '1 pacote', icone: '🥐' },
-      { ing: 'Cogumelos', quantidade: '200g', icone: '🍄' },
-      { ing: 'Presunto cru', quantidade: '100g', icone: '🥓' },
-      { ing: 'Mostarda', quantidade: '2 colheres de sopa', icone: '🌭' },
-      { ing: 'Ovo', quantidade: '1', icone: '🥚' },
-    ],
-    passos: [
-      'Sele o filé mignon e pincele com mostarda.',
-      'Refogue os cogumelos e espalhe sobre o presunto cru.',
-      'Envolva o filé com presunto e cogumelos.',
-      'Enrole tudo na massa folhada, pincele com ovo.',
-      'Asse em forno pré-aquecido a 200°C por cerca de 40 minutos.',
-    ],
-    avaliacao: 
-    { nota: 0, contador: 0, media: 0 },
-    calorias: 820,
-    peso: 350,
-    proteina: 65,
-  },
-  {
-    email: '',
-    id: 5,
-    title: 'Pizza',
-    description: 'Uma ótima e deliciosa pizza.',
-    dif: 'Um pouco complicada...',
-    time: '⏱️ 30 min',
-    image: require('../../../../assets/Receitas/ReceitasCarnivoras/pizza.png'),
-    autor: 'Mistura Boa',
-    tipo: 'carnivoro',
-    refeicao: 'sobremesa',
-    ingredientes: [
-      { ing: 'Massa de pizza', quantidade: '1 disco', icone: '🍞' },
-      { ing: 'Molho de tomate', quantidade: '4 colheres de sopa', icone: '🍅' },
-      { ing: 'Queijo mussarela', quantidade: '150g', icone: '🧀' },
-      { ing: 'Calabresa fatiada', quantidade: '100g', icone: '🥓' },
-    ],
-    passos: [
-      'Espalhe o molho de tomate sobre a massa.',
-      'Cubra com queijo, calabresa e azeitonas.',
-      'Leve ao forno pré-aquecido a 220°C por 15 minutos.',
-      'Sirva quente.',
-    ],
-    avaliacao: 
-    { nota: 0, contador: 0, media: 0 },
-    calorias: 420,
-    peso: 350,
-    proteina: 35,
-  },
-];
 
-export default function ReceitasCarnivoraApp({navigation}: Props) {
+export default function ReceitasCarnivoraUsuarios({navigation}: Props) {
   const dispatch = useAppDispatch();
-  let {ordenacao, refeicao} = useAppSelector(state => state.filtro);
+  let {ordenacao} = useAppSelector(state => state.filtro);
   const corDoFiltro = '#fd5a28ff';
   const [emailB64, setEmailB64] = useState<string>('');
   const [receitaCarnivoraFavoritada, setReceita] = useState<number[]>([]);
   const [loadingReceitas, setLoadingReceitas] = useState<boolean>(true);
   const [loadingFavoritas, setLoadingFavoritas] = useState<boolean>(true);
+  const [recipesCarnivoras, setRecipesCarnivoras] = useState<any[]>([]);
+  
 
   useEffect(() => {
     // Função que busca todas as receitas carnívoras e cria um nó para cada uma delas.
     dispatch(modificaOrdenacao('Ordenação Padrão'));
     setLoadingReceitas(true);
+    
     async function ReceitaFirebase() {
       await buscaReceitas();
-      const refReceita = ref(db, `ReceitasApp/carnivoro`);
+      const refReceita = ref(db, `ReceitasUsuarios/carnivoro`);
       onValue(refReceita, async (snapshot) => {
         await buscaReceitas();
       });
-
-      for (let i = 0; i < recipesCarnivoras.length; i++) {
-        let refReceita = ref(db, `ReceitasApp/${recipesCarnivoras[i].tipo}/${recipesCarnivoras[i].id}`);
-        let snapshot = await get(refReceita);
-        if (!snapshot.exists()) {
-          await update(refReceita, {
-          ...recipesCarnivoras[i]
-        });
-        };
-      };
+      await buscaReceitas();
     };
+
     ReceitaFirebase();
 
     const user = onAuthStateChanged(authInstance, usuario => {
@@ -219,17 +59,17 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
   }, [authInstance]);
 
   async function buscaReceitas() {
-    const refReceita = ref(db, `ReceitasApp/carnivoro`);
-    const snapshot = await get(refReceita);
-    const dados = snapshot.val();
-    const receitas = dados.slice(1);
+    try {  
+      const refReceita = ref(db, `ReceitasUsuarios/carnivoro`);
+      const snapshot = await get(refReceita);
+      const dados = snapshot.val();
+      let receitas = dados.filter(Boolean);
+      setRecipesCarnivoras(receitas);
     
-    for (let i = 0; i < recipesCarnivoras.length; i++) {
-      recipesCarnivoras[i] = {
-        ...recipesCarnivoras[i], 
-        avaliacao: receitas[i].avaliacao, 
-        comentarios: receitas[i].comentarios}
+    } catch (erro) {
+      console.log('Erro ao fazer requisição', erro);
     };
+
   };
 
   const adicionaFavorito = async (recipe: any) => {
@@ -308,7 +148,7 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
 
         <View className='p-[25px]'>
           {(ordenacao === 'Melhores Receitas' ?
-          recipesCarnivoras.slice().sort((a: any, b: any) => b.avaliacao.media - a.avaliacao.media) // Filtra as receis com média maior - média menor.
+          recipesCarnivoras.slice().sort((a: any, b: any) => b.avaliacao.media - a.avaliacao.media) // Filtra as receitas com média maior - média menor.
           : ordenacao === 'Calorias' ? 
           recipesCarnivoras.slice().sort((a: any, b: any) => a.calorias - b.calorias) // Filtra as receitas em menos caloria - mais caloria.
           : ordenacao === 'Ganhar Músculo' ?
@@ -337,10 +177,10 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
                 return { ...receita, idDificuldade: 0 };
             }
           }).sort((a: any, b: any) => a.idDificuldade - b.idDificuldade) // Filtra as receitas em mais fácil - mais difícil.
-          : recipesCarnivoras
+          :
+          recipesCarnivoras
 
-          ).filter((receita: any) => refeicao === 'Todas' ? true : receita.refeicao === refeicao).
-          map((recipe: any) => (
+          ).map((recipe: any) => (
             <TouchableOpacity
               key={recipe.id}
               activeOpacity={0.8}
@@ -359,7 +199,7 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
               end={{x: 1, y: 0}}
               >
                 <Image
-                  source={recipe.image}
+                  source={{uri: recipe.image}}
                   className="w-[110px] h-full rounded-xl mr-2"
                 />
                 
@@ -383,14 +223,13 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
                   </Text>
                   <Text className="text-neutral-100 font-medium text-[14px] mb-1">{recipe.description}</Text>
                   <Text style={{textShadowColor: 'black', textShadowRadius: 0.2}} className='text-[14px] mb-1 text-white font-bold'>
-                    {recipe.time}  •  {recipe.dif}
+                    {recipe.time}  •  {recipe.dificuldade}
                   </Text>
                 </View>
               </LinearGradient>
             </TouchableOpacity>
           ))}
         </View>
-
       </ScrollView>
     </ImageBackground>
   );

@@ -59,7 +59,14 @@ export default function Barra() {
         },
         {
             img: require('../../../assets/barra/receitasApp.png'),
-            proximaTela: 'ReceitasApp',
+            proximaTela: 'Receitas',
+            usuarioAtual,
+            altura: 38,
+            largura: 38,
+        },
+        {
+            img: require('../../../assets/barra/criarReceita.png'),
+            proximaTela: 'CriarReceita',
             usuarioAtual,
             altura: 38,
             largura: 38,
@@ -83,16 +90,17 @@ export default function Barra() {
         else if (telas[telaAtual].proximaTela === "GeradorReceita") navigation.navigate("GeradorReceita", {usuarioAtual});
         else if (telas[telaAtual].proximaTela === "CriarDieta") return;
         else if (telas[telaAtual].proximaTela === "DietaCriada") return;
-        else if (telas[telaAtual].proximaTela === "ReceitasCarnivoraApp") return;
+        else if (telas[telaAtual].proximaTela === "Receita") return;
+        else if (telas[telaAtual].proximaTela === "ReceitasFavoritas") return;
         else
         navigation.navigate(telas[telaAtual].proximaTela);
     };
 
     return (
         <ImageBackground
-            source={barra !== 1 ? require('../../../assets/TelaPrincipal/capa2.png') : require('../../../assets/TelaPrincipal/capa.png')}
+            source={require('../../../assets/TelaPrincipal/capa2.png')}
             resizeMode='cover'
-            className={`flex-row w-full h-[75px] items-center border ${barra !== 1 ? "border-neutral-200" : "border-[#121212]"} border-1`}
+            className='flex-row w-full h-[75px] items-center border border-neutral-200 border-1'
             >
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {telas.map((icone, index) => (

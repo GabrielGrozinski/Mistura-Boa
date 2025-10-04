@@ -11,7 +11,7 @@ const controller = new AbortController();
 const api = axios.create({
     timeout: 15000,
     signal: controller.signal,
-    baseURL: 'http://192.168.1.9:3000'
+    baseURL: 'http://192.168.1.24:3000'
 });
 
     export async function TipoDeAlimentacao(usuarioAtual: string): Promise<any> {
@@ -20,7 +20,6 @@ const api = axios.create({
       const dados = snapshot.val();
       const [key, value] = _.toPairs(dados);
       return key;
-      
       
       // Pega o tipo de alimentação do usuário.
     };
@@ -79,6 +78,83 @@ const api = axios.create({
       const QuantReceitaUsuario = dadosQuantReceita?.quantReceitas;
       return QuantReceitaUsuario;
       // Pega a quantidade de receitas criadas pelo usuário logado.
+    };
+    
+    export async function QuantReceitasGeradas(usuarioAtual: string): Promise<number> {
+      const refQuantReceitaGeradas = ref(db, `usuarios/${usuarioAtual}`);
+      const snapshotQuantReceitaGeradas = await get(refQuantReceitaGeradas);
+      const dadosQuantReceitaGeradas = snapshotQuantReceitaGeradas.val();
+      const QuantReceitaUsuarioGeradas = dadosQuantReceitaGeradas?.receitasGeradas;
+      return QuantReceitaUsuarioGeradas;
+      // Pega a quantidade de receitas geradas pelo usuário logado.
+    };
+    
+    export async function buscaAssinante(usuarioAtual: string): Promise<boolean> {
+      return false
+      // Verifica se o usuário é assinante do aplicativo.
+    };
+
+    export async function buscaRequisitosCozinheiros(usuarioAtual: string, quantConquistas: number): Promise<boolean[]> {
+      // Função que busca os requisitos dos cozinheiros do perfil.
+      // Os 4 primeiros cozinheiros não possuem requisitos, então vou começar a partir do quinto.
+      if (!usuarioAtual) return [false];
+      let arrayComOsRequisitos = [true, true, true, true];
+      const refUsuarioBase = ref(db, `usuarios/${usuarioAtual}`);
+
+      // Busca Quantidade de Receitas:
+      const quantReceita = await QuantReceitas(usuarioAtual);
+      const requisitoGato = quantReceita >= 5 ? true : false;
+      const requisitoDragao = quantReceita >= 30 ? true : false;
+
+      // Busca XP:
+      const quantXP = await QuantXP(usuarioAtual);
+      const requisitoCachorro = quantXP >= 500 ? true : false;
+      const requisitoMago = quantXP >= 5000 ? true : false;
+
+      // Busca Ranking:
+      const qualRanking = await RankingUsuario(usuarioAtual, true);
+      const requisitoUrso = qualRanking !== "Nenhum" ? true : false;
+      const requisitoFantasma = qualRanking !== "Nenhum" ? qualRanking !== "Bronze" ? true : false : false;
+
+      // Busca Conquistas:
+      const requisitoCoelho = quantConquistas >= 3 ? true : false;
+      const requisitoFada = quantConquistas >= 10 ? true : false;
+
+      // Busca Avaliacao:
+      let quantAvaliacao = 0;
+      const refAvaliacoesApp = ref(db, `usuarios/${usuarioAtual}/avaliacoes/ReceitasApp`);
+      const snapshotAvalicoesApp = await get(refAvaliacoesApp);
+      if (snapshotAvalicoesApp.exists()) {
+        let dados: any = Object.values(snapshotAvalicoesApp.val());
+        dados = dados.map((item: any) => item.slice(1));
+        // Retira o valor null.
+        quantAvaliacao = dados.reduce((acumulador: number, valorAtual: any) => acumulador + valorAtual.length, 0);
+      };
+      const refAvaliacoesUsuario = ref(db, `usuarios/${usuarioAtual}/avaliacoes/ReceitasUsuarios`);
+      const snapshotAvalicoesUsuario = await get(refAvaliacoesUsuario);
+      if (snapshotAvalicoesUsuario.exists()) {
+        let dados: any = Object.values(snapshotAvalicoesUsuario.val());
+        dados = dados.map((item: any) => item.slice(1));
+        quantAvaliacao = dados.reduce((acumulador: number, valorAtual: any) => acumulador + valorAtual.length, 0);
+      };
+      const requisitoPapaiNoel = quantAvaliacao >= 1000 ? true : false;
+
+      // Busca Quantidade de Receitas Geradas:
+      const quantReceitasGeradas = await QuantReceitasGeradas(usuarioAtual);
+      const requisitoCoelhoDaPascoa = quantReceitasGeradas >= 100 ? true : false;
+
+      // Busca Assinatura:
+      const verificaAssinante = await buscaAssinante(usuarioAtual);
+      const requisitoOdin = verificaAssinante ? true : false
+      const requisitoOsiris = verificaAssinante ? true : false
+      const requisitoPoseidon = verificaAssinante ? true : false
+      const requisitoDemeter = verificaAssinante ? true : false
+      
+      arrayComOsRequisitos.push(requisitoGato, requisitoCachorro, requisitoUrso, requisitoCoelho, requisitoDragao,
+        requisitoMago, requisitoFantasma, requisitoFada, requisitoCoelhoDaPascoa, requisitoPapaiNoel, requisitoOdin,
+        requisitoOsiris, requisitoPoseidon, requisitoDemeter);
+
+      return arrayComOsRequisitos
     };
     
     export async function RankingUsuario(usuarioAtual: string, ranking_ou_passos: boolean): Promise<any> {

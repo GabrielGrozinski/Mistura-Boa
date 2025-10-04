@@ -14,9 +14,9 @@ type Props = NativeStackScreenProps<TiposRotas, 'Ranking'>
 
 const app = getApp();
 const db = getDatabase(app);
-const authInstance = auth(app);
 
-export default function Ranking({navigation, route}: Props) {
+
+export default function Ranking({ route }: Props) {
     const {usuarioAtual} = route.params;
     // Só será mostrado os rankings do seu usuário.
     const [passosBronze, setPassosBronze] = useState([]);
@@ -75,7 +75,6 @@ export default function Ranking({navigation, route}: Props) {
 
     }, [usuarioAtual]);
 
-    console.log('0asso bronze', passosBronze);
     return (
         <ImageBackground
             source={require('../../../assets/TelaPrincipal/capa.png')}
@@ -154,7 +153,7 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={passosBronze[2]/1}
+                                progress={passosBronze[2]}
                                 color="#eca261ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
@@ -210,8 +209,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosOuro[0]/500}
+                                color="#ffcc13ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -220,7 +219,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosOuro[0]}/500
                             </Text>
                         </View>
                         
@@ -233,8 +232,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosOuro[1]/25}
+                                color="#ffcc13ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -243,7 +242,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosOuro[1]}/25
                             </Text>
                         </View>
                         
@@ -256,8 +255,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosOuro[2]/5}
+                                color="#ffcc13ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -266,7 +265,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosOuro[2]}/5
                             </Text>
                         </View>
                         
@@ -277,12 +276,12 @@ export default function Ranking({navigation, route}: Props) {
                             
                             <View className="items-center ml-2 w-[90%]">
                                 <Text className="font-bold text-[#54341cff] mr-[18px] my-2 py-1 self-start">
-                                5000 COOKIES
+                                10000 COOKIES
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosOuro[3]/10000}
+                                color="#ffcc13ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -291,7 +290,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosOuro[3]}/10000
                             </Text>
                         </View>
 
@@ -312,8 +311,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosDiamante[0]/1000}
+                                color="#1e6dffff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -322,7 +321,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosDiamante[0]}/1000
                             </Text>
                         </View>
                         
@@ -335,8 +334,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosDiamante[1]/50}
+                                color="#1e6dffff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -345,7 +344,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosDiamante[0]}/1000
                             </Text>
                         </View>
                         
@@ -358,8 +357,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosDiamante[2]/10}
+                                color="#1e6dffff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -368,7 +367,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosDiamante[1]}/50
                             </Text>
                         </View>
                         
@@ -383,8 +382,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosDiamante[3]/50000}
+                                color="#1e6dffff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -393,7 +392,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosDiamante[3]}/50000
                             </Text>
                         </View>
 
@@ -414,8 +413,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosEsmeralda[0]/2500}
+                                color="#09ff00ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -424,7 +423,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosEsmeralda[0]}/2500
                             </Text>
                         </View>
                         
@@ -437,8 +436,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosEsmeralda[1]/100}
+                                color="#09ff00ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -447,7 +446,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosEsmeralda[0]}/100
                             </Text>
                         </View>
                         
@@ -460,8 +459,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosEsmeralda[2]/20}
+                                color="#09ff00ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -470,7 +469,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosEsmeralda[2]}/20
                             </Text>
                         </View>
                         
@@ -483,8 +482,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosEsmeralda[3]/1}
+                                color="#09ff00ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -492,8 +491,8 @@ export default function Ranking({navigation, route}: Props) {
                                 borderRadius={5}
                                 />
                             </View>
-                            <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                            <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
+                                {passosEsmeralda[3]}/1
                             </Text>
                         </View>
                         
@@ -508,8 +507,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosEsmeralda[4]/250000}
+                                color="#09ff00ff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -518,7 +517,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosEsmeralda[4]}/250000
                             </Text>
                         </View>
 
@@ -539,8 +538,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosCS[0]/5000}
+                                color="#c8089eff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -549,7 +548,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosCS[0]}/5000
                             </Text>
                         </View>
                         
@@ -562,8 +561,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosCS[1]/200}
+                                color="#c8089eff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -572,7 +571,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosCS[1]}/200
                             </Text>
                         </View>
                         
@@ -585,8 +584,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosCS[2]/30}
+                                color="#c8089eff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -595,7 +594,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
-                                40/100
+                                {passosCS[2]}/30
                             </Text>
                         </View>
                         
@@ -608,8 +607,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosCS[3]/3}
+                                color="#c8089eff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -617,8 +616,8 @@ export default function Ranking({navigation, route}: Props) {
                                 borderRadius={5}
                                 />
                             </View>
-                            <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                            <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[38px]">
+                                {passosCS[3]}/3
                             </Text>
                         </View>
                         
@@ -633,8 +632,8 @@ export default function Ranking({navigation, route}: Props) {
                                 </Text>
                                 <Progress.Bar
                                 className='self-start'
-                                progress={0.4}
-                                color="#eca261ff"
+                                progress={passosCS[4]/1000000}
+                                color="#c8089eff"
                                 unfilledColor="#FFF3C4"
                                 width={260}
                                 height={6}
@@ -643,7 +642,7 @@ export default function Ranking({navigation, route}: Props) {
                                 />
                             </View>
                             <Text className="font-bold text-[#54341cff] absolute right-[22px] top-[22px]">
-                                40/100
+                                {passosCS[4]}/1000000
                             </Text>
                         </View>
 

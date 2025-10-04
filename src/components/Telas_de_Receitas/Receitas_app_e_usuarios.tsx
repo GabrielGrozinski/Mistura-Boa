@@ -1,23 +1,22 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { View, Text, ScrollView, StatusBar, TouchableOpacity, Image, ImageBackground } from 'react-native';
-import { TipoDeAlimentacao } from '../../Perfil/buscaDados';
+import { TipoDeAlimentacao } from '../Perfil/buscaDados';
 import { getApp } from '@react-native-firebase/app';
 import auth, {onAuthStateChanged} from '@react-native-firebase/auth';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { TiposRotas } from '../../../navigation/types';
+import type { TiposRotas } from '../../navigation/types';
 import { Base64 } from 'js-base64';
-import Barra from '../../Barra/Barra';
+import Barra from '../Barra/Barra';
 
 
-type Props = NativeStackScreenProps<TiposRotas, 'ReceitasApp'>
+type Props = NativeStackScreenProps<TiposRotas, 'Receitas'>
 
-const app = getApp()
-const authInstance = auth(app)
+const app = getApp();
+const authInstance = auth(app);
 
-export default function ReceitasApp({navigation}: Props) {
+export default function Receitas({navigation}: Props) {
     const [card, setCard] = useState<any>([]);
     const [tipo_de_alimentacao, setTipo_de_Alimentacao] = useState('');
-    const [timer, setTimer] = useState('Qualquer tempo ⏱️');
  
     useEffect(() => { 
           
@@ -42,26 +41,55 @@ export default function ReceitasApp({navigation}: Props) {
           id: 1,
           category: 'CARNÍVORO',
           title: 'Você come de tudo um pouco? Então aqui é o seu lugar!',
-          image: require('../../../../assets/Receitas/carnivora.png'),
+          image: require('../../../assets/Receitas/carnivora.png'),
           tipoCard: tipo_de_alimentacao == 'carnivoro' ? true : false,
           tipoCardId: 'ReceitasCarnivoraAppBASE',
-        
+          tipoReceita: ''
         },
         {
           id: 2,
-          category: 'VEGETARIANO',
-          title: 'Não come carne, mas quer aproveitar receitas incríveis? Esse é o ideal!',
-          image: require('../../../../assets/Receitas/vegetariano.png'),
-          tipoCard: tipo_de_alimentacao == 'vegetariano' ? true : false,
-          tipoCardId: 'ReceitasVegetarianaAppBASE',
+          category: 'CARNÍVORO',
+          title: 'Você come de tudo um pouco? Então aqui é o seu lugar!',
+          image: require('../../../assets/Receitas/carnivoraUsuario.png'),
+          tipoCard: tipo_de_alimentacao == 'carnivoro' ? true : false,
+          tipoCardId: 'ReceitasCarnivoraUsuariosBASE',
+          tipoReceita: 'Receita dos Usuarios'
         },
         {
           id: 3,
+          category: 'VEGETARIANO',
+          title: 'Não come carne, mas quer aproveitar receitas incríveis? Esse é o ideal!',
+          image: require('../../../assets/Receitas/vegetariano.png'),
+          tipoCard: tipo_de_alimentacao == 'vegetariano' ? true : false,
+          tipoCardId: 'ReceitasVegetarianaAppBASE',
+          tipoReceita: ''
+        },
+        {
+          id: 4,
+          category: 'VEGETARIANO',
+          title: 'Não come carne, mas quer aproveitar receitas incríveis? Esse é o ideal!',
+          image: require('../../../assets/Receitas/vegetarianoUsuario.png'),
+          tipoCard: tipo_de_alimentacao == 'vegetariano' ? true : false,
+          tipoCardId: 'ReceitasVegetarianaUsuariosBASE',
+          tipoReceita: 'Receita dos Usuarios'
+        },
+        {
+          id: 5,
           category: 'VEGANO',
           title: 'Quer continuar comendo comidas deliciosas sem nenhuma presença animal? Essa é a melhor opção!',
-          image: require('../../../../assets/Receitas/vegano.png'),
+          image: require('../../../assets/Receitas/vegano.png'),
           tipoCard: tipo_de_alimentacao == 'vegano' ? true : false,
           tipoCardId: 'ReceitasVeganaAppBASE',
+          tipoReceita: ''
+        },
+        {
+          id: 6,
+          category: 'VEGANO',
+          title: 'Quer continuar comendo comidas deliciosas sem nenhuma presença animal? Essa é a melhor opção!',
+          image: require('../../../assets/Receitas/veganoUsuario.png'),
+          tipoCard: tipo_de_alimentacao == 'vegano' ? true : false,
+          tipoCardId: 'ReceitasVeganaUsuariosBASE',
+          tipoReceita: 'Receita dos Usuarios'
         },
       ];
       setCard(cards);
@@ -73,14 +101,11 @@ export default function ReceitasApp({navigation}: Props) {
     <ImageBackground
     className='flex-1'
     resizeMode='cover'
-    source={require('../../../../assets/TelaPrincipal/capa2.png')}>
+    source={require('../../../assets/TelaPrincipal/capa2.png')}>
 
       <StatusBar hidden />
-      <Text className="text-[28px] font-bold text-[#A83232] text-center my-[18px] tracking-[1px]">
-        Receitas do Aplicativo
-      </Text>
       
-      <View className='pb-[140px]'>
+      <View className='pb-[80px] mt-6'>
         <ScrollView className="grow p-4">
           {card.map((card: any) => (
             <TouchableOpacity
@@ -103,6 +128,14 @@ export default function ReceitasApp({navigation}: Props) {
                       </Text>
                     </View>
 
+                    {card.tipoReceita && (
+                      <View className="bg-purple-200 rounded px-[6px] py-[2px]">
+                        <Text className="text-[12px] font-semibold text-[#6B4D00]">
+                          {card.tipoReceita}
+                        </Text>
+                      </View>
+                    )}
+ 
                     {card.tipoCard && (
                       <View className="bg-[#D6F5C6] rounded px-[6px] py-[2px]">
                         <Text className="text-[12px] font-semibold text-[#6B4D00]">
