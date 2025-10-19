@@ -51,3 +51,15 @@ export async function ReceberImagemEscolhida(req, res, next) {
         next(erro);
     };
 };
+
+{/* 
+    
+    Funções de backend em Node.js/Express para manipulação de imagens usando Mongoose/ODM: inclui EnviarImagem que recebe id, tipo, 
+contentType e image (em base64) no corpo da requisição, valida se todos os campos foram enviados, converte image em Buffer, 
+verifica duplicidade no banco, cria e salva uma nova imagem e retorna status 200.
+
+    ReceberImagemEscolhida que recebe id e tipo como query, valida presença, busca imagem correspondente no banco, retorna erro 404 
+se não encontrada e, se encontrada, define contentType e retorna imageUrl em formato base64 no JSON, com tratamento de erros 
+via next.    
+    
+*/}

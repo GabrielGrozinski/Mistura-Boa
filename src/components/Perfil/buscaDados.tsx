@@ -301,3 +301,18 @@ const api = axios.create({
       };
     };
     // Busca o ranking atual e os passos.
+
+{/* 
+  
+  Módulo responsável por buscar e atualizar dados dos usuários no Firebase,
+além de integrar com a API local via Axios. Ele reúne funções que tratam de
+informações de perfil, progresso e conquistas dentro do app.
+
+  As funções acessam dados como tipo de alimentação, dias logados, XP, receitas,
+seguidores e ranking. Também verificam requisitos para desbloquear cozinheiros
+e atualizam o nível atual do usuário (de Bronze até Chefe Supremo).
+
+  A estrutura é direta e modular, permitindo fácil expansão — novas funções podem
+ser adicionadas seguindo o mesmo padrão de acesso ao banco e retorno de valores.
+  
+*/}

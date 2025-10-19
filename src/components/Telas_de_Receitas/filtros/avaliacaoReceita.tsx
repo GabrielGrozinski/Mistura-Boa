@@ -246,6 +246,16 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
 
     </View>
   );
+
+{/* 
+  
+  Componente AvaliacaoReceita em React Native/TypeScript que exibe estrelas para avaliação de receitas, verifica se o usuário já 
+avaliou usando Firebase Realtime Database, permite avaliar receita apenas uma vez, calcula média e contador de avaliações, 
+atualiza avaliação tanto no nó principal da receita quanto no nó do usuário que criou a receita, integra funções auxiliares para 
+passar XP, atualizar conquistas e ranking, usa Pressable e Ionicons para renderizar estrelas interativas, gerencia estado local 
+de estrelas e avaliação, e trata receitas do app e de usuários.
+  
+*/}
 };
 
 export default AvaliacaoReceita;

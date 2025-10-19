@@ -79,4 +79,18 @@ export default function ReceitasCarnivoraUsuariosBASE({navigation}: Props) {
 
     </ImageBackground>
   );
+  
+{/* 
+  
+  ReceitasCarnivoraUsuariosBASE em React Native/TypeScript que exibe receitas enviadas por usuários do aplicativo com 
+  ImageBackground de fundo, inclui título principal com estilo e sombra de texto, barra de busca com TextInput e ícone de lupa 
+  (Ionicons), categorias de receitas exibidas com Pressable contendo Image de cada categoria, ScrollView horizontal mostrando 
+  imagens de receitas em miniatura com borda e cantos arredondados, botão Pressable que leva à tela completa de receitas dos 
+  usuários, e barra inferior fixa (Barra) para navegação; a tela é estática, não depende de Firebase ou estado dinâmico, focada 
+  apenas na apresentação visual das categorias e receitas.
+
+  Observações: além das categorias de receitas mostradas, é possível adicionar outras categorias, como receitas picantes, receitas
+quentes, receitas frias e etc.
+  
+*/}
 };

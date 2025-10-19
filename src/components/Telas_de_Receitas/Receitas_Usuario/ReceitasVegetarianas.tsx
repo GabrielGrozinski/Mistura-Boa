@@ -249,4 +249,10 @@ export default function ReceitasVegetarianaUsuarios({navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Segue a mesma lógica das receitas carnívoras, mas com receitas vegetarianas.
+ 
+*/} 
 };

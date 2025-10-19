@@ -159,4 +159,16 @@ export default function Receitas({navigation}: Props) {
       </View>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela Receitas em React Native/TypeScript que busca tipo de alimentação do usuário via Firebase Auth, define cards de receitas 
+(carnívoro, vegetariano, vegano) com base na escolha do usuário, exibe esses cards em ScrollView com Image, Text e TouchableOpacity, 
+e permite navegar para telas específicas de cada card, usando ImageBackground e Barra inferior fixa.
+
+  Sugestões: além das receitas padrões (carnívora, vegetariana e vegana), receitas comemorativas, como receitas de natal, halloween,
+páscoa e outras podiam ser introduzidas, principalmente em datas próximas a tais comemorações. Outra possibilidade são as receitas 
+exclusivas, como, por exemplo, receitas que só são acessíveis se você usar o personagens Poseidon.
+
+*/}
 };

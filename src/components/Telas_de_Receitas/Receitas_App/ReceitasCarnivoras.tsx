@@ -421,4 +421,15 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela ReceitasCarnivoraApp em React Native/TypeScript que exibe lista de receitas carnívoras, integra Firebase Realtime Database e 
+Auth para buscar receitas e favoritos do usuário, cria nós no banco caso não existam, permite favoritar receitas com verificação de
+duplicidade, aplica filtros e ordenações (melhores receitas, calorias, proteína, tempo, dificuldade), utiliza ScrollView e 
+ImageBackground para exibir as receitas com LinearGradient, exibe informações básicas 
+(imagem, título, descrição, tempo, dificuldade), controla estados de loading, gerencia email do usuário em Base64, conecta filtros 
+com Redux e navega para tela individual de receita ao tocar em cada item.
+ 
+*/}
 };

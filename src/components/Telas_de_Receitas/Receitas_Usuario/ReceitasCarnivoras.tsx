@@ -258,4 +258,21 @@ export default function ReceitasCarnivoraUsuarios({navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela ReceitasCarnivoraUsuarios em React Native/TypeScript que exibe receitas enviadas por usuários do aplicativo, inclui 
+ImageBackground de fundo, StatusBar oculta, título principal com estilo e componente de filtro personalizado (Filtrar), utiliza 
+Firebase Realtime Database para buscar as receitas dos usuários (`ReceitasUsuarios/carnivoro`) e atualiza o estado local 
+(`recipesCarnivoras`), implementa autenticação com Firebase Auth e codifica o email do usuário em Base64 para acessar nós de 
+receitas favoritas, possui funções para buscar receitas favoritas, adicionar uma receita aos favoritos 
+(com verificação de duplicatas) e atualizar dinamicamente o estado das receitas favoritas, oferece ordenação das receitas por 
+critérios como “Melhores Receitas”, “Calorias”, “Ganhar Músculo”, “Emagrecer”, “Tempo de Preparo” e “Facilidade”. 
+
+  Renderiza cada receita em TouchableOpacity com LinearGradient de fundo, imagem da receita, título, descrição, tempo de preparo e dificuldade, 
+ícone de coração (Ionicons) indica se a receita está favoritada, permitindo adicionar aos favoritos com animação de sobreposição, 
+exibe LoaderCompleto enquanto receitas ou favoritos estão carregando, e ScrollView vertical permite rolagem de todas as receitas 
+filtradas e ordenadas dinamicamente.
+  
+*/}
 };

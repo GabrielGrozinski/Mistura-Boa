@@ -350,5 +350,14 @@ export default function AdicionarAmigos({navigation, route}: Props) {
     </View>
   </View>
   );
+
+{/* 
+  
+  Tela AdicionarAmigos em React Native/TypeScript que busca usuários no Firebase, mostra listas de seguindo/seguidores, permite 
+seguir usuários, atualiza contadores e navega para perfis, usando Base64 para emails, ScrollView/TouchableOpacity/Image para layout, 
+Ionicons para ícones e LoaderCompleto para loading.  O componente mantém estados locais para controlar: o email do usuário atual, 
+o carregamento da tela, a aba ativa (seguindo ou seguidores), listas de seguidores, seguindo e usuários disponíveis para seguir. 
+  
+*/}
 };
              

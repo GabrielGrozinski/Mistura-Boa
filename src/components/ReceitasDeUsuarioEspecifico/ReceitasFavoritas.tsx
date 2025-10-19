@@ -207,4 +207,12 @@ export default function ReceitasFavoritas({route, navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela ReceitasFavoritas em React Native/TypeScript que busca receitas favoritas do usuário no Firebase, aplica filtros 
+(calorias, proteína, tempo, dificuldade, refeição), mostra lista de receitas com LinearGradient, Image e Text, permite navegar 
+para detalhes da receita, usa LoaderCompleto enquanto carrega e integra filtros via Redux/Filtrar.
+
+*/}
 };

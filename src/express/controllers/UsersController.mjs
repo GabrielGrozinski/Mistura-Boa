@@ -54,3 +54,18 @@ export async function alterar_DiasLogados_e_UltimoLogin(req, res, next) {
         next(erro);
     };
 };
+
+{/* 
+    
+    Funções de backend em Node.js/Express que gerenciam usuários usando Mongoose/ODM e Dayjs: inclui CriarUsuario que recebe email 
+no corpo da requisição, define diasLogados como 1, registra ultimoLogin e criadoEm com a data atual (início do dia) e salva um novo 
+usuário no banco retornando status 201.
+
+    GetUsuario que busca usuário por email passado como query, valida entrada e retorna erro 400 se não fornecido ou 404 se não 
+encontrado, ou retorna o usuário encontrado.
+
+    Alterar_DiasLogados_e_UltimoLogin que recebe email por query, valida e busca usuário, calcula diferença de dias entre hoje 
+e ultimoLogin, reseta diasLogados para 1 se diferença >1, incrementa em 1 se diferença =1, atualiza ultimoLogin para hoje, 
+salva e retorna o usuário atualizado, com tratamento de erros via next.   
+    
+*/}

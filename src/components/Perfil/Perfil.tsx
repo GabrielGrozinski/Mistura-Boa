@@ -202,7 +202,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
   // O status_usuario serve para definir se o perfil visitado é do próprio usuário, de um usuário que ele segue,
   // de um usuário que o segue ou de um usuário que nenhum dos dois se seguem.
   const [state_status_usuario, setStatus_Usuario] = useState<any>(status_usuario);
-  // Transforma o status_usuario em uma variável de estado.
+  // Transforma o status_usuario em uma variável useState.
 
   let { usuarioAtual } = route.params;
   if (!usuarioAtual) usuarioAtual = emailUserAtual;
@@ -958,5 +958,23 @@ export default function PerfilUsuario({route, navigation}: Props) {
         </View>
     </View>
   );
+
+{/* 
+  
+  Componente Perfil é uma tela React Native/TypeScript que representa o perfil completo de um usuário dentro do aplicativo. Realiza 
+diversas integrações com Firebase Realtime Database para buscar e atualizar informações como nome, imagem, XP, ranking, conquistas, 
+receitas e relação de seguidores, além de usar Redux para sincronizar dados globais e gerenciar estados locais. Controla o modo 
+imersivo, atualiza o login do usuário e exibe dinamicamente o progresso de cada seção do perfil. 
+
+  A UI combina cards animados, modais de conquistas e cozinheiros desbloqueáveis, botões de seguir/deixar de seguir e navegação 
+para outras telas (como Receitas e Conquistas). Serve como um centro visual e funcional do ecossistema social do app, conectando 
+estatísticas, progressos e interações entre os usuários, além de ser possível mostrar o perfil do usuário logado ou outros perfis.
+
+  Observações: é possível inserir, em algum lugar da tela, a informação do último login do usuário, que já está salva mas não é
+usada; é sempre plausível adicionar ou remover algumas informações conforme o aplciativo se desenvolve e atualiza; a ação de seguir
+usuário, adicionar amigos, seguir de volta e seguindo é controlada pelo status_usuario, mas o ideal é fazer esse controle pelo
+Firebase. Se eu fosse levar o app à diante, com certeza mudaria o gerenciamento de estado.
+
+*/}
 };
  

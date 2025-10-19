@@ -818,4 +818,15 @@ export default function Receita({ route, navigation }: Props) {
         </View>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela Receita em React Native/TypeScript que gerencia temporizador, comentários e avaliações de uma receita, integra Firebase 
+Realtime Database e Auth para buscar dados do usuário, permite adicionar comentários e concluir receitas, exibe informações da 
+receita (ingredientes, passos, autor, tempo, média de avaliações) com ImageBackground, LinearGradient e ScrollView, controla 
+modais de comentário/avaliação e inclui barra inferior fixa com Redux.
+
+  Observações: só é possível acessar os comentários sendo ranking Bronze; não
+
+*/}
 };

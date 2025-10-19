@@ -338,7 +338,6 @@ export default function ReceitasVegetarianaApp({navigation}: Props) {
     <LoaderCompleto/>
   );
 
-
   return (
     <ImageBackground resizeMode='cover' source={require('../../../../assets/TelaPrincipal/capa2.png')} className="flex-1">
       <StatusBar hidden />
@@ -438,4 +437,10 @@ export default function ReceitasVegetarianaApp({navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Segue a mesma lógica das receitas carnívoras, mas com receitas vegetarianas.
+ 
+*/} 
 };
