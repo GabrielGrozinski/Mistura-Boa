@@ -1,7 +1,6 @@
 import { getDatabase, ref, set, get, update} from '@react-native-firebase/database';
 import { getApp } from '@react-native-firebase/app';
 import axios from 'axios';
-import _ from 'lodash';
 
 const app = getApp();
 const db = getDatabase(app);
@@ -108,13 +107,14 @@ const api = axios.create({
       console.log('Erro em PassarXP', erro);
     };
   };
+  // Função responsável por aumentar o xp do usuário.
 
   export const verificarConquistas_e_Ranking = async (email: string): Promise<void> => {
     // Função que atualiza as conquistas e rankings do usuário que criou a receita.
     try {
       const refCarnivoro = ref(db, `usuarios/${email}/receitas/carnivoro`);
       const snapshotCarnivoro = await get(refCarnivoro);
-      const dadosCarnivoro = snapshotCarnivoro.exists() ? snapshotCarnivoro.val().slice(1) : 0;
+      const dadosCarnivoro = snapshotCarnivoro.exists() ? snapshotCarnivoro.val().filter(Boolean) : 0;
       const somenteContador_car = snapshotCarnivoro.exists() ? dadosCarnivoro.map((receita: any) => receita.avaliacao.contador) : 0;
       const somaDosContadoresDeCarnivoro = snapshotCarnivoro.exists() ? somenteContador_car.reduce((acumulador: number, valorAtual: number) => 
       acumulador + valorAtual, 0) : 0;
@@ -122,7 +122,7 @@ const api = axios.create({
 
       const refVegano = ref(db, `usuarios/${email}/receitas/vegano`);
       const snapshotVegano = await get(refVegano);
-      const dadosVegano = snapshotVegano.exists() ? snapshotVegano.val().slice(1) : 0;
+      const dadosVegano = snapshotVegano.exists() ? snapshotVegano.val().filter(Boolean) : 0;
       const somenteContador_veg = snapshotVegano.exists() ? dadosVegano.map((receita: any) => receita.avaliacao.contador) : 0;
       const somaDosContadoresDeVegano = snapshotVegano.exists() ? somenteContador_veg.reduce((acumulador: number, valorAtual: number) => 
       acumulador + valorAtual, 0) : 0;
@@ -130,7 +130,7 @@ const api = axios.create({
       
       const refVegetariano = ref(db, `usuarios/${email}/receitas/vegetariano`);
       const snapshotVegetariano = await get(refVegetariano);
-      const dadosVegetariano = snapshotVegetariano.exists() ? snapshotVegetariano.val().slice(1) : 0;
+      const dadosVegetariano = snapshotVegetariano.exists() ? snapshotVegetariano.val().filter(Boolean) : 0;
       const somenteContador_vege = snapshotVegetariano.exists() ? dadosVegetariano.map((receita: any) => receita.avaliacao.contador) : 0;
       const somaDosContadoresDeVegetariano = snapshotVegetariano.exists() ? somenteContador_vege.reduce((acumulador: number, valorAtual: number) => 
       acumulador + valorAtual, 0) : 0;
@@ -241,13 +241,14 @@ const api = axios.create({
       console.log('Erro em verificarConquistas_e_Ranking', erro);
     };
   };
+  // Função que verifica as conquistas e rankings referentes a avaliação de uma receita.
 
   export const verificaNotaReceita = async (email: string): Promise<void> => {
     // Função que analisa as notas das receitas do usuário.
     try {
       const refReceitasCarnivoras = ref(db, `usuarios/${email}/receitas/carnivoro`);
       const snapshotCarnivoro = await get(refReceitasCarnivoras);
-      const dadosCarnivoro = snapshotCarnivoro.val().slice(1);
+      const dadosCarnivoro = snapshotCarnivoro.val().filter(Boolean);
       const carnivoro_nota_4 = dadosCarnivoro.filter((receita: any) => receita.avaliacao.media >= 4);
       // Pega todas as receitas com média maior ou igual a 4.
 
@@ -266,7 +267,7 @@ const api = axios.create({
       // Faz o mesmo, mas com receitas veganas.
       const refReceitasVeganas = ref(db, `usuarios/${email}/receitas/vegano`);
       const snapshotVeganas = await get(refReceitasVeganas);
-      const dadosVeganas = snapshotVeganas.exists() ? snapshotVeganas.val().slice(1) : [];
+      const dadosVeganas = snapshotVeganas.exists() ? snapshotVeganas.val().filter(Boolean) : [];
       const vegano_nota_4 = dadosVeganas.filter((receita: any) => receita.avaliacao.media >= 4);
       const vegano_10_avaliacoes = vegano_nota_4.filter((receita: any) => receita.avaliacao.contador >= 10);
       const vegano_50_avaliacoes = vegano_nota_4.filter((receita: any) => receita.avaliacao.contador >= 50);
@@ -276,7 +277,7 @@ const api = axios.create({
       // Faz o mesmo, mas com receitas vegetarianas.
       const refReceitasVegetarianas = ref(db, `usuarios/${email}/receitas/vegetariano`);
       const snapshotVegetarianas = await get(refReceitasVegetarianas);
-      const dadosVegetarianas = snapshotVegetarianas.exists() ? snapshotVegetarianas.val().slice(1) : [];
+      const dadosVegetarianas = snapshotVegetarianas.exists() ? snapshotVegetarianas.val().filter(Boolean) : [];
       const vegetariano_nota_4 = dadosVegetarianas.filter((receita: any) => receita.avaliacao.media >= 4);
       const vegetariano_10_avaliacoes = vegetariano_nota_4.filter((receita: any) => receita.avaliacao.contador >= 10);
       const vegetariano_50_avaliacoes = vegetariano_nota_4.filter((receita: any) => receita.avaliacao.contador >= 50);
@@ -394,9 +395,9 @@ const api = axios.create({
       console.log('Erro em verificaNotaReceita', erro);
     };
   };
+  // Função que verifica as conquistas e rankings referentas as notas de uma receita.
 
   export const UnirReceita_ao_Usuario = async (receita: any, email: string) => {
-    // Função responsável por unir a receita criada ao usuário que a criou.
     // A função é separada em muitas partes.
     
     // Verifica Receita
@@ -560,3 +561,19 @@ const api = axios.create({
     };
 
   };
+  // Função responsável por unir a receita criada ao usuário que a criou.
+  
+{/* 
+  
+  Arquivo inserirDados fornece funções utilitárias que operam no Realtime Database do Firebase: 
+1: PassarXP (incrementa XP do usuário e atualiza segmentos de ranking conforme thresholds). 
+2: verificarConquistas_e_Ranking (calcula somas de avaliações de receitas e atualiza conquistas/rankings, 
+chamando PassarXP quando aplicável).
+3: verificaNotaReceita (analisa notas/contadores das receitas para desbloquear conquistas de qualidade).
+4: UnirReceita_ao_Usuario (incrementa o contador de receitas do usuário, grava a nova receita e atualiza conquistas/ranking 
+relacionados). 
+
+  Todas usam get/set/update/ref do @react-native-firebase, fazem várias leituras e escritas sequenciais com awaits e tratam 
+erros por console.log.
+  
+*/}

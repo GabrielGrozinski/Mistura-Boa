@@ -32,9 +32,9 @@ export default function ReceitasCriadas({route, navigation}: Props) {
       console.error('Usuário não autenticado');
       return;
     };
-    // Função para buscar as receitas criadas.
     buscaReceita();
   }, [usuarioAtual]);
+  // Chama a função buscaReceita.
 
   async function buscaReceita() {
     setLoadingBuscaReceita(false);
@@ -50,6 +50,7 @@ export default function ReceitasCriadas({route, navigation}: Props) {
       console.log('Erro ao buscar receitas criadas', erro);
     };
   };
+  // Função que busca as receitas criadas.
 
   const corDoFiltro = "#ff2323ff";
 

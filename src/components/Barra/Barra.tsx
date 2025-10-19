@@ -80,6 +80,7 @@ export default function Barra() {
         });
         return () => user();
     }, [authInstance]);
+    // UseEffect que recupera o email do usuário.
 
     function redirecionarUser(telaAtual: number) {
         dispatch(modificaBarra(telaAtual));
@@ -92,9 +93,11 @@ export default function Barra() {
         else if (telas[telaAtual].proximaTela === "DietaCriada") return;
         else if (telas[telaAtual].proximaTela === "Receita") return;
         else if (telas[telaAtual].proximaTela === "ReceitasFavoritas") return;
+        else if (telas[telaAtual].proximaTela === "ReceitasCriadas") return;
         else
         navigation.navigate(telas[telaAtual].proximaTela);
     };
+    // Função que redireciona o usuário para a tela que ele clicou.
 
     return (
         <ImageBackground
@@ -119,4 +122,19 @@ export default function Barra() {
             </ScrollView>
         </ImageBackground>  
     );
+
+{/* 
+    Componente funcional React Native que renderiza uma barra horizontal de ícones dentro de um ImageBackground e permite
+scroll horizontal. Cada ícone é um Pressable que chama redirecionarUser(index). 
+    
+    A função despacha modificaBarra (Redux) e navega para a rota correspondente (react-navigation), passando parâmetros
+quando necessário. Usa Firebase Auth (onAuthStateChanged) para obter o e‑mail do usuário atual, codifica em Base64 e armazena 
+em estado local (usuarioAtual); a subscrição é limpa no return do useEffect.
+    
+    Lista de telas/ícones definida localmente com imagem (require), dimensões e rota destino; algumas rotas são tratadas 
+como noop (não navegam).
+    
+    Aplica estilo de item ativo via estado global (borda azul)
+    
+*/}
 };

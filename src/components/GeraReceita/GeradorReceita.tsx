@@ -67,7 +67,7 @@ export default function GeradorReceita({route, navigation}: Props) {
 
         // Por exemplo:
         const recipe = {
-            email: null, // O email não é necessário aqui, pois a receita não será salva no banco de dados geral do app.
+            email: '', // O email não é necessário aqui, pois a receita não será salva no banco de dados geral do app.
             id: receitasGeradas + 1, // Ainda importante, pois a receita será salva no banco de dados do usuário.
             title: 'Bife Grelhado com Alho', // Título da receita gerada pela própria I.A.
             description: 'Suculento bife temperado com alho e ervas.', // Descrição da receita.
@@ -76,30 +76,36 @@ export default function GeradorReceita({route, navigation}: Props) {
             image: null, // Como é uma receita gerada, não teria imagem, mas é possível pedir para a I.A gerar uma imagem também.
             autor: 'Hamburgão', // O aplicativo tem um nome fictício para a I.A, no caso, um para cada tipo de receita.
             tipo: 'carnivoro', // Tipo de receita, que pode ser: carnivoro, vegetariano, vegano ou fitness.
+            refeicao: 'prato_principal', // Exemplo de refeição, pode ser ajustado conforme a lógica.
             ingredientes: [
-            { ing: 'Batata', quantidade: '3', },
-            { ing: 'Carne', quantidade: '1', },
-            { ing: 'Macarrão', quantidade: '1', },
-            { ing: 'Queijo', quantidade: '1', },
-            ], // Ingredientes da receita gerada, que são dinâmicos, ou seja, mudam conforme o usuário digita-os.
+                { ing: 'Batata', quantidade: '3', medida: 'unidade', id: 1 }, // Ingredientes da receita gerada, que são dinâmicos, ou seja, mudam conforme o usuário digita-os.
+                { ing: 'Carne', quantidade: '1', medida: 'unidade', id: 2 },
+                { ing: 'Macarrão', quantidade: '1', medida: 'unidade', id: 3 },
+                { ing: 'Queijo', quantidade: '1', medida: 'unidade', id: 4 },
+            ],
             passos: [
-            'Cortar a carne',
-            'Temperar com sal e pimenta',
-            'Grelhar a carne em uma frigideira quente',
-            'Jogar ela no macarrão com queijo',
-            'Servir com batatas fritas',
-            ], // Passos da receita, que a própria I.A gera.
+                'Cortar a carne', // Passos da receita, que a própria I.A gera.
+                'Temperar com sal e pimenta',
+                'Grelhar a carne em uma frigideira quente',
+                'Jogar ela no macarrão com queijo',
+                'Servir com batatas fritas',
+            ],
             avaliacao: null, // Como somente o usuário pode ver a receita, ela não possui avaliação
-        
+            calorias: 0, // Pode ser gerado pela I.A ou calculado depois
+            peso: 0, // Pode ser gerado pela I.A ou calculado depois
+            proteina: 0, // Pode ser gerado pela I.A ou calculado depois
+         
         // Obs: Na dificuldade, como ela é separada por níveis específicos, eu limitaria a I.A a retornar sempre um dos níveis já determinados.
         // Obs: Eu usaria a mesma lógica de tempo que usei na tela de criação de receitas, onde o tempo é limitado entre 15 minutos e 2 horas+.
-        // Obs: A I.A poderia gerar uma receita com mais ou menos passos, dependendo do que o usuário digitar.
+        // Obs: A I.A poderia gerar uma receita com mais ou menos passos, dependendo do que o usuário digitar.   
         };
+
         receitaDB(recipe);
         } catch (error) {
             console.log('Erro ao gerar receita:', error);
         };
     };
+    // Função que carregaria a lógica da receita criada pela I.A.
 
     const receitaDB = async (recipe: any): Promise<void> => {
         try {
@@ -137,6 +143,7 @@ export default function GeradorReceita({route, navigation}: Props) {
             setErro('Erro ao salvar receita. Tente novamente.');
         };
     };
+    // Verifica se já atingiu a cota de receitas geradas no Firebase.
 
     const verificaConquista = async (receitasGeradas: number): Promise<void> => {
         // Atualiza as conquistas com base na quantidade de receitas geradas.
@@ -176,6 +183,7 @@ export default function GeradorReceita({route, navigation}: Props) {
                 break;
         };
     };
+    // Função que verifica as conquistas de receitas geradas.
 
     return (
         <View
@@ -251,4 +259,19 @@ export default function GeradorReceita({route, navigation}: Props) {
             </View>
         </View>
     );
+
+{/* 
+    
+    Componente GeradorReceita é uma tela React Native/TypeScript que permite ao usuário escolher um "cozinheiro" (avatar), 
+digitar ingredientes e solicitar a geração de uma receita; no fluxo atual a "I.A." é apenas simulada, isso é, não há 
+integração real com modelo de geração. O componente lê e escreve dados no Realtime Database do Firebase: verifica e decrementa 
+um limite diário de receitas geradas, incrementa receitasGeradas do usuário, salva a receita em 
+usuarios/{usuarioAtual}/receitasGeradasUser e atualiza conquistas (verificaConquista). 
+
+    A UI usa Modal para seleção de cozinheiro, LinearGradient, inputs e um botão para gerar, exibindo mensagens de erro via 
+estado local; erros são logados no console e mensagens simples mostradas ao usuário. 
+
+    Observações rápidas: a lógica de geração é mock (sem I.A.) e a UI está prototípica. 
+    
+*/}
 };

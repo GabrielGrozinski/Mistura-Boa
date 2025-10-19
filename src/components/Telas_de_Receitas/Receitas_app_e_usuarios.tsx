@@ -18,8 +18,7 @@ export default function Receitas({navigation}: Props) {
     const [card, setCard] = useState<any>([]);
     const [tipo_de_alimentacao, setTipo_de_Alimentacao] = useState('');
  
-    useEffect(() => { 
-          
+    useEffect(() => {       
       const user = onAuthStateChanged(authInstance, async usuario => {
         if (!usuario || !usuario.email) return;
         const usuarioAtual = Base64.encode(usuario.email)
@@ -28,8 +27,8 @@ export default function Receitas({navigation}: Props) {
       });
     
       return () => user();
-      // Busca o tipo de alimentação do usuário (carnívoro, vegano, vegetariano).
     }, [authInstance]);
+    // Busca o tipo de alimentação do usuário (carnívoro, vegano, vegetariano).
 
     useEffect(() => {
       // Define os cards de receitas.
@@ -95,6 +94,7 @@ export default function Receitas({navigation}: Props) {
       setCard(cards);
 
     }, [tipo_de_alimentacao]);
+    // Define os cards das receitas.
 
 
   return (

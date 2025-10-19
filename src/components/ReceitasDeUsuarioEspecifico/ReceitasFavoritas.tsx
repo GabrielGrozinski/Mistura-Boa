@@ -34,9 +34,9 @@ export default function ReceitasFavoritas({route, navigation}: Props) {
       console.error('Usuário não autenticado');
       return;
     };
-    // Função para buscar as receitas favoritadas.
     buscaReceita();
   }, [usuarioAtual]);
+  // Chama a função buscaReceita.
 
   async function buscaReceita() {
     setLoadingBuscaReceita(false);
@@ -52,6 +52,7 @@ export default function ReceitasFavoritas({route, navigation}: Props) {
       console.log('Erro ao buscar receitas favoritas', erro);
     };
   };
+  // Função para buscar as receitas favoritadas.
   
   async function removerReceitaFavorita(): Promise<void> {
     if (!usuarioAtual) return;
@@ -93,6 +94,7 @@ export default function ReceitasFavoritas({route, navigation}: Props) {
       Alert.alert("Erro", "Não foi possível remover a receita.");
     };
   };
+  // Função que remove receitas que o usuário escolher.
 
   const corDoFiltro = "#23d3ffff";
 
@@ -105,6 +107,7 @@ export default function ReceitasFavoritas({route, navigation}: Props) {
     // Adiciona a receita pressionada.
 
   };
+  // Função que permite o usuário selecionar quais receitas quer remover.
 
   if (!loadingApagaReceita || !loadingBuscaReceita) return (
     <LoaderCompleto/>

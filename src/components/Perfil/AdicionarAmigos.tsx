@@ -20,23 +20,14 @@ export default function AdicionarAmigos({navigation, route}: Props) {
   const [emailUserAtual, setEmailUserAtual] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   
-  let { usuarioAtual, nome } = route.params;
+  let { usuarioAtual, nome, AdicionarAmigos_ou_Ver_Seguidores } = route.params;
   if (!usuarioAtual) usuarioAtual = emailUserAtual;
 
   const [abaAtiva, setAbaAtiva] = useState('seguindo');
-  const [users, setUsers] = useState<any>([]);
+  const [Seguidores, setSeguidores] = useState<any>([]);
   const [Seguindo, setSeguindo] = useState<any>([]);
-  const [imagem, setImagem] = useState([
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-    require('../../../assets/Perfil/user.jpg'),
-  ]);
+  const [Users, setUsers] = useState<any>([]);
+
 
   useEffect(() => {
     // Função que busca os usuários do aplicativo.
@@ -47,8 +38,10 @@ export default function AdicionarAmigos({navigation, route}: Props) {
     Buscar();
 
   }, [usuarioAtual]);
+  // Chama a função buscarSeguindo.
 
   useEffect(() => {
+    // Caso dê algum problema no usuarioAtual, o emailUserAtual armazena o email do usuário.
     const user = onAuthStateChanged(authInstance, usuario => {
       if (!usuario || !usuario.email) return
       setEmailUserAtual(Base64.encode(usuario.email));
@@ -56,6 +49,7 @@ export default function AdicionarAmigos({navigation, route}: Props) {
 
     return () => user();
   }, [authInstance, usuarioAtual]);
+  // Função que armazena o email do usuário logado.
 
   async function buscaUsuarios(seguindo: any): Promise<void> {
       try { 
@@ -83,6 +77,7 @@ export default function AdicionarAmigos({navigation, route}: Props) {
               ...novosUsuarios_extra[index]
           }));
           // Monta uma lista com os usuários restantes, que o usuário atual ainda não está seguindo.
+          setUsers(listaUsuarios);
           
           const usuarios_que_te_seguem: any[] = [] 
           for (const user of listaUsuarios) {
@@ -92,8 +87,9 @@ export default function AdicionarAmigos({navigation, route}: Props) {
               usuarios_que_te_seguem.push(user);
             };
           };
+          // Pega os usuários que te seguem.
 
-          setUsers(usuarios_que_te_seguem);
+          setSeguidores(usuarios_que_te_seguem);
           setLoading(false);
 
         };
@@ -102,8 +98,9 @@ export default function AdicionarAmigos({navigation, route}: Props) {
         };
       // Chama a função buscarSeguidor para atualizar a lista de seguidores.
   };
+  // Função que busca os usuários do aplicativo.
 
-  const SeguirUsuario = async (email: string, nome: string): Promise<void> => {
+  const SeguirUsuario = async (email: string, nome: string, imagemPerfil: string): Promise<void> => {
     // Função para seguir um usuário.
     // A função é separada em duas partes.
     try {
@@ -123,6 +120,7 @@ export default function AdicionarAmigos({navigation, route}: Props) {
       set(refSeguindo, {
         nome: nome,
         email: email,
+        imagemPerfil
       });
     };
 
@@ -167,6 +165,7 @@ export default function AdicionarAmigos({navigation, route}: Props) {
     };
 
   };
+  // Função que segue um dos usuários.
 
   const buscarSeguindo = async (): Promise<any> => {
     // Função para buscar os usuários que o usuário atual está seguindo.
@@ -174,7 +173,6 @@ export default function AdicionarAmigos({navigation, route}: Props) {
     let usuariosSeguindo: any[] = [];
     const refSeguindoArray = ref(db, `usuarios/${usuarioAtual}/seguindo`);
     const snapshotSeguindo = await get(refSeguindoArray);
-    console.log('teste4')
     
     if (!snapshotSeguindo.exists()) {
       await buscaUsuarios(usuariosSeguindo); 
@@ -189,7 +187,8 @@ export default function AdicionarAmigos({navigation, route}: Props) {
       let dados = snapshotNovo.val();
       let emailUsuario = dados?.email;
       let nomeUsuario = dados?.nome;
-      usuariosSeguindo = [...usuariosSeguindo, {email: emailUsuario, nome: nomeUsuario, id: i}]
+      let fotoUsuario = dados?.imagemPerfil;
+      usuariosSeguindo = [...usuariosSeguindo, {email: emailUsuario, imagemPerfil: fotoUsuario, nome: nomeUsuario, id: i}]
     };
     // O for passa por todos os usuários seguidos, e recupera o email e o nome deles, além de criar um identificador.
     
@@ -200,10 +199,53 @@ export default function AdicionarAmigos({navigation, route}: Props) {
       console.log('Erro buscar Seguindo', erro);
     };
   };
+  // Função que busca os usuários que o usuário atual segue.
   
   if (loading) return (
     <LoaderCompleto />
   );
+
+  if (AdicionarAmigos_ou_Ver_Seguidores) {
+     return (
+      <View className="flex-1 bg-[#132022]">
+        <Text className='text-[#888] font-bold text-2xl text-center self-center mt-8'>
+          Usuários para seguir
+        </Text>
+
+        <View className="items-center mt-5 flex-1 mb-5">
+          <ScrollView>
+            <View className="w-full justify-center items-center">
+              {Users.length === 0 && (
+                <View className="mx-4 mb-6 h-[75px] border-2 border-[#5f636f8d] rounded-xl flex-row items-center">
+                    <Text className='text-xl opacity-95 w-full text-center text-white self-center'>
+                        Não há usuários para seguir
+                    </Text>
+                </View>
+              )}
+                
+              {Users.map((user: any, index: number) => (
+                <TouchableOpacity key={index} onPress={() => navigation.navigate('PerfilUsuario', {usuarioAtual: Base64.encode(user.email), status_usuario: 'Não Segue'})} className="items-center mx-[15px] w-full">
+                  <View className="flex-row justify-between mb-6 h-[75px] w-[90%] border-2 border-[#5f636f8d] rounded-xl flex-row items-center">
+                  <View className='flex-row'>
+                      <Image source={{uri: user.imagemPerfil}} className="w-[45px] h-[45px] rounded-full items-center justify-center ml-4" />
+                    <Text className="text-2xl ml-4 text-white self-center">{user.nome}</Text>
+                  </View>
+                    <TouchableOpacity
+                    className="bg-yellow-500 rounded-xl px-3 py-1 mr-2"
+                    onPress={() => SeguirUsuario(user.email, user.nome, user.imagemPerfil)}
+                    >
+                    <Ionicons name="person-add-sharp" size={24} color="#211309ff" />
+                  </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+    
+    );
+  };
 
   return (
   <View className="flex-1 bg-[#132022]">
@@ -250,7 +292,7 @@ export default function AdicionarAmigos({navigation, route}: Props) {
       <ScrollView>
         {abaAtiva === 'Seguidores' && (
           <View className="w-full justify-center items-center">
-            {users.length === 0 && (
+            {Seguidores.length === 0 && (
               <View className="mx-4 mb-6 h-[75px] border-2 border-[#5f636f8d] rounded-xl flex-row items-center">
                   <Text className='text-xl opacity-95 w-full text-center text-white self-center'>
                       Ainda não tem seguidores
@@ -258,16 +300,17 @@ export default function AdicionarAmigos({navigation, route}: Props) {
               </View>
             )}
             
-            {users.map((user: any, index: number) => (
+            {Seguidores.map((user: any, index: number) => (
               <TouchableOpacity key={index} onPress={() => navigation.navigate('PerfilUsuario', {usuarioAtual: Base64.encode(user.email), status_usuario: 'Seguir de volta!'})} className="items-center mx-[15px] w-full">
                 <View className="flex-row justify-between mb-6 h-[75px] w-[90%] border-2 border-[#5f636f8d] rounded-xl flex-row items-center">
                 <View className='flex-row'>
-                    <Image source={imagem[index]} className="w-[45px] h-[45px] rounded-full items-center justify-center ml-4" />
+                  <Image source={{uri: user.imagemPerfil}} 
+                  className="min-w-[45px] min-h-[45px] rounded-full items-center justify-center ml-4" />
                   <Text className="text-2xl ml-4 text-white self-center">{user.nome}</Text>
                 </View>
                   <TouchableOpacity
                   className="bg-yellow-500 rounded-xl px-3 py-1 mr-2"
-                  onPress={() => SeguirUsuario(user.email, user.nome)}
+                  onPress={() => SeguirUsuario(user.email, user.nome, user.imagemPerfil)}
                 >
                   <Ionicons name="person-add-sharp" size={24} color="#211309ff" />
                 </TouchableOpacity>
@@ -292,7 +335,9 @@ export default function AdicionarAmigos({navigation, route}: Props) {
               <TouchableOpacity key={index} onPress={() => navigation.navigate('PerfilUsuario', {usuarioAtual: Base64.encode(user.email), status_usuario: 'Seguindo'})} className="items-center mx-[15px] w-full">
                 <View className="flex-row justify-between mb-6 h-[75px] w-[90%] border-2 border-[#5f636f8d] rounded-xl flex-row items-center">
                 <View className='flex-row'>
-                    <Image source={imagem[index]} className="w-[45px] h-[45px] rounded-full items-center justify-center ml-4" />
+                    <Image source={{uri: user.imagemPerfil}} 
+                    className="min-w-[45px] max-w-[45px] max-h-[45px] min-h-[45px] rounded-full items-center justify-center ml-4" 
+                    />
                   <Text className="text-2xl ml-4 text-white self-center">{user.nome}</Text>
                 </View>
                   <Ionicons className="px-3 py-1 mr-2" name="chevron-forward-outline" size={24} color="#5f636fc9" />
@@ -304,6 +349,6 @@ export default function AdicionarAmigos({navigation, route}: Props) {
       </ScrollView>
     </View>
   </View>
-);
+  );
 };
              

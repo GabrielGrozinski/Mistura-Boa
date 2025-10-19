@@ -24,7 +24,7 @@ const db = getDatabase(app);
 let recipesVeganas: any = [
   {
     email: '',
-    id: '1',
+    id: 1,
     title: 'Tofu Grelhado com Gergelim',
     description: 'Crocante por fora, macio por dentro e cheio de sabor.',
     dif: 'Fácil de fazer!',
@@ -32,12 +32,13 @@ let recipesVeganas: any = [
     image: require('../../../../assets/Receitas/ReceitasVeganas/tofu.png'),
     autor: 'Mistura Boa',
     tipo: 'vegano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Tofu firme', quantidade: '200g', icone: '🍥' },
-      { ing: 'Gergelim', quantidade: '2 colheres de sopa', icone: '🌱' },
-      { ing: 'Molho shoyu', quantidade: '2 colheres de sopa', icone: '🥣' },
-      { ing: 'Óleo de gergelim', quantidade: '1 colher de chá', icone: '🫒' },
-      { ing: 'Cebolinha picada', quantidade: 'a gosto', icone: '🌿' },
+      { ing: 'Tofu firme', quantidade: '200', medida: 'grama', id: 1 },
+      { ing: 'Gergelim', quantidade: '2', medida: 'colher', id: 2 },
+      { ing: 'Molho shoyu', quantidade: '2', medida: 'colher', id: 3 },
+      { ing: 'Óleo de gergelim', quantidade: '1', medida: 'colher', id: 4 },
+      { ing: 'Cebolinha picada', quantidade: '1', medida: 'grama', id: 5 }, // "a gosto" padronizado
     ],
     passos: [
       'Corte o tofu em fatias e seque com papel toalha.',
@@ -53,7 +54,7 @@ let recipesVeganas: any = [
   },
   {
     email: '',
-    id: '2',
+    id: 2,
     title: 'Curry de Grão-de-Bico',
     description: 'Um curry vegano cremoso, nutritivo e cheio de especiarias.',
     dif: 'Um pouco complicada...',
@@ -61,16 +62,17 @@ let recipesVeganas: any = [
     image: require('../../../../assets/Receitas/ReceitasVeganas/curry.png'),
     autor: 'Mistura Boa',
     tipo: 'vegano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Grão-de-bico cozido', quantidade: '2 xícaras', icone: '🧆' },
-      { ing: 'Tomate picado', quantidade: '2', icone: '🍅' },
-      { ing: 'Cebola picada', quantidade: '1', icone: '🧅' },
-      { ing: 'Alho picado', quantidade: '2 dentes', icone: '🧄' },
-      { ing: 'Leite de coco', quantidade: '200ml', icone: '🥥' },
-      { ing: 'Curry em pó', quantidade: '1 colher de sopa', icone: '🌶️' },
-      { ing: 'Azeite de oliva', quantidade: '1 colher de sopa', icone: '🫒' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Coentro fresco', quantidade: 'a gosto', icone: '🌿' },
+      { ing: 'Grão-de-bico cozido', quantidade: '2', medida: 'xícara', id: 1 },
+      { ing: 'Tomate picado', quantidade: '2', medida: 'unidade', id: 2 },
+      { ing: 'Cebola picada', quantidade: '1', medida: 'unidade', id: 3 },
+      { ing: 'Alho picado', quantidade: '2', medida: 'unidade', id: 4 }, // dentes = unidade
+      { ing: 'Leite de coco', quantidade: '200', medida: 'ml', id: 5 },
+      { ing: 'Curry em pó', quantidade: '1', medida: 'colher', id: 6 },
+      { ing: 'Azeite de oliva', quantidade: '1', medida: 'colher', id: 7 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 8 }, // "a gosto" padronizado
+      { ing: 'Coentro fresco', quantidade: '1', medida: 'grama', id: 9 }, // "a gosto" padronizado
     ],
     passos: [
       'Aqueça o azeite em uma panela e refogue a cebola e o alho até dourar.',
@@ -87,7 +89,7 @@ let recipesVeganas: any = [
   },
   {
     email: '',
-    id: '3',
+    id: 3,
     title: 'Salada Morna de Batata-doce e Lentilha',
     description: 'Salada nutritiva e colorida, perfeita para qualquer refeição.',
     dif: 'Fácil de fazer!',
@@ -95,14 +97,15 @@ let recipesVeganas: any = [
     image: require('../../../../assets/Receitas/ReceitasVeganas/salada.png'),
     autor: 'Mistura Boa',
     tipo: 'vegano',
+    refeicao: 'salada',
     ingredientes: [
-      { ing: 'Batata-doce em cubos', quantidade: '2 xícaras', icone: '🍠' },
-      { ing: 'Lentilha cozida', quantidade: '1 xícara', icone: '🌱' },
-      { ing: 'Cebola roxa fatiada', quantidade: '1/2', icone: '🧅' },
-      { ing: 'Azeite de oliva', quantidade: '2 colheres de sopa', icone: '🫒' },
-      { ing: 'Salsinha picada', quantidade: 'a gosto', icone: '🌿' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Limão', quantidade: '1/2', icone: '🍋' },
+      { ing: 'Batata-doce em cubos', quantidade: '2', medida: 'xícara', id: 1 },
+      { ing: 'Lentilha cozida', quantidade: '1', medida: 'xícara', id: 2 },
+      { ing: 'Cebola roxa fatiada', quantidade: '0.5', medida: 'unidade', id: 3 },
+      { ing: 'Azeite de oliva', quantidade: '2', medida: 'colher', id: 4 },
+      { ing: 'Salsinha picada', quantidade: '1', medida: 'grama', id: 5 }, // "a gosto" padronizado
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 6 }, // "a gosto" padronizado
+      { ing: 'Limão', quantidade: '0.5', medida: 'unidade', id: 7 },
     ],
     passos: [
       'Cozinhe a batata-doce em água fervente até ficar macia, escorra e reserve.',
@@ -118,7 +121,7 @@ let recipesVeganas: any = [
   },
   {
     email: '',
-    id: '4',
+    id: 4,
     title: 'Queijo Vegano Fermentado',
     description: 'Receita avançada com castanhas e fermentação natural.',
     dif: 'Mestre-cuca!',
@@ -126,13 +129,14 @@ let recipesVeganas: any = [
     image: require('../../../../assets/Receitas/ReceitasVeganas/queijo.png'),
     autor: 'Mistura Boa',
     tipo: 'vegano',
+    refeicao: 'acompanhamento',
     ingredientes: [
-      { ing: 'Castanha de caju crua', quantidade: '200g', icone: '🥜' },
-      { ing: 'Água filtrada', quantidade: '1/2 xícara', icone: '💧' },
-      { ing: 'Suco de limão', quantidade: '2 colheres de sopa', icone: '🍋' },
-      { ing: 'Sal', quantidade: '1 colher de chá', icone: '🧂' },
-      { ing: 'Probiótico em pó', quantidade: '1 cápsula', icone: '🦠' },
-      { ing: 'Ervas finas', quantidade: 'a gosto', icone: '🌿' },
+      { ing: 'Castanha de caju crua', quantidade: '200', medida: 'grama', id: 1 },
+      { ing: 'Água filtrada', quantidade: '0.5', medida: 'xícara', id: 2 },
+      { ing: 'Suco de limão', quantidade: '2', medida: 'colher', id: 3 },
+      { ing: 'Sal', quantidade: '1', medida: 'colher', id: 4 },
+      { ing: 'Probiótico em pó', quantidade: '1', medida: 'unidade', id: 5 }, // cápsula = unidade
+      { ing: 'Ervas finas', quantidade: '1', medida: 'grama', id: 6 }, // "a gosto" padronizado
     ],
     passos: [
       'Deixe as castanhas de caju de molho em água por 8 horas.',
@@ -148,7 +152,7 @@ let recipesVeganas: any = [
   },
   {
     email: '',
-    id: '5',
+    id: 5,
     title: 'Risoto Vegano de Abóbora',
     description: 'Risoto cremoso feito com abóbora, arroz arbório e temperos naturais.',
     dif: 'Um pouco complicada...',
@@ -156,23 +160,24 @@ let recipesVeganas: any = [
     image: require('../../../../assets/Receitas/ReceitasVeganas/risoto.png'),
     autor: 'Mistura Boa',
     tipo: 'vegano',
+    refeicao: 'prato_principal',
     ingredientes: [
-        { ing: 'Arroz arbório', quantidade: '1 xícara', icone: '🍚' },
-        { ing: 'Abóbora cabotiá em cubos', quantidade: '2 xícaras', icone: '🎃' },
-        { ing: 'Cebola picada', quantidade: '1/2', icone: '🧅' },
-        { ing: 'Alho picado', quantidade: '2 dentes', icone: '🧄' },
-        { ing: 'Caldo de legumes', quantidade: '1 litro', icone: '🥣' },
-        { ing: 'Azeite de oliva', quantidade: '2 colheres de sopa', icone: '🫒' },
-        { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-        { ing: 'Salsinha picada', quantidade: 'a gosto', icone: '🌿' },
+      { ing: 'Arroz arbório', quantidade: '1', medida: 'xícara', id: 1 },
+      { ing: 'Abóbora cabotiá em cubos', quantidade: '2', medida: 'xícara', id: 2 },
+      { ing: 'Cebola picada', quantidade: '0.5', medida: 'unidade', id: 3 },
+      { ing: 'Alho picado', quantidade: '2', medida: 'unidade', id: 4 }, // dentes = unidade
+      { ing: 'Caldo de legumes', quantidade: '1', medida: 'litro', id: 5 },
+      { ing: 'Azeite de oliva', quantidade: '2', medida: 'colher', id: 6 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 7 }, // "a gosto" padronizado
+      { ing: 'Salsinha picada', quantidade: '1', medida: 'grama', id: 8 }, // "a gosto" padronizado
     ],
     passos: [
-        'Aqueça o azeite em uma panela e refogue a cebola e o alho até ficarem macios.',
-        'Adicione a abóbora e refogue por alguns minutos.',
-        'Junte o arroz arbório e misture bem.',
-        'Adicione o caldo de legumes aos poucos, mexendo sempre, até o arroz ficar cremoso e al dente.',
-        'Tempere com sal e pimenta.',
-        'Finalize com salsinha picada e sirva quente.',
+      'Aqueça o azeite em uma panela e refogue a cebola e o alho até ficarem macios.',
+      'Adicione a abóbora e refogue por alguns minutos.',
+      'Junte o arroz arbório e misture bem.',
+      'Adicione o caldo de legumes aos poucos, mexendo sempre, até o arroz ficar cremoso e al dente.',
+      'Tempere com sal e pimenta.',
+      'Finalize com salsinha picada e sirva quente.',
     ],
     avaliacao: { nota: 0, contador: 0, media: 0 },
     calorias: 290,
@@ -191,49 +196,65 @@ export default function ReceitasVeganaApp({navigation}: Props) {
   const [loadingFavoritas, setLoadingFavoritas] = useState<boolean>(true);
 
   useEffect(() => {
-    dispatch(modificaOrdenacao('Ordenação Padrão'));
-    setLoadingReceitas(true);
-    async function ReceitaFirebase() {
-      await buscaReceitas();
-      const refReceita = ref(db, `ReceitasApp/vegano`);
-      onValue(refReceita, async (snapshot) => {
-        await buscaReceitas();
+    // Função que busca todas as receitas veganas e cria um nó para cada uma delas.
+    try {
+      dispatch(modificaOrdenacao('Ordenação Padrão'));
+      setLoadingReceitas(true);
+      const refReceita = ref(db, `ReceitasApp/vegetariano`);
+      const listenerRefReceita = onValue(refReceita, async (snapshot) => {
+          await buscaReceitas();
       });
-
-      for (let i = 0; i < recipesVeganas.length; i++) {
-        let refReceita = ref(db, `ReceitasApp/${recipesVeganas[i].tipo}/${recipesVeganas[i].id}`);
-        let snapshot = await get(refReceita);
-        if (!snapshot.exists()) {
-          await update(refReceita, {
-          ...recipesVeganas[i]
-        });
-        };
+      
+      async function ReceitaFirebase() {
+        try {
+          await buscaReceitas();
+          for (let i = 0; i < recipesVeganas.length; i++) {
+            let refReceita = ref(db, `ReceitasApp/${recipesVeganas[i].tipo}/${recipesVeganas[i].id}`);
+            let snapshot = await get(refReceita);
+            if (!snapshot.exists()) {
+              await update(refReceita, {
+                ...recipesVeganas[i]
+              });
+            };
+          };
+        } catch (error) {
+          console.log('Erro em ReceitaFirebase:', error);
+        }
       };
-    };
-    ReceitaFirebase();
-    
-    const user = onAuthStateChanged(authInstance, usuario => {
-      if (!usuario || !usuario.email) return;
-      setEmailB64(Base64.encode(usuario.email));
-    });
-    setLoadingReceitas(false);
 
-    return () => user();
+      ReceitaFirebase();
+
+      const user = onAuthStateChanged(authInstance, usuario => {
+        if (!usuario || !usuario.email) return;
+        setEmailB64(Base64.encode(usuario.email));
+      });
+      setLoadingReceitas(false);
+
+      return () => {user(); listenerRefReceita();};
+    } catch (error) {
+      console.log('Erro no useEffect principal:', error);
+    }
   }, [authInstance]);
+  // Busca todas as receitas veganas e cria um nó pra elas, além de pegar o email do usuário.
 
   async function buscaReceitas() {
-    const refReceita = ref(db, `ReceitasApp/vegano`);
-    const snapshot = await get(refReceita);
-    const dados = snapshot.val();
-    const receitas = dados.slice(1);
-    
-    for (let i = 0; i < recipesVeganas.length; i++) {
-      recipesVeganas[i] = {
-        ...recipesVeganas[i], 
-        avaliacao: receitas[i].avaliacao, 
-        comentarios: receitas[i].comentarios}
-    };
-  };
+    try {
+      const refReceita = ref(db, `ReceitasApp/vegano`);
+      const snapshot = await get(refReceita);
+      const dados = snapshot.val();
+      const receitas = dados.filter(Boolean);
+      
+      for (let i = 0; i < recipesVeganas.length; i++) {
+        recipesVeganas[i] = {
+          ...recipesVeganas[i], 
+          avaliacao: receitas[i].avaliacao, 
+          comentarios: receitas[i].comentarios}
+      };
+    } catch (error) {
+      console.log('Erro em buscaReceitas:', error);
+    }
+  }
+  // Função que busca todas as receitas veganas do banco e atualiza o array local.
 
   const adicionaFavorito = async (recipe: any) => {
     // Função que adiciona a receita em sua lista de favoritos.
@@ -243,14 +264,9 @@ export default function ReceitasVeganaApp({navigation}: Props) {
       const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
       onValue(refOriginal, async (snapshot) => {
         if (snapshot.exists()) {
-          const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
+          const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
           const verifica_se_ja_existe = receitasFavoritadas.some((r: any) => r.id === recipe.id && r.tipo === recipe.tipo && r.autor === recipe.autor);
           receitaFavoritada = verifica_se_ja_existe;
-          // Verifica se a receita que está prestes a ser favoritada já existe na lista de favoritos do usuário.
-          // A verificação é feita analisando o id, tipo e autor, pois são os únicos atributos que diferenciam uma receita de outra.
-          // O id pode ser o mesmo se o tipo for diferente, e o autor também pode ser o mesmo se o tipo for diferente.
-          // Por isso é importante verificar os 3 ao mesmo tempo.
-          // Se a receita já foi favoritada, retorna true; senão, false.
         };
     
         if (receitaFavoritada) {
@@ -266,31 +282,57 @@ export default function ReceitasVeganaApp({navigation}: Props) {
         });
         await buscaReceitasFavoritas(false);
       }, { onlyOnce: true });
-      // O campo idChildren serve para organizar as receitas favoritadas na ordem que o usuário as favoritou.
       Alert.alert('Receita Favoritada', 'A receita foi adicionada aos seus favoritos!');
       
     } catch (erro: any) {
       console.log('Erro:', erro.message)
     };
   };
-
-  onValue(ref(db, `usuarios/${emailB64}/receitasFavoritas`), async snapshot => await buscaReceitasFavoritas(false));
-
-  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
-    setLoadingFavoritas(precisa_de_loading);
-    const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
-    const snapshot = await get(refOriginal);
-    if (snapshot.exists()) {
-      const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
-      const receitasFavoritadasVeganas = receitasFavoritadas.filter((r: any) => r.tipo === 'vegano');
-      setReceita(receitasFavoritadasVeganas.map((r: any) => r.id));
-    };
-    setLoadingFavoritas(false);
-  };
+  // Função que adiciona a receita em sua lista de favoritos.
 
   useEffect(() => {
-    buscaReceitasFavoritas(true);
+    // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+    try {
+      if (!emailB64) return;
+
+      const refFavoritos = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const unsubscribeFavoritos = onValue(refFavoritos, async snapshot => {
+        await buscaReceitasFavoritas(false);
+      });
+
+      return () => unsubscribeFavoritos();
+    } catch (error) {
+      console.log('Erro no useEffect de favoritos:', error);
+    }
   }, [emailB64]);
+  // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+
+  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
+    try {
+      setLoadingFavoritas(precisa_de_loading);
+      const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const snapshot = await get(refOriginal);
+      if (snapshot.exists()) {
+        const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
+        const receitasFavoritadasVeganas = receitasFavoritadas.filter((r: any) => r.tipo === 'vegano' && r.email === '');
+        setReceita(receitasFavoritadasVeganas.map((r: any) => r.id));
+      };
+      setLoadingFavoritas(false);
+    } catch (error) {
+      console.log('Erro em buscaReceitasFavoritas:', error);
+    }
+  }
+  // Função que busca as receitas favoritas.
+
+  useEffect(() => {
+    try {
+      buscaReceitasFavoritas(true);
+    } catch (error) {
+      console.log('Erro no useEffect de buscaReceitasFavoritas:', error);
+    }
+  }, [emailB64]);
+  // UseEffect que busca receitas favoritas ao carregar o email.
+
 
   if (loadingFavoritas || loadingReceitas) return (
     <LoaderCompleto/>

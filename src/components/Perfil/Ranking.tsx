@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import "../../../global.css";
-import { View, Text, ImageBackground, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, Image } from 'react-native';
 import { getApp } from '@react-native-firebase/app';
-import auth from '@react-native-firebase/auth';
 import { getDatabase, ref, get } from '@react-native-firebase/database';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TiposRotas } from '../../navigation/types';
@@ -18,7 +17,7 @@ const db = getDatabase(app);
 
 export default function Ranking({ route }: Props) {
     const {usuarioAtual} = route.params;
-    // Só será mostrado os rankings do seu usuário.
+    // Só será mostrado o(s) ranking(s) do seu usuário.
     const [passosBronze, setPassosBronze] = useState([]);
     const [passosOuro, setPassosOuro] = useState([]);
     const [passosDiamante, setPassosDiamante] = useState([]);
@@ -74,6 +73,7 @@ export default function Ranking({ route }: Props) {
         buscaRanking();
 
     }, [usuarioAtual]);
+    // UseEffect que recupera o ranking atual e a progressão dos passos dos rankings.   
 
     return (
         <ImageBackground
@@ -652,5 +652,5 @@ export default function Ranking({ route }: Props) {
 
             </ScrollView>
         </ImageBackground>
-);
+    );
 };

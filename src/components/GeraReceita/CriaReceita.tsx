@@ -71,18 +71,18 @@ export default function CriarReceita({navigation}: Props) {
     id: 1,
     ing: '',
     quantidade: 0,
-    medida: 'Grama',
+    medida: 'gramas',
     }
   ]);
   const [modalMedida, setModalMedida] = useState<boolean>(false);
   const medidasOpcoes = [
-    'Grama',
-    'Unidade',
-    'Quilo',
-    'Litro',
-    'ML',
-    'Xícara',
-    'Colher',
+    'gramas',
+    'unidades',
+    'quilo',
+    'litro',
+    'mls',
+    'xícara',
+    'colher',
   ];
   const [ingredienteSelecionado, setIngredienteSelecionado] = useState<number | null>(null);
   const [name, setName] = useState<string>('');
@@ -136,6 +136,7 @@ export default function CriarReceita({navigation}: Props) {
     };
     setImagem(imagemUpload);
   };
+  // Função que escolhe uma imagem do usuário.
 
   const EnviarImagem = async (id: number, tipo: string): Promise<boolean> => {
     // Função que envia a imagem escolhida do usuário para o mongoDB.
@@ -154,6 +155,7 @@ export default function CriarReceita({navigation}: Props) {
       return false;
     };
   };
+  // Função que envia a imagem para o mongoDb.
 
   const RecuperarImagem = async (id: number, tipo: string): Promise<string | boolean> => {
     // Função que recupera a imagem do mongoDb e insere o uri dela no firebase.
@@ -167,6 +169,7 @@ export default function CriarReceita({navigation}: Props) {
       return false;
     };
   };
+  // Função que recupera a imagem do mongoDb, para depois inserir ela como uri na receita.
 
   const criarReceita = async () => {
     // Função responsável por criar a receita.
@@ -241,6 +244,7 @@ export default function CriarReceita({navigation}: Props) {
       console.log('Erro ao criar receita:', erro);
     };
   };
+  // Função que cria a receita.
 
   const proximaTela = (receita: any) => { 
     // Função responsável por navegar para a tela da receita que foi criada.
@@ -251,6 +255,7 @@ export default function CriarReceita({navigation}: Props) {
       ],
     });
   };
+  // Função que leva o usuário para a tela da receita criada.
   
   if (loading) return (
     <LoaderCompleto/>
@@ -292,6 +297,7 @@ export default function CriarReceita({navigation}: Props) {
             onChangeText={(texto) => setTitulo(texto)}
             returnKeyType='next'
             onSubmitEditing={() => descricaoInput.current?.focus()}
+            maxLength={30}
           />
         </View>
         {/* Adicionar Título */}
@@ -302,7 +308,7 @@ export default function CriarReceita({navigation}: Props) {
           </Text>
           <TextInput
             ref={descricaoInput}
-            className="h-[110px] w-full bg-[#132022] font-bold mt-2 text-center rounded-xl elevation-1 text-lg text-neutral-200"
+            className="h-[100px] w-full bg-[#132022] font-bold mt-2 text-center rounded-xl elevation-1 text-lg text-neutral-200"
             placeholderTextColor="#A3A3A3"
             placeholder="Fale um pouco sobre essa receita..."
             value={descricao}
@@ -310,7 +316,15 @@ export default function CriarReceita({navigation}: Props) {
             textAlignVertical='top'
             onChangeText={(texto) => setDescricao(texto)}
             returnKeyType='done'
+            maxLength={40}
           />
+          <Text 
+          className={
+          `self-center text-center text-xl 
+          ${descricao.length < 8 ? 'text-green-500' : descricao.length < 15 ? 'text-green-300' : descricao.length < 25 ? 'text-green-100' : descricao.length < 31 ? 'text-red-200' : 'text-red-400'}
+          `}>
+            {descricao.length < 40 ? `${descricao.length}/40 caracteres` : 'Número máximo de caracteres'}
+          </Text>
         </View>
         {/* Adicionar Descrição */}
 
@@ -394,6 +408,7 @@ export default function CriarReceita({navigation}: Props) {
                 }}
                 textAlign='left'
                 returnKeyType='done'
+                maxLength={50}
               />
             ))}
 
@@ -471,7 +486,7 @@ export default function CriarReceita({navigation}: Props) {
           </View>
 
           <TouchableOpacity className="self-center items-center justify-center" disabled={ingredientes.length >= 10} 
-          onPress={() => setIngredientes([...ingredientes, {id: ingredientes.length + 1, ing: '', quantidade: 0, medida: 'Grama'}])}>
+          onPress={() => setIngredientes([...ingredientes, {id: ingredientes.length + 1, ing: '', quantidade: 0, medida: 'gramas'}])}>
 
             <Text className={`${ingredientes.length < 10 ? 'text-4xl' : 'text-2xl'} ${ingredientes.length < 10 ? 'text-green-400' : 'text-red-400'} mt-2`}>
                 {ingredientes.length >= 10 ? "Limite de Ingredientes atingidos!" : "+"}  
@@ -596,4 +611,34 @@ export default function CriarReceita({navigation}: Props) {
 
     </View>
   );
+
+{/* 
+  
+  Componente CriarReceita é uma tela React Native/TypeScript que permite ao usuário compor uma receita
+(título, descrição, passos, ingredientes, tipo/refeição e imagem), pede permissão e seleciona imagem via Expo ImagePicker, 
+envia a imagem ao backend (apiImagem), recupera a URL retornada, monta o objeto receita e grava em Realtime Database em 
+ReceitasUsuarios/{tipo}/{id}, além de conceder XP (PassarXP) e ligar a receita ao usuário (UnirReceita_ao_Usuario) antes 
+de navegar para a tela da receita criada. 
+
+  Observações: é possível adicionar mais tópicos; seria possível deixar alguns tópicos mais dinâmicos, como, por exemplo, permitir
+que o usuário eescrevesse o tempo exato da receita, mas acredito que com os intervalos de tempo padronizados a UI fica mais
+agradável; em algumas variáveis usei o 'useState', e em outras, 'useRef'. É possível padronizar, mas como o aplicativo tem como
+foco portfólio profissional, achei mais interessante variar as formas de declarar variável, bem como declarar funções e etc, 
+mostrando uma versatilidade no código; o mesmo vale para a imagem no MongoDB. Seria possível usar o Firebase Storage? Sim, mas
+além dele ser pago (e eu ter feito o aplicativo com tecnologias 100% gratuitas), também acho que é interessante usar mais de um
+banco de dados para mostrar versatilidade, apesar de, é claro, uma empresa comumente usar apenas um.
+
+  Sugestões: uma ótima ideia seria deixar a criação de receitas mais dinâmica conforme o usuário que o usuário está usando.
+Uma ideia, por exemplo, seria de dar o dobro de xp para receitas do tipo sobremesa caso o usuário usasse o Coelho da Páscoa.
+  Outra possibilidade seria, caso o usuário criasse a receita com o Papai Noel, todos que avaliassem a receita ganhariam uma 
+certa quantidade de xp.
+  Ou então, por exemplo, se você criar uma receita com o fantasma, suas receitas automaticamente iriam para uma seção de receitas
+do Halloween.
+  Tudo isso daria dinamismo e incentivaria os usuários a buscar os personagens.
+
+  Outra sugestão é de, nos ingredientes, abrir uma lista enorme com todos os ingredientes, e o usuário poder pesquisar qual
+ingrediente ele deseja. isso, apesar de limitar as possibilidades de receita, deixaria tudo mais padronizado, e também mais
+fácil da I.A, por exemplo, de calcular macronutrientes e calorias.
+  
+*/}
 };

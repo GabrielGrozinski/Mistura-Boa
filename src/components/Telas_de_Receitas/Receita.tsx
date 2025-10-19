@@ -39,6 +39,7 @@ export default function Receita({ route, navigation }: Props) {
   const usuarioAtual = useRef<string>('');
   const emailB64 = useRef<string>('');
   const nome = useRef<string>('');
+  const imagemPerfil = useRef<string>('');
   const [loadingMedia_e_User, setLoadingMedia_e_User] = useState<boolean>(true);
   const [loadingComentarios, setLoadingComentarios] = useState<boolean>(true);
   const [loadingAvaliacao, setLoadingAvaliacao] = useState<boolean>(true);
@@ -52,14 +53,20 @@ export default function Receita({ route, navigation }: Props) {
 
   useEffect(() => {
     // UseEffect para não ter nenhuma borda azulada na barra de telas.
-    dispatch(modificaBarra(-1));
+    try {
+      dispatch(modificaBarra(-1));
+    } catch (error) {
+      console.log('Erro no useEffect modificaBarra:', error);
+    }
   }, []);
   // Tirando a borda azul da barra de telas.
 
   useEffect(() => {
+    try {
       // Define se a receita foi gerada por um usuário ou se é uma receita do app.
       // A verificação é feita pelo email. Se não houver email, foi o aplicativo.
       // A verificação é importante para o nó do firebase, afinal, existe um nó para as receitas dos usuários e outro para as do app.
+      ImmersiveMode.setImmersive(true);
       setLoadingMedia_e_User(true);
 
       let no_de_receita_state = ''; // Criei essa variável para usar nesse useEffect, já que o useState pode não ter renderizado.
@@ -72,58 +79,75 @@ export default function Receita({ route, navigation }: Props) {
       };
       
       async function pegarMedia(): Promise<void> {
-        const refMedia = ref(db, `${no_de_receita_state}/${recipe.tipo}/${recipe.id}/avaliacao`);
-        const snapshot = await get(refMedia);
-        const dados = snapshot.val();
-        const media = Number(dados.media);
-        setMedia(media);
-        // A média é o número de estrelas que a receita tem, e é calculada pelo número de avaliações.
-        };
+        try {
+          const refMedia = ref(db, `${no_de_receita_state}/${recipe.tipo}/${recipe.id}/avaliacao`);
+          const snapshot = await get(refMedia);
+          const dados = snapshot.val();
+          const media = Number(dados.media);
+          setMedia(media);
+          // A média é o número de estrelas que a receita tem, e é calculada pelo número de avaliações.
+        } catch (error) {
+          console.log('Erro em pegarMedia:', error);
+        }
+      };
       pegarMedia();
 
       const user = onAuthStateChanged(authInstance, usuario => {
-        if (!usuario || !usuario.email || !usuario.displayName) return;
-        usuarioAtual.current = usuario.email;
-        emailB64.current = Base64.encode(usuario.email);
-        nome.current = usuario.displayName;
+        try {
+          if (!usuario || !usuario.email || !usuario.displayName || !usuario.photoURL) return;
+          usuarioAtual.current = usuario.email;
+          emailB64.current = Base64.encode(usuario.email);
+          nome.current = usuario.displayName;
+          imagemPerfil.current = usuario.photoURL;
+        } catch (error) {
+          console.log('Erro em onAuthStateChanged:', error);
+        }
       });
 
-      ImmersiveMode.setImmersive(true);
       setLoadingMedia_e_User(false);
 
       return () => user();
-    
+    } catch (error) {
+      console.log('Erro no useEffect de definição de nó da receita e user:', error);
+    }
   }, [recipe, authInstance]);
   // Definindo nó da receita e pegando informações do user.
 
   const converterTempo = (timeString: string) => {
-    // Converte o tempo da receita, para que seja mostrado corretamente no temporizador.
-    const tempoString = timeString.split(' ');
-    const numero = parseInt(tempoString[1]);
-    setIniciar(true);
-    setPausado(false); // inicia/despausa
-    // Extrai apenas números.
+    try {
+      // Converte o tempo da receita, para que seja mostrado corretamente no temporizador.
+      const tempoString = timeString.split(' ');
+      const numero = parseInt(tempoString[1]);
+      setIniciar(true);
+      setPausado(false); // inicia/despausa
+      // Extrai apenas números.
 
-    if (numero < 15) {
-      setTempoMinutos(numero*60*60);
-    } else {
-      setTempoMinutos(numero*60);
-    };
-    // A receita só pode ter 1 hora, 2 horas+ ou algum intervalo entre 15 minutos e 45 minutos.
-    // Portanto, se o número for menor que 15, assume que é hora, e multiplica mais uma vez por 60.
+      if (numero < 15) {
+        setTempoMinutos(numero*60*60);
+      } else {
+        setTempoMinutos(numero*60);
+      };
+      // A receita só pode ter 1 hora, 2 horas+ ou algum intervalo entre 15 minutos e 45 minutos.
+      // Portanto, se o número for menor que 15, assume que é hora, e multiplica mais uma vez por 60.
+    } catch (error) {
+      console.log('Erro em converterTempo:', error);
+    }
   };
 
   useEffect(() => {
-    // Função para contar o tempo do temporizador.
-    if (!iniciar || pausado || tempoMinutos <= 0) return;
-    const intervalId = setInterval(() => {
-      setTempoMinutos((prev) => Math.max(prev - 1, 0));
-    }, 1000);
-    // para quando chegar em 0
-    // Decrementa o tempo em 1 segundo a cada 1000 milissegundos (1 segundo).
-    
-    return () => clearInterval(intervalId);
-  
+    try {
+      // Função para contar o tempo do temporizador.
+      if (!iniciar || pausado || tempoMinutos <= 0) return;
+      const intervalId = setInterval(() => {
+        setTempoMinutos((prev) => Math.max(prev - 1, 0));
+      }, 1000);
+      // para quando chegar em 0
+      // Decrementa o tempo em 1 segundo a cada 1000 milissegundos (1 segundo).
+      
+      return () => clearInterval(intervalId);
+    } catch (error) {
+      console.log('Erro no useEffect do temporizador:', error);
+    }
   }, [iniciar, pausado, tempoMinutos]);
   // Temporizador.
   
@@ -133,197 +157,243 @@ export default function Receita({ route, navigation }: Props) {
   //
 
   const adicionaComentario = async (comentario: string): Promise<void> => {
-    // Função para adicionar comentário.
-    try {
-      const refAvaliacao = ref(db, `usuarios/${emailB64.current}/avaliacoes/${No_de_Receita}/${recipe.tipo}/${recipe.id}`);
-      const snapshotAvaliacao = await get (refAvaliacao);
-      if (!snapshotAvaliacao.exists()) {
-        return Alert.alert('Avalie a receita primeiro')
-      };
-      const dados = snapshotAvaliacao.val();
-      const nota = dados.avaliou;
-      // Só permite que o usuário comente se ele já avaliou a receita.
+      // Função para adicionar comentário.
+      try {
+        const refAvaliacao = ref(db, `usuarios/${emailB64.current}/avaliacoes/${No_de_Receita}/${recipe.tipo}/${recipe.id}`);
+        const snapshotAvaliacao = await get (refAvaliacao);
+        if (!snapshotAvaliacao.exists()) {
+          return Alert.alert('Avalie a receita primeiro')
+        };
+        const dados = snapshotAvaliacao.val();
+        const nota = dados.avaliou;
+        // Só permite que o usuário comente se ele já avaliou a receita.
 
-      // Salva o comentário no banco de dados do usuário.
-      const refReceitaUsuario = ref(db, `usuarios/${emailB64.current}/comentarios/${No_de_Receita}/${recipe.tipo}/${recipe.id}`)
-      const snapshotReceitaUsuario = await get(refReceitaUsuario);
-      if (!snapshotReceitaUsuario.exists()) {
-      set(refReceitaUsuario, {
-        1: {
-          comentario: comentario,
-          nota: nota,
-        }
-      });
-      } else {
-        const id = snapshotReceitaUsuario.numChildren();
-        const refReceitaUsuarioID = ref(db, `usuarios/${emailB64.current}/comentarios/${No_de_Receita}/${recipe.tipo}/${recipe.id}/${id}`)
-        update(refReceitaUsuarioID, {
-          comentario: comentario,
-          nota: nota,
-        });
-      };
-
-      // Salva o comentário no banco de dados da própria receita.
-      const refReceita = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/comentarios`);
-      const snapshotReceita = await get (refReceita);
-      if (!snapshotReceita.exists()) {
-        set(refReceita, {
+        // Salva o comentário no banco de dados do usuário.
+        const refReceitaUsuario = ref(db, `usuarios/${emailB64.current}/comentarios/${No_de_Receita}/${recipe.tipo}/${recipe.id}`)
+        const snapshotReceitaUsuario = await get(refReceitaUsuario);
+        if (!snapshotReceitaUsuario.exists()) {
+        set(refReceitaUsuario, {
           1: {
+            comentario: comentario,
+            nota: nota,
+          }
+        });
+        } else {
+          const id = snapshotReceitaUsuario.numChildren();
+          const refReceitaUsuarioID = ref(db, `usuarios/${emailB64.current}/comentarios/${No_de_Receita}/${recipe.tipo}/${recipe.id}/${id}`)
+          update(refReceitaUsuarioID, {
+            comentario: comentario,
+            nota: nota,
+          });
+        };
+
+        // Salva o comentário no banco de dados da própria receita.
+        const refReceita = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/comentarios`);
+        const snapshotReceita = await get (refReceita);
+        if (!snapshotReceita.exists()) {
+          set(refReceita, {
+            1: {
+              nome: nome.current,
+              nota: nota,
+              comentario: comentario,
+              email: emailB64.current,
+              imagemPerfil: imagemPerfil.current
+            }
+          });
+
+        } else {
+          const id = snapshotReceita.numChildren();
+          const refNovoComentario = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/comentarios/${id}`);
+          update(refNovoComentario, {
             nome: nome.current,
             nota: nota,
             comentario: comentario,
             email: emailB64.current,
+            imagemPerfil: imagemPerfil.current
+          });
+        };
+
+      setComentarioUser('');
+      } catch (erro) {
+        console.log('Erro em adicionaComentario', erro);
+      };
+      // Cria um nó de comentários com o nome de quem comentou, a nota que ele deu à receita e o próprio comentário.
+  };
+  // Função que adiciona comentário;
+
+  useEffect(() => {
+    try {
+      // Função para buscar quem já comentou.
+      setLoadingComentarios(true);
+
+      if (!recipe || !recipe.id || !recipe.tipo || !No_de_Receita) return;
+
+      const refComentarios = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/comentarios`);
+      const ListenerComentarios = onValue(refComentarios, async (snapshotComentarios) => 
+        {
+          try {
+            if (!snapshotComentarios.exists()) {
+              return;
+                // Caso não haja comentários, a função não faz nada.
+            };
+            const dados = snapshotComentarios.val();
+            setTodosComentarios(dados.filter(Boolean));        
+          } catch (error) {
+            console.log('Erro no ListenerComentarios:', error);
           }
         });
 
-      } else {
-        const id = snapshotReceita.numChildren();
-        const refNovoComentario = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/comentarios/${id}`);
-        update(refNovoComentario, {
-          nome: nome.current,
-          nota: nota,
-          comentario: comentario,
-          email: emailB64.current,
-        });
-      };
+      setLoadingComentarios(false);
 
-    setComentarioUser('');
-    } catch (erro) {
-      console.log('Erro em adicionaComentario', erro);
-    };
-    // Cria um nó de comentários com o nome de quem comentou, a nota que ele deu à receita e o próprio comentário.
-  };
-
-  useEffect(() => {
-    // Função para buscar quem já comentou.
-    setLoadingComentarios(true);
-
-    if (!recipe || !recipe.id || !recipe.tipo || !No_de_Receita) return;
-    async function buscaComentarios(): Promise<void> {
-      const refComentarios = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/comentarios`);
-      onValue(refComentarios, async (snapshotComentarios) => {
-        if (!snapshotComentarios.exists()) {
-          return;
-          // Caso não haja comentários, a função não faz nada.
-        };
-        const dados = snapshotComentarios.val();
-        setTodosComentarios(dados.slice(1));        
-      });
-    };
-    buscaComentarios();
-
-    setLoadingComentarios(false);
+      return () => ListenerComentarios();
+    } catch (error) {
+      console.log('Erro no useEffect buscar comentários:', error);
+    }
   }, [recipe, No_de_Receita]);
   // Busca quem comentou.
 
   useEffect(() => {
-    // Função para buscar quem já avaliou a receita.
-    setLoadingAvaliacao(true);
+    try {
+      // Função para buscar quem já avaliou a receita.
+      setLoadingAvaliacao(true);
 
-    if (!recipe || !recipe.id || !recipe.tipo || !No_de_Receita) return;
-    async function buscaAvaliacao(): Promise<void> {
+      if (!recipe || !recipe.id || !recipe.tipo || !No_de_Receita) return;
+
       const refAvaliacao = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/avaliacao/quem_avaliou`);
-      onValue(refAvaliacao, async (snapshotAvaliacoes) => {
-        if (!snapshotAvaliacoes.exists()) {
-          return;
-          // Caso não haja avaliações, a função não faz nada.
-        };
-        const dados = snapshotAvaliacoes.val();
-        setTodasAvaliacoes(dados.slice(1));        
-      });
-    };
-    buscaAvaliacao();
+      const ListenerAvaliacao = onValue(refAvaliacao, async (snapshotAvaliacoes) => 
+        {
+          try {
+            if (!snapshotAvaliacoes.exists()) {
+              return;
+              // Caso não haja avaliações, a função não faz nada.
+            };
+            const dados = snapshotAvaliacoes.val();
+            setTodasAvaliacoes(dados.filter(Boolean));        
+          } catch (error) {
+            console.log('Erro no ListenerAvaliacao:', error);
+          }
+        });
 
-    setLoadingAvaliacao(false);
+      setLoadingAvaliacao(false);
+
+      return () => ListenerAvaliacao();
+    } catch (error) {
+      console.log('Erro no useEffect buscar avaliações:', error);
+    }
   }, [recipe, No_de_Receita]);
   // Busca quem avaliou.
 
   useEffect(() => {
-    // Verifica o ranking do usuário para permitir ou não comentar.
-    if (!emailB64.current || !emailB64 || emailB64.current === '') return;
-    setLoadingRanking(true);
-    async function buscaRanking(): Promise<void> {
-      const refRankingAtual = ref(db, `usuarios/${emailB64.current}`);
-      const snapshotRankingAtual = await get (refRankingAtual);
-      const dados = snapshotRankingAtual.val();
-      const ranking = dados?.rankingAtual;
-      if (ranking === 'NoRank') {
-        setVerificaRanking(false);
-      } else {
-        setVerificaRanking(true);
-        // É preciso ser ranking bronze para comentar, e o ranking bronze é o primeiro ranking que o usuário pode alcançar.
+    try {
+      // Verifica o ranking do usuário para permitir ou não comentar.
+      if (!emailB64.current || !emailB64 || emailB64.current === '') return;
+      setLoadingRanking(true);
+      async function buscaRanking(): Promise<void> {
+        try {
+          const refRankingAtual = ref(db, `usuarios/${emailB64.current}`);
+          const snapshotRankingAtual = await get (refRankingAtual);
+          const dados = snapshotRankingAtual.val();
+          const ranking = dados?.rankingAtual;
+          if (ranking === 'NoRank') {
+            setVerificaRanking(false);
+          } else {
+            setVerificaRanking(true);
+            // É preciso ser ranking bronze para comentar, e o ranking bronze é o primeiro ranking que o usuário pode alcançar.
+          };
+        } catch (error) {
+          console.log('Erro em buscaRanking:', error);
+        }
       };
-    };
-    buscaRanking();
-    
-    setLoadingRanking(false);
+      buscaRanking();
+      
+      setLoadingRanking(false);
+    } catch (error) {
+      console.log('Erro no useEffect verificar ranking:', error);
+    }
   }, [emailB64.current]);
   // Verifica o ranking do usuário.
 
   useEffect(() => {
-    // UseEffect que verifica se o usuário já avaliou a receita.
-    if (!nome || !emailB64.current || !No_de_Receita || !recipe) return;
+    try {
+      // UseEffect que verifica se o usuário já avaliou a receita.
+      if (!nome || !emailB64.current || !No_de_Receita || !recipe) return;
 
-    async function verificarAvaliacao() {
-      
       const refUsuario = ref(db, `usuarios/${emailB64.current}/avaliacoes/${No_de_Receita}/${recipe.tipo}`);
-      onValue(refUsuario, async (snapshot) => {
-        if (!snapshot.exists()) {
-          setJaAvaliou(false);
-          // Se o usuário não avaliou nenhuma receita desse tipo ou nó, o valor é false;
-        } else {
-          let dados = snapshot.val();
-          dados = dados.slice(1);
-          const dadosFiltrados = dados.filter((avaliacao: any) => avaliacao.id == recipe.id);
-          
-          if (!dadosFiltrados || dadosFiltrados.length === 0) {
-            setJaAvaliou(false);
-          } else {
-          setJaAvaliou(true);
-          // Se o usuário já avaliou a receita, setamos para true
-          };
+      const ListenerAvaliou = onValue(refUsuario, async (snapshot) => 
+        {
+          try {
+            if (!snapshot.exists()) {
+              setJaAvaliou(false);
+              // Se o usuário não avaliou nenhuma receita desse tipo ou nó, o valor é false;
+            } else {
+              let dados = snapshot.val();
+              dados = dados.filter(Boolean);
+              const dadosFiltrados = dados.filter((avaliacao: any) => avaliacao.id == recipe.id);
+              
+              if (!dadosFiltrados || dadosFiltrados.length === 0) {
+                setJaAvaliou(false);
+              } else {
+              setJaAvaliou(true);
+              // Se o usuário já avaliou a receita, setamos para true
+              };
+            };
+          } catch (error) {
+            console.log('Erro no ListenerAvaliou:', error);
+          }
+        });
 
-        };
-      });
-    };
-    verificarAvaliacao();
-
+      return () => ListenerAvaliou();
+    } catch (error) {
+      console.log('Erro no useEffect verificar se já avaliou:', error);
+    }
   }, [emailB64.current, recipe, No_de_Receita]);
   // Verifica se o usuário já avaliou a receita.
 
   const concluirReceita = async () => {
-    const refConcluirReceita = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/quem_concluiu`);
-    const snapshot = await get(refConcluirReceita);
-    const idChildren = snapshot.exists() ? snapshot.numChildren() : 1;
-    const refConcluirReceitaID = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/quem_concluiu/${idChildren}`);
-    if (!snapshot.exists()) {
-      set(refConcluirReceitaID, {
-        email: emailB64.current
-      });
-    } else {
-      update(refConcluirReceitaID, {
-        email: emailB64.current
-      });
-    };
-    setJaConcluiu(true);
+    try {
+      const refConcluirReceita = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/quem_concluiu`);
+      const snapshot = await get(refConcluirReceita);
+      const idChildren = snapshot.exists() ? snapshot.numChildren() : 1;
+      const refConcluirReceitaID = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/quem_concluiu/${idChildren}`);
+      if (!snapshot.exists()) {
+        set(refConcluirReceitaID, {
+          email: emailB64.current
+        });
+      } else {
+        update(refConcluirReceitaID, {
+          email: emailB64.current
+        });
+      };
+      setJaConcluiu(true);
+    } catch (error) {
+      console.log('Erro em concluirReceita:', error);
+    }
   };
   // Função que atualiza quem concluiu a receita.
 
   useEffect(() => {
-    if (!recipe || !No_de_Receita) return;
-    
-    async function buscaQuemConcluiu() {
-      const refConcluirReceita = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/quem_concluiu`);
-      const snapshot = await get(refConcluirReceita)
-      if (!snapshot.exists()) return;
-      const dados = snapshot.val();
-      const quemConcluiu = dados.filter(Boolean);
-      const usuario_concluiu = quemConcluiu.filter((usuario: any) => usuario.email === emailB64.current);
-      if (usuario_concluiu.length === 0) return;
-      else return setJaConcluiu(true);
-    };
+    try {
+      if (!recipe || !No_de_Receita) return;
+      
+      async function buscaQuemConcluiu() {
+        try {
+          const refConcluirReceita = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/quem_concluiu`);
+          const snapshot = await get(refConcluirReceita)
+          if (!snapshot.exists()) return;
+          const dados = snapshot.val();
+          const quemConcluiu = dados.filter(Boolean);
+          const usuario_concluiu = quemConcluiu.filter((usuario: any) => usuario.email === emailB64.current);
+          if (usuario_concluiu.length === 0) return;
+          else return setJaConcluiu(true);
+        } catch (error) {
+          console.log('Erro em buscaQuemConcluiu:', error);
+        }
+      };
 
-    buscaQuemConcluiu();
+      buscaQuemConcluiu();
+    } catch (error) {
+      console.log('Erro no useEffect buscaQuemConcluiu:', error);
+    }
   }, [recipe, No_de_Receita]);
   // Verifica se o usuário já concluiu a receita.
 
@@ -332,71 +402,72 @@ export default function Receita({ route, navigation }: Props) {
     <LoaderCompleto/>
   );
 
-  if (Comentario) return (
-    <View className='flex-1 h-full bg-[#ff6e14ff]'>
-        <Modal transparent visible={Comentario} onRequestClose={() => setComentario(false)} animationType='slide'>
-            <View className='h-full'>
-                <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1.6}} className='h-full w-full items-center justify-center' colors={['#ff6e14ff', '#ff7a28ff']}>
-                  <View className='min-h-[450px] min-w-[300px] items-start p-2 bg-white border-[4px] rounded-xl border-[#242222ff]'>
-                    <Pressable onPress={() => {setComentario(false); setComentarioUser('');}}>
-                      <Ionicons name="arrow-back-outline" size={34} color="#000000ff" />
-                    </Pressable>
-                    <Text className='text-2xl mt-4 ml-2 font-bold'>
-                      Escreva seu comentário
-                    </Text>
-                    <Text className='text-2xl mb-4 ml-2 font-bold'>
-                      ou apenas avalie a receita
-                    </Text>
-                    
-                    <View className='flex-row items-center'>
-                      <Image className='w-[80px] h-[80px]' source={require('../../../assets/TelaPrincipal/user.png')} />
-                      <Text className='text-lg font-medium'>
-                        Gabriel Grozinski
+  if (Comentario) 
+    return (
+      <View className='flex-1 h-full bg-[#ff6e14ff]'>
+          <Modal transparent visible={Comentario} onRequestClose={() => setComentario(false)} animationType='slide'>
+              <View className='h-full'>
+                  <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1.6}} className='h-full w-full items-center justify-center' colors={['#ff6e14ff', '#ff7a28ff']}>
+                    <View className='min-h-[450px] min-w-[300px] items-start p-2 bg-white border-[4px] rounded-xl border-[#242222ff]'>
+                      <Pressable onPress={() => {setComentario(false); setComentarioUser('');}}>
+                        <Ionicons name="arrow-back-outline" size={34} color="#000000ff" />
+                      </Pressable>
+                      <Text className='text-2xl mt-4 ml-2 font-bold'>
+                        Escreva seu comentário
                       </Text>
-                    </View>
-
-                    <View className='min-h-[100px] self-center items-center min-w-[90%] bg-gray-100 rounded-2xl'>
+                      <Text className='text-2xl mb-4 ml-2 font-bold'>
+                        ou apenas avalie a receita
+                      </Text>
                       
-                      <TextInput
-                      ref={comentarioInputRef}
-                      value={comentarioUser}
-                      onChangeText={texto => setComentarioUser(texto)}
-                      placeholder='Compartilhe sua opinião sobre a receita...'
-                      placeholderTextColor={'#5b5a59ff'}
-                      returnKeyType='done'
-                      keyboardType='default'
-                      className="text-lg min-h-[100px] max-h-[100px] min-w-[85%] max-w-[85%] font-semibold mx-1 text-gray-800"
-                      multiline
-                      submitBehavior='blurAndSubmit'
-                      textAlignVertical='top'
-                      />
+                      <View className='flex-row items-center mb-2'>
+                        <Image className='w-[60px] h-[60px] mr-2' source={{uri: imagemPerfil.current}} />
+                        <Text className='text-lg font-medium'>
+                          {nome.current}
+                        </Text>
+                      </View>
+
+                      <View className='min-h-[100px] self-center items-center min-w-[90%] bg-gray-100 rounded-2xl'>
+                        
+                        <TextInput
+                        ref={comentarioInputRef}
+                        value={comentarioUser}
+                        onChangeText={texto => setComentarioUser(texto)}
+                        placeholder='Compartilhe sua opinião sobre a receita...'
+                        placeholderTextColor={'#5b5a59ff'}
+                        returnKeyType='done'
+                        keyboardType='default'
+                        className="text-lg min-h-[100px] max-h-[100px] min-w-[85%] max-w-[85%] font-semibold mx-1 text-gray-800"
+                        multiline
+                        submitBehavior='blurAndSubmit'
+                        textAlignVertical='top'
+                        />
+
+                      </View>
+
+                      <View className='flex-row items-center'>
+                        <Text className='font-bold text-xl mx-2'>
+                          Avaliação: 
+                        </Text>
+                        <AvaliacaoReceita nome={nome.current} usuarioAtual={emailB64.current} No_de_Receita={No_de_Receita} recipe={recipe} tamanho={25} />
+                      </View>
+                      
+                      <TouchableOpacity    
+                        onPress={() => {adicionaComentario(comentarioUser); setComentario(false);}}
+                        className='w-[95%] rounded-xl mb-2 self-center'
+                      >
+                        <Text className="text-center text-xl p-2 bg-[#FF6C44] mx-4 border border-transparent rounded-lg font-bold text-white">
+                          Publicar Comentário
+                        </Text>
+                      </TouchableOpacity>
 
                     </View>
-
-                    <View className='flex-row items-center'>
-                      <Text className='font-bold text-xl mx-2'>
-                        Avaliação: 
-                      </Text>
-                      <AvaliacaoReceita nome={nome.current} usuarioAtual={emailB64.current} No_de_Receita={No_de_Receita} recipe={recipe} tamanho={25} />
-                    </View>
-                    
-                    <TouchableOpacity    
-                      onPress={() => {adicionaComentario(comentarioUser); setComentario(false);}}
-                      className='w-[95%] rounded-xl mb-2 self-center'
-                    >
-                      <Text className="text-center text-xl p-2 bg-[#FF6C44] mx-4 border border-transparent rounded-lg font-bold text-white">
-                        Publicar Comentário
-                      </Text>
-                    </TouchableOpacity>
-
-                  </View>
-                </LinearGradient>
-            </View>
+                  </LinearGradient>
+              </View>
 
 
-        </Modal>
-    </View>
-  );
+          </Modal>
+      </View>
+    );
 
   if (Avaliacao) return (
     <View className='flex-1 h-full bg-[#ff6e14ff]'>
@@ -409,9 +480,9 @@ export default function Receita({ route, navigation }: Props) {
                     </Pressable>
                     
                     <View className='flex-row items-center'>
-                      <Image className='w-[80px] h-[80px]' source={require('../../../assets/TelaPrincipal/user.png')} />
+                      <Image className='w-[60px] h-[60px] mr-2' source={{uri: imagemPerfil.current}} />
                       <Text className='text-lg font-medium'>
-                        Gabriel Grozinski
+                        {nome.current}
                       </Text>
                     </View>
 
@@ -452,7 +523,7 @@ export default function Receita({ route, navigation }: Props) {
         <View style={{elevation: 1, shadowColor: 'black'}} className={`w-[85%] min-h-[${55 + 35*recipe.ingredientes.length}px] bg-white -mt-10 self-center rounded-2xl`}>
           <LinearGradient
           colors={['transparent', 'rgba(255, 235, 223, 1)']}
-          className={`h-[${55 + 35*recipe.ingredientes.length}px] w-full items-center justify-around self-center`}
+          className={`min-h-[${55 + 35*recipe.ingredientes.length}px] w-full items-center justify-around self-center`}
           start={{x: 0, y: 0}}
           end={{x: 0, y: 3}}
           >
@@ -460,7 +531,7 @@ export default function Receita({ route, navigation }: Props) {
           {recipe.ingredientes.map((item: any, index: number) => (
             <View key={index} className="flex-row w-full items-center mr-4 ml-10 mb-2">
               <Ionicons name="checkmark-circle-sharp" size={24} color="#FF6C44" />
-              <Text className="ml-1 capitalize text-lg text-center">
+              <Text className="ml-1 text-lg text-center">
                 {`${item.ing} ${item.quantidade} ${item.medida}`}
               </Text>
             </View>
@@ -591,8 +662,8 @@ export default function Receita({ route, navigation }: Props) {
               <ScrollView nestedScrollEnabled={true} contentContainerClassName="w-[290px] self-center">
                 {todosComentarios.map((comentario: any, index: number) => (
                   <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario', {usuarioAtual: comentario.email, status_usuario: 'Outro'})} key={index} className='flex-row w-[290px] h-[80px] items-center justify-start'>
-                    <Image className='w-[80px] h-[80px]' source={require('../../../assets/TelaPrincipal/user.png')} />
-                    <View className='max-w-[210px] justify-around max-h-[80px] h-full'>
+                    <Image className='w-[60px] h-[60px] mr-2' source={{uri: comentario.imagemPerfil}} />
+                    <View className='max-w-[210px] justify-center max-h-[80px] h-full'>
                       <View className='flex-row'>
                         <Text className='text-lg font-bold mr-2'>
                           {comentario.nome}
@@ -606,6 +677,7 @@ export default function Receita({ route, navigation }: Props) {
                             color="rgba(255, 227, 71, 1)"
                           />
                         ))}
+
                       </View>
                       <Text numberOfLines={2} className='text-sm mr-2 truncate max-h-[35px]'>
                         {comentario.comentario}
@@ -670,7 +742,7 @@ export default function Receita({ route, navigation }: Props) {
               <ScrollView nestedScrollEnabled={true} contentContainerClassName="w-[290px] self-center">
                 {todasAvaliacoes.map((avaliacao: any, index: number) => (
                   <View key={index} className='flex-row w-[290px] h-[80px] items-center justify-start'>
-                    <Image className='w-[80px] h-[80px]' source={require('../../../assets/TelaPrincipal/user.png')} />
+                    <Image className='w-[60px] h-[60px] mr-2' source={{uri: avaliacao.imagemPerfil}} />
                     <View className='max-w-[210px] justify-around max-h-[80px] h-full'>
                       <View className='flex-row'>
                         <Text className='text-lg font-bold mr-2'>
@@ -742,7 +814,7 @@ export default function Receita({ route, navigation }: Props) {
        
       </ScrollView>
         <View className='absolute -bottom-1'>
-          <Barra />
+          <Barra/>
         </View>
     </ImageBackground>
   );

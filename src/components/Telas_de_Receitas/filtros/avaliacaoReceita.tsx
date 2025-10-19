@@ -1,4 +1,4 @@
-import React, { useState, useEffect, cache } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Pressable, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getDatabase, ref, get, set, update } from '@react-native-firebase/database';
@@ -99,6 +99,12 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
           media: media,
         });
 
+        // Recupera a imagem do usuário.
+        const refUsuario = ref(db, `usuarios/${usuarioAtual}`);
+        const snapshotUsuario = await get(refUsuario);
+        const dadosUsuario = snapshotUsuario.val();
+        const imagemPerfil = dadosUsuario?.imagemPerfil;
+
         // Salva a avaliação no banco de dados da própria receita.
         const refAvaliacao = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/avaliacao/quem_avaliou`);
         const snapshotAvaliacao = await get (refAvaliacao);
@@ -107,7 +113,8 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
             1: {
               nome: nome,
               nota: valor,
-              email: usuarioAtual
+              email: usuarioAtual,
+              imagemPerfil: imagemPerfil
             }
           });
 
@@ -118,6 +125,7 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
             nome: nome,
             nota: valor,
             email: usuarioAtual,
+            imagemPerfil: imagemPerfil
           });
         };
 
@@ -183,7 +191,7 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
       const idReceita = recipe.id;
       let refReceitaUsuario = ref(db, `usuarios/${emailUsuarioReceita}/receitas/${tipoUsuarioReceita}`)
       let snapshotReceitaUsuario = await get(refReceitaUsuario);
-      let dadosReceitaUsuario = snapshotReceitaUsuario.val().slice(1);
+      let dadosReceitaUsuario = snapshotReceitaUsuario.val().filter(Boolean);
       let idDaReceita = dadosReceitaUsuario.filter((receita: any) => receita.id === idReceita);
       // Pega a receita com o id correto.
 

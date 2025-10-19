@@ -24,7 +24,7 @@ const db = getDatabase(app);
 let recipesVegetarianas: any = [
   {
     email: '',
-    id: '1',
+    id: 1,
     title: 'Omelete de Legumes',
     description: 'Omelete leve e saborosa com legumes variados.',
     dif: 'Fácil de fazer!',
@@ -32,13 +32,14 @@ let recipesVegetarianas: any = [
     image: require('../../../../assets/Receitas/ReceitasVegetarianas/omelete.png'),
     autor: 'Mistura Boa',
     tipo: 'vegetariano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Ovos', quantidade: '2', icone: '🥚' },
-      { ing: 'Cebola picada', quantidade: '1/2', icone: '🧅' },
-      { ing: 'Tomate picado', quantidade: '1', icone: '🍅' },
-      { ing: 'Pimentão picado', quantidade: '1/4', icone: '🫑' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Azeite de oliva', quantidade: '1 colher de chá', icone: '🫒' },
+      { ing: 'Ovo', quantidade: '2', medida: 'unidade', id: 1 },
+      { ing: 'Cebola picada', quantidade: '0.5', medida: 'unidade', id: 2 },
+      { ing: 'Tomate picado', quantidade: '1', medida: 'unidade', id: 3 },
+      { ing: 'Pimentão picado', quantidade: '0.25', medida: 'unidade', id: 4 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 5 }, // "a gosto" padronizado
+      { ing: 'Azeite de oliva', quantidade: '1', medida: 'colher', id: 6 },
     ],
     passos: [
       'Bata os ovos com sal e pimenta.',
@@ -54,7 +55,7 @@ let recipesVegetarianas: any = [
   },
   {
     email: '',
-    id: '2',
+    id: 2,
     title: 'Estrogonofe de Cogumelos',
     description: 'Um clássico em versão vegetariana.',
     dif: 'Um pouco complicada...',
@@ -62,14 +63,15 @@ let recipesVegetarianas: any = [
     image: require('../../../../assets/Receitas/ReceitasVegetarianas/cogumelo.png'),
     autor: 'Mistura Boa',
     tipo: 'vegetariano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Cogumelos frescos fatiados', quantidade: '200g', icone: '🍄' },
-      { ing: 'Creme de leite', quantidade: '100ml', icone: '🥛' },
-      { ing: 'Cebola picada', quantidade: '1/2', icone: '🧅' },
-      { ing: 'Molho de tomate', quantidade: '2 colheres de sopa', icone: '🍅' },
-      { ing: 'Azeite de oliva', quantidade: '1 colher de sopa', icone: '🫒' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Arroz branco cozido', quantidade: 'para acompanhar', icone: '🍚' },
+      { ing: 'Cogumelo fresco fatiado', quantidade: '200', medida: 'grama', id: 1 },
+      { ing: 'Creme de leite', quantidade: '100', medida: 'ml', id: 2 },
+      { ing: 'Cebola picada', quantidade: '0.5', medida: 'unidade', id: 3 },
+      { ing: 'Molho de tomate', quantidade: '2', medida: 'colher', id: 4 },
+      { ing: 'Azeite de oliva', quantidade: '1', medida: 'colher', id: 5 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 6 }, // "a gosto" padronizado
+      { ing: 'Arroz branco cozido', quantidade: '1', medida: 'xícara', id: 7 }, // para acompanhar
     ],
     passos: [
       'Aqueça o azeite e refogue a cebola até dourar.',
@@ -85,7 +87,7 @@ let recipesVegetarianas: any = [
   },
   {
     email: '',
-    id: '3',
+    id: 3,
     title: 'Moqueca Vegetariana',
     description: 'Moqueca deliciosa sem ingredientes de origem animal.',
     dif: 'Difícil!',
@@ -93,15 +95,16 @@ let recipesVegetarianas: any = [
     image: require('../../../../assets/Receitas/ReceitasVegetarianas/moqueca.png'),
     autor: 'Mistura Boa',
     tipo: 'vegetariano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Palmito em rodelas', quantidade: '200g', icone: '🌴' },
-      { ing: 'Tomate picado', quantidade: '2', icone: '🍅' },
-      { ing: 'Pimentão em tiras', quantidade: '1', icone: '🫑' },
-      { ing: 'Cebola em rodelas', quantidade: '1', icone: '🧅' },
-      { ing: 'Leite de coco', quantidade: '200ml', icone: '🥥' },
-      { ing: 'Azeite de dendê', quantidade: '1 colher de sopa', icone: '🟠' },
-      { ing: 'Coentro picado', quantidade: 'a gosto', icone: '🌿' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
+      { ing: 'Palmito em rodelas', quantidade: '200', medida: 'grama', id: 1 },
+      { ing: 'Tomate picado', quantidade: '2', medida: 'unidade', id: 2 },
+      { ing: 'Pimentão em tiras', quantidade: '1', medida: 'unidade', id: 3 },
+      { ing: 'Cebola em rodelas', quantidade: '1', medida: 'unidade', id: 4 },
+      { ing: 'Leite de coco', quantidade: '200', medida: 'ml', id: 5 },
+      { ing: 'Azeite de dendê', quantidade: '1', medida: 'colher', id: 6 },
+      { ing: 'Coentro picado', quantidade: '1', medida: 'grama', id: 7 }, // "a gosto" padronizado
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 8 }, // "a gosto" padronizado
     ],
     passos: [
       'Em uma panela, faça camadas de cebola, tomate, pimentão e palmito.',
@@ -117,7 +120,7 @@ let recipesVegetarianas: any = [
   },
   {
     email: '',
-    id: '4',
+    id: 4,
     title: 'Macarrão com Espinafre',
     description: 'Macarrão com espinafre e queijo.',
     dif: 'Mestre-cuca!',
@@ -125,14 +128,15 @@ let recipesVegetarianas: any = [
     image: require('../../../../assets/Receitas/ReceitasVegetarianas/macarrao.png'),
     autor: 'Mistura Boa',
     tipo: 'vegetariano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Macarrão tipo penne ou fusilli', quantidade: '250g', icone: '🍝' },
-      { ing: 'Espinafre fresco', quantidade: '1 maço', icone: '🥬' },
-      { ing: 'Queijo parmesão ralado', quantidade: '50g', icone: '🧀' },
-      { ing: 'Alho picado', quantidade: '2 dentes', icone: '🧄' },
-      { ing: 'Azeite de oliva', quantidade: '2 colheres de sopa', icone: '🫒' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Creme de leite', quantidade: '100ml', icone: '🥛' },
+      { ing: 'Macarrão tipo penne ou fusilli', quantidade: '250', medida: 'grama', id: 1 },
+      { ing: 'Espinafre fresco', quantidade: '1', medida: 'unidade', id: 2 }, // maço = unidade
+      { ing: 'Queijo parmesão ralado', quantidade: '50', medida: 'grama', id: 3 },
+      { ing: 'Alho picado', quantidade: '2', medida: 'unidade', id: 4 }, // dentes = unidade
+      { ing: 'Azeite de oliva', quantidade: '2', medida: 'colher', id: 5 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 6 }, // "a gosto" padronizado
+      { ing: 'Creme de leite', quantidade: '100', medida: 'ml', id: 7 },
     ],
     passos: [
       'Cozinhe o macarrão em água fervente com sal até ficar al dente. Escorra e reserve.',
@@ -149,7 +153,7 @@ let recipesVegetarianas: any = [
   },
   {
     email: '',
-    id: '5',
+    id: 5,
     title: 'Lasanha de Berinjela',
     description: 'Uma lasanha leve e saborosa, feita com fatias de berinjela grelhadas.',
     dif: 'Um pouco complicada...',
@@ -157,14 +161,15 @@ let recipesVegetarianas: any = [
     image: require('../../../../assets/Receitas/ReceitasVegetarianas/lasanha.png'),
     autor: 'Mistura Boa',
     tipo: 'vegetariano',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Berinjela', quantidade: '2 médias', icone: '🍆' },
-      { ing: 'Molho de tomate', quantidade: '2 xícaras', icone: '🍅' },
-      { ing: 'Queijo mussarela ralado', quantidade: '150g', icone: '🧀' },
-      { ing: 'Queijo parmesão ralado', quantidade: '50g', icone: '🧀' },
-      { ing: 'Azeite de oliva', quantidade: '2 colheres de sopa', icone: '🫒' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Manjericão fresco', quantidade: 'a gosto', icone: '🌿' },
+      { ing: 'Berinjela', quantidade: '2', medida: 'unidade', id: 1 },
+      { ing: 'Molho de tomate', quantidade: '2', medida: 'xícara', id: 2 },
+      { ing: 'Queijo mussarela ralado', quantidade: '150', medida: 'grama', id: 3 },
+      { ing: 'Queijo parmesão ralado', quantidade: '50', medida: 'grama', id: 4 },
+      { ing: 'Azeite de oliva', quantidade: '2', medida: 'colher', id: 5 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'grama', id: 6 }, // "a gosto" padronizado
+      { ing: 'Manjericão fresco', quantidade: '1', medida: 'grama', id: 7 }, // "a gosto" padronizado
     ],
     passos: [
       'Corte as berinjelas em fatias finas no sentido do comprimento.',
@@ -191,49 +196,65 @@ export default function ReceitasVegetarianaApp({navigation}: Props) {
   const [loadingFavoritas, setLoadingFavoritas] = useState<boolean>(true);
 
   useEffect(() => {
-    dispatch(modificaOrdenacao('Ordenação Padrão'));
-    setLoadingReceitas(true);
-    async function ReceitaFirebase() {
-      await buscaReceitas();
+    // Função que busca todas as receitas vegetarianas e cria um nó para cada uma delas.
+    try {
+      dispatch(modificaOrdenacao('Ordenação Padrão'));
+      setLoadingReceitas(true);
       const refReceita = ref(db, `ReceitasApp/vegetariano`);
-      onValue(refReceita, async (snapshot) => {
-        await buscaReceitas();
+      const listenerRefReceita = onValue(refReceita, async (snapshot) => {
+          await buscaReceitas();
       });
-
-      for (let i = 0; i < recipesVegetarianas.length; i++) {
-        let refReceita = ref(db, `ReceitasApp/${recipesVegetarianas[i].tipo}/${recipesVegetarianas[i].id}`);
-        let snapshot = await get(refReceita);
-        if (!snapshot.exists()) {
-          await update(refReceita, {
-          ...recipesVegetarianas[i]
-        });
-        };
+      
+      async function ReceitaFirebase() {
+        try {
+          await buscaReceitas();
+          for (let i = 0; i < recipesVegetarianas.length; i++) {
+            let refReceita = ref(db, `ReceitasApp/${recipesVegetarianas[i].tipo}/${recipesVegetarianas[i].id}`);
+            let snapshot = await get(refReceita);
+            if (!snapshot.exists()) {
+              await update(refReceita, {
+                ...recipesVegetarianas[i]
+              });
+            };
+          };
+        } catch (error) {
+          console.log('Erro em ReceitaFirebase:', error);
+        }
       };
-    };
-    ReceitaFirebase();
-    
-    const user = onAuthStateChanged(authInstance, usuario => {
-      if (!usuario || !usuario.email) return;
-      setEmailB64(Base64.encode(usuario.email));
-    });
-    setLoadingReceitas(false);
 
-    return () => user();
+      ReceitaFirebase();
+
+      const user = onAuthStateChanged(authInstance, usuario => {
+        if (!usuario || !usuario.email) return;
+        setEmailB64(Base64.encode(usuario.email));
+      });
+      setLoadingReceitas(false);
+
+      return () => {user(); listenerRefReceita();};
+    } catch (error) {
+      console.log('Erro no useEffect principal:', error);
+    }
   }, [authInstance]);
+  // Busca todas as receitas vegetarianas e cria um nó pra elas, além de pegar o email do usuário.
 
   async function buscaReceitas() {
-    const refReceita = ref(db, `ReceitasApp/vegetariano`);
-    const snapshot = await get(refReceita);
-    const dados = snapshot.val();
-    const receitas = dados.slice(1);
-    
-    for (let i = 0; i < recipesVegetarianas.length; i++) {
-      recipesVegetarianas[i] = {
-        ...recipesVegetarianas[i], 
-        avaliacao: receitas[i].avaliacao, 
-        comentarios: receitas[i].comentarios}
-    };
-  };
+    try {
+      const refReceita = ref(db, `ReceitasApp/vegetariano`);
+      const snapshot = await get(refReceita);
+      const dados = snapshot.val();
+      const receitas = dados.filter(Boolean);
+      
+      for (let i = 0; i < recipesVegetarianas.length; i++) {
+        recipesVegetarianas[i] = {
+          ...recipesVegetarianas[i], 
+          avaliacao: receitas[i].avaliacao, 
+          comentarios: receitas[i].comentarios}
+      };
+    } catch (error) {
+      console.log('Erro em buscaReceitas:', error);
+    }
+  }
+  // Função que busca todas as receitas vegetarianas do banco e atualiza o array local.
 
   const adicionaFavorito = async (recipe: any) => {
     // Função que adiciona a receita em sua lista de favoritos.
@@ -243,14 +264,9 @@ export default function ReceitasVegetarianaApp({navigation}: Props) {
       const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
       onValue(refOriginal, async (snapshot) => {
         if (snapshot.exists()) {
-          const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
+          const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
           const verifica_se_ja_existe = receitasFavoritadas.some((r: any) => r.id === recipe.id && r.tipo === recipe.tipo && r.autor === recipe.autor);
           receitaFavoritada = verifica_se_ja_existe;
-          // Verifica se a receita que está prestes a ser favoritada já existe na lista de favoritos do usuário.
-          // A verificação é feita analisando o id, tipo e autor, pois são os únicos atributos que diferenciam uma receita de outra.
-          // O id pode ser o mesmo se o tipo for diferente, e o autor também pode ser o mesmo se o tipo for diferente.
-          // Por isso é importante verificar os 3 ao mesmo tempo.
-          // Se a receita já foi favoritada, retorna true; senão, false.
         };
     
         if (receitaFavoritada) {
@@ -266,31 +282,57 @@ export default function ReceitasVegetarianaApp({navigation}: Props) {
         });
         await buscaReceitasFavoritas(false);
       }, { onlyOnce: true });
-      // O campo idChildren serve para organizar as receitas favoritadas na ordem que o usuário as favoritou.
       Alert.alert('Receita Favoritada', 'A receita foi adicionada aos seus favoritos!');
       
     } catch (erro: any) {
       console.log('Erro:', erro.message)
     };
   };
-
-  onValue(ref(db, `usuarios/${emailB64}/receitasFavoritas`), async snapshot => await buscaReceitasFavoritas(false));
-
-  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
-    setLoadingFavoritas(precisa_de_loading);
-    const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
-    const snapshot = await get(refOriginal);
-    if (snapshot.exists()) {
-      const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
-      const receitasFavoritadasVegetarianas = receitasFavoritadas.filter((r: any) => r.tipo === 'vegetariano');
-      setReceita(receitasFavoritadasVegetarianas.map((r: any) => r.id));
-    };
-    setLoadingFavoritas(false);
-  };
+  // Função que adiciona a receita em sua lista de favoritos.
 
   useEffect(() => {
-    buscaReceitasFavoritas(true);
+    // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+    try {
+      if (!emailB64) return;
+
+      const refFavoritos = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const unsubscribeFavoritos = onValue(refFavoritos, async snapshot => {
+        await buscaReceitasFavoritas(false);
+      });
+
+      return () => unsubscribeFavoritos();
+    } catch (error) {
+      console.log('Erro no useEffect de favoritos:', error);
+    }
   }, [emailB64]);
+  // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+
+  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
+    try {
+      setLoadingFavoritas(precisa_de_loading);
+      const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const snapshot = await get(refOriginal);
+      if (snapshot.exists()) {
+        const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
+        const receitasFavoritadasVegetarianas = receitasFavoritadas.filter((r: any) => r.tipo === 'vegetariano' && r.email === '');
+        setReceita(receitasFavoritadasVegetarianas.map((r: any) => r.id));
+      };
+      setLoadingFavoritas(false);
+    } catch (error) {
+      console.log('Erro em buscaReceitasFavoritas:', error);
+    }
+  }
+  // Função que busca as receitas favoritas.
+
+  useEffect(() => {
+    try {
+      buscaReceitasFavoritas(true);
+    } catch (error) {
+      console.log('Erro no useEffect de buscaReceitasFavoritas:', error);
+    }
+  }, [emailB64]);
+  // UseEffect que busca receitas favoritas ao carregar o email.
+
 
   if (loadingFavoritas || loadingReceitas) return (
     <LoaderCompleto/>

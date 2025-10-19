@@ -31,9 +31,11 @@ import ReceitasFavoritas from '../components/ReceitasDeUsuarioEspecifico/Receita
 import CriarReceita from '../components/GeraReceita/CriaReceita.tsx';
 import ReceitasCriadas from '../components/ReceitasDeUsuarioEspecifico/ReceitasCriadas.tsx';
 
+
 const Stack = createNativeStackNavigator<TiposRotas>();
 
 export default function Rotas() {
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='primeiraTela' screenOptions={{headerShown: false}}>

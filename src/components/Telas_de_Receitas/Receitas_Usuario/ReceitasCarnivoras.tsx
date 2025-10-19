@@ -32,31 +32,38 @@ export default function ReceitasCarnivoraUsuarios({navigation}: Props) {
   const [loadingFavoritas, setLoadingFavoritas] = useState<boolean>(true);
   const [recipesCarnivoras, setRecipesCarnivoras] = useState<any[]>([]);
   
-
   useEffect(() => {
     // Função que busca todas as receitas carnívoras e cria um nó para cada uma delas.
-    dispatch(modificaOrdenacao('Ordenação Padrão'));
-    setLoadingReceitas(true);
-    
-    async function ReceitaFirebase() {
-      await buscaReceitas();
+    try {
+      dispatch(modificaOrdenacao('Ordenação Padrão'));
+      setLoadingReceitas(true);
+      
       const refReceita = ref(db, `ReceitasUsuarios/carnivoro`);
-      onValue(refReceita, async (snapshot) => {
-        await buscaReceitas();
+      const listenerRefReceita = onValue(refReceita, async (snapshot) => {
+          await buscaReceitas();
       });
-      await buscaReceitas();
-    };
+      
+      async function ReceitaFirebase() {
+        try {
+          await buscaReceitas();
+        } catch (error) {
+          console.log('Erro em ReceitaFirebase:', error);
+        }
+      };
+      ReceitaFirebase();
 
-    ReceitaFirebase();
+      const user = onAuthStateChanged(authInstance, usuario => {
+        if (!usuario || !usuario.email) return;
+        setEmailB64(Base64.encode(usuario.email));
+      });
+      setLoadingReceitas(false);
 
-    const user = onAuthStateChanged(authInstance, usuario => {
-      if (!usuario || !usuario.email) return;
-      setEmailB64(Base64.encode(usuario.email));
-    });
-    setLoadingReceitas(false);
-
-    return () => user();
+      return () => {user(); listenerRefReceita();};
+    } catch (error) {
+      console.log('Erro no useEffect principal:', error);
+    }
   }, [authInstance]);
+  // Busca todas as receitas carnívoras, além de pegar o email do usuário.
 
   async function buscaReceitas() {
     try {  
@@ -65,12 +72,11 @@ export default function ReceitasCarnivoraUsuarios({navigation}: Props) {
       const dados = snapshot.val();
       let receitas = dados.filter(Boolean);
       setRecipesCarnivoras(receitas);
-    
     } catch (erro) {
       console.log('Erro ao fazer requisição', erro);
-    };
-
+    }
   };
+  // Função que busca todas as receitas carnívoras do banco e atualiza o array local.
 
   const adicionaFavorito = async (recipe: any) => {
     // Função que adiciona a receita em sua lista de favoritos.
@@ -80,14 +86,9 @@ export default function ReceitasCarnivoraUsuarios({navigation}: Props) {
       const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
       onValue(refOriginal, async (snapshot) => {
         if (snapshot.exists()) {
-          const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
+          const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
           const verifica_se_ja_existe = receitasFavoritadas.some((r: any) => r.id === recipe.id && r.tipo === recipe.tipo && r.autor === recipe.autor);
           receitaFavoritada = verifica_se_ja_existe;
-          // Verifica se a receita que está prestes a ser favoritada já existe na lista de favoritos do usuário.
-          // A verificação é feita analisando o id, tipo e autor, pois são os únicos atributos que diferenciam uma receita de outra.
-          // O id pode ser o mesmo se o tipo for diferente, e o autor também pode ser o mesmo se o tipo for diferente.
-          // Por isso é importante verificar os 3 ao mesmo tempo.
-          // Se a receita já foi favoritada, retorna true; senão, false.
         };
     
         if (receitaFavoritada) {
@@ -103,31 +104,55 @@ export default function ReceitasCarnivoraUsuarios({navigation}: Props) {
         });
         await buscaReceitasFavoritas(false);
       }, { onlyOnce: true });
-      // O campo idChildren serve para organizar as receitas favoritadas na ordem que o usuário as favoritou.
       Alert.alert('Receita Favoritada', 'A receita foi adicionada aos seus favoritos!');
-      
     } catch (erro: any) {
       console.log('Erro:', erro.message)
-    };
+    }
   };
-
-  onValue(ref(db, `usuarios/${emailB64}/receitasFavoritas`), async snapshot => await buscaReceitasFavoritas(false));
-
-  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
-    setLoadingFavoritas(precisa_de_loading);
-    const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
-    const snapshot = await get(refOriginal);
-    if (snapshot.exists()) {
-      const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
-      const receitasFavoritadasCarnivoras = receitasFavoritadas.filter((r: any) => r.tipo === 'carnivoro' && r.email !== '');
-      setReceita(receitasFavoritadasCarnivoras.map((r: any) => r.id));
-    };
-    setLoadingFavoritas(false);
-  };
+  // Função que adiciona a receita em sua lista de favoritos.
 
   useEffect(() => {
-    buscaReceitasFavoritas(true);
+    // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+    try {
+      if (!emailB64) return;
+
+      const refFavoritos = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const unsubscribeFavoritos = onValue(refFavoritos, async snapshot => {
+        await buscaReceitasFavoritas(false);
+      });
+
+      return () => unsubscribeFavoritos();
+    } catch (error) {
+      console.log('Erro no useEffect de favoritos:', error);
+    }
   }, [emailB64]);
+  // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+
+  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
+    try {
+      setLoadingFavoritas(precisa_de_loading);
+      const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const snapshot = await get(refOriginal);
+      if (snapshot.exists()) {
+        const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
+        const receitasFavoritadasCarnivoras = receitasFavoritadas.filter((r: any) => r.tipo === 'carnivoro' && r.email !== '');
+        setReceita(receitasFavoritadasCarnivoras.map((r: any) => r.id));
+      };
+      setLoadingFavoritas(false);
+    } catch (error) {
+      console.log('Erro em buscaReceitasFavoritas:', error);
+    }
+  };
+  // Função que busca as receitas favoritas.
+
+  useEffect(() => {
+    try {
+      buscaReceitasFavoritas(true);
+    } catch (error) {
+      console.log('Erro no useEffect de buscaReceitasFavoritas:', error);
+    }
+  }, [emailB64]);
+  // UseEffect que busca receitas favoritas ao carregar o email.
 
   if (loadingFavoritas || loadingReceitas) return (
     <LoaderCompleto/>
