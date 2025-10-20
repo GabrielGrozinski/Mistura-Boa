@@ -1,260 +1,250 @@
-# 🍽️ Mistura Boa — App Inteligente de Receitas
-Change the commit to EnglishVersion to read in English
+# 🍽️ Mistura Boa — Smart Recipe App
+Troque o commit para VersãoPortuguês para ler em português
 
  ![MisturaBoa](assets/README/readmePrincipal/MisturaBoa.png) 
 
-Este projeto é um aplicativo de receitas feito em **React Native**, que combina **inteligência artificial**, **Firebase** e **design responsivo** para oferecer uma experiência personalizada ao usuário.  
-O objetivo principal é apresentar uma arquitetura escalável, código limpo e práticas modernas de UI, servindo como projeto de **portfólio profissional**.
+This project is a recipe app built with **React Native**, combining **artificial intelligence**, **Firebase** and **responsive design** to provide a personalized user experience.  
+The main goal is to present a scalable architecture, clean code and modern UI practices, serving as a **professional portfolio project**.
 
 ---
 
-## Plataformas
+## Platforms
 
-- **Android** (desenvolvido e testado)
-- Pode ser adaptado para iOS com pequenos ajustes
+- **Android** (developed and tested)
+- Can be adapted to iOS with small adjustments
 
 ---
 
-## Capturas de Tela
+## Screenshots
 
-### Tela Inicial e Detalhes da Receita
-| Início | Receitas |
+### Home and Recipe Details
+| Home | Recipes |
 |--------|----------|
-| ![Início](assets/README/readmePrincipal/tela1.jpg) | ![Receitas](assets/README/readmePrincipal/tela2.jpg) |
+| ![Home](assets/README/readmePrincipal/tela1.jpg) | ![Recipes](assets/README/readmePrincipal/tela2.jpg) |
 
-### Criação de Receitas
-| Gerador de Receita | Criar Receita |
-|--------------------|---------------|
-| ![GeradordeReceita](assets/README/readmePrincipal/tela3.jpg) | ![CriarReceita](assets/README/readmePrincipal/tela4.jpg) |
-
----
-
-## Funcionalidades
-
-- 🔐 **Autenticação com Firebase**
-  - Login e cadastro com e-mail e senha
-  - Gerenciamento de perfil com foto e nome
-- 🧠 **Gerador de Receitas com IA**
-  - Gera receitas com base nos ingredientes informados
-  - Sugere combinações equilibradas usando IA generativa
-- 🍴 **Gerador de Dieta com IA**
-  - Cria planos alimentares personalizados (perda de peso, ganho de massa, vegetarianos, etc.)
-  - Gera sugestões diárias/semanas com estimativas de macronutrientes
-- 🍁 **Aplicativo Pensado a Longo Prazo**
-  - Sistema de conquistas e rankings
-  - Ícones de usuários para desbloquear
-- ☁️ **Integração com Firebase Realtime Database**
-  - Armazena receitas, favoritos e dados do usuário em tempo real
-- 🖼️ **Upload de Imagens**
-  - Envio e cache de fotos no MongoDB
-- 💅 **Design Responsivo**
-  - Estilização com **NativeWind** para um layout moderno e adaptável
+### Recipe Creation
+| Recipe Generator | Create Recipe |
+|------------------|---------------|
+| ![RecipeGenerator](assets/README/readmePrincipal/tela3.jpg) | ![CreateRecipe](assets/README/readmePrincipal/tela4.jpg) |
 
 ---
 
-## Bibliotecas / Ferramentas
+## Features
 
-Este projeto utiliza as seguintes bibliotecas e ferramentas:
-
-- [React Native](https://reactnative.dev/) para o app Android  
-- [TypeScript](https://www.typescriptlang.org/) para tipagem estática  
-- [Firebase](https://firebase.google.com/) para autenticação, banco de dados e armazenamento  
-- [NativeWind](https://www.nativewind.dev/) para estilização no padrão Tailwind  
-- [React Navigation](https://reactnavigation.org/) para navegação   
-- [Expo Image Picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/) (opcional para upload de imagens)
-- [MongoDb](https://www.mongodb.com/) para armazenar dados e imagens.
+- 🔐 **Firebase Authentication**
+  - Email and password login and registration
+  - Profile management with photo and name
+- 🧠 **AI Recipe Generator**
+  - Generates recipes based on provided ingredients
+  - Suggests balanced combinations using generative AI
+- 🍴 **AI Diet Generator**
+  - Creates personalized meal plans (weight loss, muscle gain, vegetarian, etc.)
+  - Generates daily/weekly suggestions with macronutrient estimates
+- 🍁 **Long-term App Design**
+  - Achievement system and rankings
+  - Unlockable user icons
+- ☁️ **Integration with Firebase Realtime Database**
+  - Stores recipes, favorites and user data in real time
+- 🖼️ **Image Upload**
+  - Upload and caching of photos in MongoDB
+- 💅 **Responsive Design**
+  - Styling with **NativeWind** for a modern and adaptive layout
 
 ---
 
-## Estrutura do Projeto
+## Libraries / Tools
 
-Todo o código está localizado no diretório `src`, organizado para escalabilidade e legibilidade.
+This project uses the following libraries and tools:
+
+- [React Native](https://reactnative.dev/) for the Android app  
+- [TypeScript](https://www.typescriptlang.org/) for static typing  
+- [Firebase](https://firebase.google.com/) for authentication, database and storage  
+- [NativeWind](https://www.nativewind.dev/) for Tailwind-style styling  
+- [React Navigation](https://reactnavigation.org/) for navigation   
+- [Expo Image Picker](https://docs.expo.dev/versions/latest/sdk/imagepicker/) (optional for image uploads)
+- [MongoDb](https://www.mongodb.com/) to store data and images.
+
+---
+
+## Project Structure
+
+All code is located in the `src` directory, organized for scalability and readability.
 
 ```
 src/
- ├── components/       # Componentes reutilizáveis e Telas Principais
- ├── express/          # Estrutura do servidor dedicado
- ├── navigation/       # Navegação entre as telas 
- ├── reducers/         # Variáveis globais por meio do redux
- └── types/            # Tipagens globais em TypeScript
+ ├── components/       # Reusable components and Main Screens
+ ├── express/          # Dedicated server structure
+ ├── navigation/       # Screen navigation 
+ ├── reducers/         # Global variables via redux
+ └── types/            # Global TypeScript types
 ```
 
 ---
 
-## Como Executar o Projeto
+## How to Run the Project
 
 ```bash
-# Clonar o repositório
+# Clone the repository
 git clone https://github.com/GabrielGrozinski/Mistura-Boa.git
 
-# Entrar no diretório
+# Enter the directory
 cd Mistura-Boa
 
-# Instalar dependências
+# Install dependencies
 npm install
 
-# Executar no Android
+# Run on Android
 npx react-native run-android
 ```
 
 ---
 
-## Filosofia do Projeto
+## Project Philosophy
 
-Toda a lógica está organizada em **hooks** e **serviços** modulares, além dos **componentes principais**, garantindo separação entre as camadas de interface e dados.  
-Isso facilita manutenção, legibilidade e integração com novos serviços de IA ou backends no futuro.
+All logic is organized into **hooks** and modular **services**, alongside the **main components**, ensuring separation between UI and data layers.  
+This facilitates maintenance, readability and integration with new AI services or backends in the future.
 
 ---
 
-## Detalhes das Telas de Início (`src/components/Inicio`)
+## Details of the Start Screens (`src/components/Inicio`)
 
-Esta pasta contém as telas iniciais do aplicativo, responsáveis pela experiência de entrada do usuário:
+This folder contains the app's start screens, responsible for the user's entry experience:
 
 - **PrimeiraTela**  
-  Tela de boas-vindas, com foco visual e apresentação do app. Não possui lógica de autenticação, apenas interface.
-  Há também uma tela de loading que percorre por todo o aplicativo.
+  Welcome screen, visually focused and presenting the app. It has no authentication logic, only UI.
+  There is also a loading screen that runs throughout the app.
 
-### Primeira Tela
-| Início | Carregamento |
-|--------|--------------|
-| ![Início](assets/README/primeiraTela_e_Login/tela1.jpg) | ![Carregamento](assets/README/readmePrincipal/carregamento1.jpg) |
+### First Screen
+| Start | Loading |
+|-------|---------|
+| ![Start](assets/README/primeiraTela_e_Login/tela1.jpg) | ![Loading](assets/README/readmePrincipal/carregamento1.jpg) |
 
 ---
 
 - **Login**  
-  Tela para autenticação, permitindo ao usuário logar ou iniciar o cadastro. Integra com o Firebase para validação de credenciais e com o MongoDb para manutenção de dias logados.
+  Authentication screen allowing the user to log in or start registration. Integrates with Firebase for credential validation and with MongoDB to track login days.
 
-### Login e Cadastro
-| Login | Cadastro |
+### Login and Registration
+| Login | Register |
 |-------|----------|
-| ![Login](assets/README/primeiraTela_e_Login/tela2.jpg) | ![Cadastro](assets/README/primeiraTela_e_Login/tela3.jpg) |
+| ![Login](assets/README/primeiraTela_e_Login/tela2.jpg) | ![Register](assets/README/primeiraTela_e_Login/tela3.jpg) |
 
 ---
 
 - **CriarUsuario**  
-  Tela de cadastro, onde o usuário informa dados como tipo de alimentação, objetivo com o aplicativo e foto de perfil. Realiza a criação do usuário no Firebase e prepara o perfil para uso no app.
-  Alguns dados permitem mais de uma escolha, enquanto outros, como o tipo de alimentação, só permitem uma única escolha.
+  Registration screen where the user provides data like diet type, app goal and profile photo. Creates the user in Firebase and prepares the profile for app use.
+  Some data allows multiple choices, while others, like diet type, allow only a single choice.
 
-### Dados do Usuário
-| Objetivo | Conhecimento |
-|----------|--------------|
-| ![Objetivo](assets/README/primeiraTela_e_Login/tela4.jpg) | ![Conhecimento](assets/README/primeiraTela_e_Login/tela5.jpg) |
+### User Data
+| Goal | Knowledge |
+|------|-----------|
+| ![Goal](assets/README/primeiraTela_e_Login/tela4.jpg) | ![Knowledge](assets/README/primeiraTela_e_Login/tela5.jpg) |
 
-| Alimentação | Culinária |
-|-------------|-----------|
-| ![Alimentação](assets/README/primeiraTela_e_Login/tela6.jpg) | ![Culinária](assets/README/primeiraTela_e_Login/tela7.jpg) |
+| Diet | Cuisine |
+|------|---------|
+| ![Diet](assets/README/primeiraTela_e_Login/tela6.jpg) | ![Cuisine](assets/README/primeiraTela_e_Login/tela7.jpg) |
 
 
-| Pesquisa | Ícone |
-|----------|-------|
-| ![Pesquisa](assets/README/primeiraTela_e_Login/tela8.jpg) | ![Ícone](assets/README/primeiraTela_e_Login/tela9.jpg) |
+| Search | Icon |
+|--------|------|
+| ![Search](assets/README/primeiraTela_e_Login/tela8.jpg) | ![Icon](assets/README/primeiraTela_e_Login/tela9.jpg) |
 
 ---
 
-## Detalhes da Tela de TelaPrincipal (`src/components/TelaPrincipal`)
+## Details of Main Screen (`src/components/TelaPrincipal`)
 
-Esta pasta contém a tela principal do aplicativo, responsável pela experiência base do usuário:
+This folder contains the app's main screen, responsible for the user's core experience:
 
 - **TelaPrincipal**  
-  Tela Principal do aplicativo, onde o usuário tem a primeira experiência do aplicativo.
-  A tela mostra o ícone do usuário, a quantidade de xp (mostrada em cookies) e a
-  possibilidade de acessar receitas específicas de Café da Manhã, Almoço, 
-  Sobremesa e Jantar.
-  Embaixo desta e da maioria das telas há uma barra que permite o usuário alternar entre
-  as telas.
+  Main screen showing the user's icon, amount of XP (displayed in cookies) and the ability to access specific recipes for Breakfast, Lunch, Dessert and Dinner.
+  Below this and most screens there is a bar allowing the user to switch between screens.
 
-### Tela Principal
-| Tela Principal | Almoço | Almoço Concluído |
-|----------------|--------|------------------|
-| ![TelaPrincipal](assets/README/telaPrincipal/tela1.jpg) | ![Almoço](assets/README/telaPrincipal/tela2.jpg) | ![AlmoçoConcluído](assets/README/telaPrincipal/tela3.jpg) |
+### Main Screen
+| Main Screen | Lunch | Lunch Completed |
+|-------------|-------|-----------------|
+| ![MainScreen](assets/README/telaPrincipal/tela1.jpg) | ![Lunch](assets/README/telaPrincipal/tela2.jpg) | ![LunchCompleted](assets/README/telaPrincipal/tela3.jpg) |
 
 ---
 
-## Detalhes das Telas de Perfil (`src/components/Perfil`)
+## Details of Profile Screens (`src/components/Perfil`)
 
-Esta pasta contém componentes referentes a tela de perfil do aplicativo, responsável por mostrar o perfil dos usuários e outras finalidades.
+This folder contains components related to the profile screen, responsible for showing user profiles and related features.
 
 - **Perfil**  
-  A tela base do perfil, onde temos o ícone do usuário (que ele pode trocar por outros, sendo que cada um tem seus próprios requisitos), o nome dele, quando o usuário foi criado (informação que é recuperada no MongoDb), o número de seguidores e 
-  seguindo e um botão de adicionar amigos.
-  Um pouco mais embaixo, há um container de visão geral, mostrando os dias (seguidos) de 
-  login do usuário, a quantidade de receitas criadas, o xp e o ranking atual daquele usuário.
-  Logo em sequência há um botão de Receitas Favoritas, de conquistas e das receitas criadas
-  pelo usuário.
-  Por fim, para o usuário liberar o botão de Receitas Criadas, ele precisa criar ao menos 3 receitas.
-  Todas as informações são dinâmicas e mudam conforme o usuário usa o aplicativo.
+  Base profile screen showing the user's icon (which they can change with icons that have their own requirements), their name, when the user was created (retrieved from MongoDB), number of followers and following, and an add friends button.
+  A bit lower there is an overview container showing consecutive login days, number of recipes created, XP and the user's current ranking.
+  Then there are buttons for Favorite Recipes, Achievements and Recipes Created by the user.
+  To unlock the Created Recipes button, the user must create at least 3 recipes.
+  All information is dynamic and changes as the user uses the app.
 
-### Tela de Perfil
-| Perfil 1/2 | Perfil 2/2 |
+### Profile Screen
+| Profile 1/2 | Profile 2/2 |
 |------------|------------|
-| ![Perfil1/2](assets/README/perfil/tela1.jpg) | ![Perfil2/2](assets/README/perfil/tela2.jpg) |
+| ![Profile1/2](assets/README/perfil/tela1.jpg) | ![Profile2/2](assets/README/perfil/tela2.jpg) |
 
 ---
 
-### Tela de ícones
-| ícones 1/2 | Ícones 2/2 |
-|------------|------------|
-| ![ícones1/2](assets/README/perfil/tela3.jpg) | ![ícones2/2](assets/README/perfil/tela4.jpg) |
+### Icons Screen
+| Icons 1/2 | Icons 2/2 |
+|----------|-----------|
+| ![Icons1/2](assets/README/perfil/tela3.jpg) | ![Icons2/2](assets/README/perfil/tela4.jpg) |
 
 ---
 
-### ícone de Poseidon
+### Poseidon Icon
 | Poseidon 1/2 | Poseidon 2/2 |
 |--------------|--------------|
 | ![Poseidon1/2](assets/README/perfil/tela5.jpg) | ![Poseidon2/2](assets/README/perfil/tela6.jpg) |
 
 ---
 
-### Tela de Conquistas
-| Conquistas 1/2 | Conquistas 2/2 |
-|----------------|----------------|
-| ![Conquistas1/2](assets/README/perfil/tela7.jpg) | ![Conquistas2/2](assets/README/perfil/tela8.jpg) |
+### Achievements Screen
+| Achievements 1/2 | Achievements 2/2 |
+|------------------|------------------|
+| ![Achievements1/2](assets/README/perfil/tela7.jpg) | ![Achievements2/2](assets/README/perfil/tela8.jpg) |
 
 ---
 
-### Tela de Receitas Criadas
-| Receitas Criadas |
-|------------------|
-| ![ReceitasCriadas](assets/README/perfil/tela9.jpg) |
+### Created Recipes Screen
+| Created Recipes |
+|-----------------|
+| ![CreatedRecipes](assets/README/perfil/tela9.jpg) |
 
 ---
 
-- **Adicionar Amigos** 
-  A tela de adicionar amigos é acessada clicando no número de seguidores/seguindo ou clicando em adicionar amigos.
-  Se clicado em em seguindo/seguidores, é mostrado os quem aquele usuário segue e por quem ele é seguido.
-  É possível seguir um usuário a partir dessa tela, bem como é possível acessar o perfil do
-  usuário e seguir ele de lá.
-  Ao todo há 4 opções para o botão de adicionar amigos: o botão original, o botão de seguir, 
-  seguindo e seguir de volta.
+- **Add Friends** 
+  The add friends screen is accessed by clicking the followers/following numbers or the add friends button.
+  If clicked on following/followers, it shows who that user follows and who follows them.
+  It's possible to follow a user from this screen, and to access a user's profile and follow them from there.
+  There are 4 possible states for the add friends button: original, follow, following and follow back.
 
-### Adicionar Amigos
-| Usuários Para Seguir |
-|----------------------|
-| ![UsuáriosParaSeguir](assets/README/perfil/tela10.jpg) |
+### Add Friends
+| Users to Follow |
+|-----------------|
+| ![UsersToFollow](assets/README/perfil/tela10.jpg) |
 
-| Seguindo: 0 | Seguidores: 0 |
+| Following: 0 | Followers: 0 |
+|-------------|--------------|
+| ![Following:0](assets/README/perfil/tela11.jpg) | ![Followers:0](assets/README/perfil/tela12.jpg) |
+
+| Following: 1 | Followers: 1 |
 |-------------|---------------|
-| ![Seguindo:0](assets/README/perfil/tela11.jpg) | ![Seguidores:0](assets/README/perfil/tela12.jpg) |
+| ![Following:1](assets/README/perfil/tela13.jpg) | ![Followers:1](assets/README/perfil/tela14.jpg) |
 
-| Seguindo: 1 | Seguidores: 1 |
-|-------------|---------------|
-| ![Seguindo:1](assets/README/perfil/tela13.jpg) | ![Seguidores:1](assets/README/perfil/tela14.jpg) |
-
-| Seguir | Seguindo |
+| Follow | Following |
 |--------|----------|
-| ![Seguir](assets/README/perfil/tela15.jpg) | ![Seguindo](assets/README/perfil/tela16.jpg) |
+| ![Follow](assets/README/perfil/tela15.jpg) | ![Following](assets/README/perfil/tela16.jpg) |
 
-| Adicionar Amigos | Seguir de Volta |
-|------------------|-----------------|
-| ![AdicionarAmigos](assets/README/perfil/tela1.jpg) | ![SeguirdeVolta](assets/README/perfil/tela17.jpg) |
+| Add Friends | Follow Back |
+|-------------|-------------|
+| ![AddFriends](assets/README/perfil/tela1.jpg) | ![FollowBack](assets/README/perfil/tela17.jpg) |
 
 ---
 
 - **Ranking** 
-  A tela de ranking mostra todos os rankings do aplicativo: NoRank (ranking inicial, que
-  sequer é considerado um ranking), Bronze, Ouro, Diamante, Esmeralda e Chefe Supremo.
-  Cada ranking tem os seus próprios requisitos, e eles são dinâmicos, portanto crescem conforme o usuário os completa.
-  Na parte superior da tela é mostrado o ranking atual do usuário.
+  The ranking screen shows all app rankings: NoRank (initial ranking), Bronze, Gold, Diamond, Emerald and Supreme Chef.
+  Each ranking has its own requirements and they are dynamic, so they grow as users complete them.
+  The user's current ranking is shown at the top of the screen.
 
 ### Ranking
 | Ranking 1/6 | Ranking 2/6 |
@@ -271,376 +261,352 @@ Esta pasta contém componentes referentes a tela de perfil do aplicativo, respon
 
 ---
 
-## Detalhes das Telas de Fitness (`src/components/Fitness`)
+## Details of Fitness Screens (`src/components/Fitness`)
 
-Esta pasta contém as as telas referentes a lógica de dieta do aplicativo, muito útil nos dias atuais.
+This folder contains screens related to the app's diet logic, useful in current contexts.
 
 - **Dieta**  
-  A tela base, onde mostra as dietas do usuário (se ele criou alguma), além de dar a possibilidade de criar outras.
+  Base screen showing the user's diets (if any), and offering the option to create more.
 
-### Tela de Dietas
-| Sem Dieta | Com Dieta |
-|-----------|-----------|
-| ![SemDieta](assets/README/criarDieta/tela1.jpg) | ![ComDieta](assets/README/criarDieta/tela2.jpg) |
+### Diet Screen
+| No Diet | With Diet |
+|---------|-----------|
+| ![NoDiet](assets/README/criarDieta/tela1.jpg) | ![WithDiet](assets/README/criarDieta/tela2.jpg) |
 
 ---
 
 - **CriarDieta**  
-  A tela de criação da dieta, onde o usuário seleciona as opções, bem como o objetivo da dieta, o peso, a altura, restrições e o quanto ele pode gastar por dia, e uma Inteligência Artifical geraria a dieta.
+  Diet creation screen where the user selects options such as diet goal, weight, height, restrictions and daily budget, and an AI would generate the diet.
 
-  ### Criação da Dieta
-| Objetivo | Peso |
-|----------|------|
-| ![Objetivo](assets/README/criarDieta/tela3.jpg) | ![Peso](assets/README/criarDieta/tela4.jpg) |
+  ### Diet Creation
+| Goal | Weight |
+|------|--------|
+| ![Goal](assets/README/criarDieta/tela3.jpg) | ![Weight](assets/README/criarDieta/tela4.jpg) |
 
-| Altura | Restrições |
-|--------|------------|
-| ![Altura](assets/README/criarDieta/tela5.jpg) | ![Restricoes](assets/README/criarDieta/tela6.jpg) | 
+| Height | Restrictions |
+|--------|--------------|
+| ![Height](assets/README/criarDieta/tela5.jpg) | ![Restrictions](assets/README/criarDieta/tela6.jpg) | 
 
-| Preço |
+| Price |
 |-------|
-| ![Preco](assets/README/criarDieta/tela7.jpg) |
+| ![Price](assets/README/criarDieta/tela7.jpg) |
 
 ---
 
 - **DietaCriada**  
-  Onde a dieta com os dados que o usuário passou é registrada.
-  Nela há 4 refeições, com a quantidade dos macronutrientes em cada uma.
-  Há também 4 refeições para cada dia da semana.
-  **OBS: essa tela não foi finalizada. Ela é apenas um protótipo, pois não integrei a I.A no meu código, mas conceitualmente é isso que ela faria.**
+  The created diet screen where the user's provided data is recorded.
+  It includes 4 meals with macronutrient amounts for each.
+  There are also 4 meals for each day of the week.
+  **NOTE: this screen was not finished. It's only a prototype because I didn't fully integrate the AI into my code, but conceptually that's how it would work.**
 
-### Dieta Criada
-| Dieta Pronta |
-|--------------|
-| ![DietaPronta](assets/README/criarDieta/tela8.jpg) |
+### Created Diet
+| Ready Diet |
+|------------|
+| ![ReadyDiet](assets/README/criarDieta/tela8.jpg) |
 
 ---
 
-## Detalhes das Telas de GeraReceita de  (`src/components/GeraReceita`)
+## Details of Recipe Generator Screens (`src/components/GeraReceita`)
 
-Esta pasta contém duas telas, uma referente a criação manual da receita e a geração de receita por I.A.
+This folder contains two screens: one for manual recipe creation and one for AI-generated recipes.
 
 - **GeradorReceita**  
-  A tela específica para gerar receitas com Inteligência Artificial. É possível alternar entre três "cozinheiros" (com personalidades diferentes): Hamburgão, Moranguinho e Taco.
+  Screen for generating recipes with AI. You can switch between three "chefs" (different personalities): Hamburgão, Moranguinho and Taco.
 
-### Gerador de Receitas
+### Recipe Generator
 | Hamburgão | Moranguinho |
 |-----------|-------------|
 | ![Hamburgão](assets/README/gerarReceita/tela1.jpg) | ![Moranguinho](assets/README/gerarReceita/tela2.jpg) |
 
-| Taco | Escolha do Cozinheiro |
-|------|-----------------------|
-| ![Taco](assets/README/gerarReceita/tela3.jpg) | ![EscolhadoCozinheiro](assets/README/gerarReceita/tela4.jpg) |
+| Taco | Chef Selection |
+|------|----------------|
+| ![Taco](assets/README/gerarReceita/tela3.jpg) | ![ChefSelection](assets/README/gerarReceita/tela4.jpg) |
 
 ---
 
 - **CriaReceita**  
-  A tela onde é possível criar receitas.
-  As receitas são criadas com características obrigatórias: Imagem, Título, Descrição, Dificuldade, Tempo, Passos da Receita, 
-  Ingredientes da Receita, Tipo da Receita e Refeição.
-  Algumas dessas opções são escritas pelo próprio usuário, enquanto outras são um conjunto de opções que o usuário somente 
-  escolhe.
-  Opções como texto e descrição possuem limite de caracteres.
-  Cada receita criada funciona exatamente como as receitas base do aplicativo, e carregam todas as suas finalidades.
+  Screen to create recipes manually.
+  Recipes require: Image, Title, Description, Difficulty, Time, Recipe Steps, Recipe Ingredients, Recipe Type and Meal.
+  Some options are free text, others are selectable from predefined options.
+  Text fields like description have character limits.
+  Each created recipe behaves exactly like the app's base recipes and includes all functionality.
 
-### Criador de Receitas
-| Criar Receita 1/2 | Criar Receita 2/2 |
+### Recipe Creator
+| Create Recipe 1/2 | Create Recipe 2/2 |
 |-------------------|--------------------|
-| ![CriarReceita1/2](assets/README/criarReceita/tela1.jpg) | ![CriarReceita2/2](assets/README/criarReceita/tela2.jpg) |
+| ![CreateRecipe1/2](assets/README/criarReceita/tela1.jpg) | ![CreateRecipe2/2](assets/README/criarReceita/tela2.jpg) |
 
-| Selecionar Imagem | Imagem Selecionada |
-|-------------------|--------------------|
-| ![SelecionarImagem](assets/README/criarReceita/tela3.jpg) | ![ImagemSelecionada](assets/README/criarReceita/tela4.jpg) |
+| Select Image | Selected Image |
+|--------------|----------------|
+| ![SelectImage](assets/README/criarReceita/tela3.jpg) | ![SelectedImage](assets/README/criarReceita/tela4.jpg) |
 
-| Descrição 1/6 | Descrição 2/6 |
-|---------------|---------------|
-| ![Descrição1/6](assets/README/criarReceita/tela5.jpg) | ![Descrição2/6](assets/README/criarReceita/tela6.jpg) |
+| Description 1/6 | Description 2/6 |
+|-----------------|-----------------|
+| ![Description1/6](assets/README/criarReceita/tela5.jpg) | ![Description2/6](assets/README/criarReceita/tela6.jpg) |
 
-| Descrição 3/6 | Descrição 4/6 |
-|---------------|---------------|
-| ![Descrição3/6](assets/README/criarReceita/tela7.jpg) | ![Descrição4/6](assets/README/criarReceita/tela8.jpg) |
+| Description 3/6 | Description 4/6 |
+|-----------------|-----------------|
+| ![Description3/6](assets/README/criarReceita/tela7.jpg) | ![Description4/6](assets/README/criarReceita/tela8.jpg) |
 
-| Descrição 5/6 | Descrição 6/6 |
-|---------------|---------------|
-| ![Descrição5/6](assets/README/criarReceita/tela9.jpg) | ![Descrição6/6](assets/README/criarReceita/tela10.jpg) |
+| Description 5/6 | Description 6/6 |
+|-----------------|-----------------|
+| ![Description5/6](assets/README/criarReceita/tela9.jpg) | ![Description6/6](assets/README/criarReceita/tela10.jpg) |
 
-| Passos da Receita |
-|-------------------|
-| ![PassosdaReceita](assets/README/criarReceita/tela11.jpg) |
-
-| Ingredientes da Receita | Medida dos Ingredientes |
-|-------------------------|-------------------------|
-| ![IngredientesdaReceita](assets/README/criarReceita/tela12.jpg) | ![MedidadosIngredientes](assets/README/criarReceita/tela13.jpg) |
-
-| Dificuldade | Tempo |
-|-------------|-------|
-| ![Dificuldade](assets/README/criarReceita/tela14.jpg) | ![Tempo](assets/README/criarReceita/tela15.jpg) |
-
-| Refeição | Tipo da Receita |
-|----------|-----------------|
-| ![Refeição](assets/README/criarReceita/tela16.jpg) | ![TipodaReceita](assets/README/criarReceita/tela17.jpg) |
-
-| Receita Criada | Avaliação da Receita Criada |
-|----------------|-----------------------------|
-| ![Refeição](assets/README/criarReceita/tela18.jpg) | ![TipodaReceita](assets/README/criarReceita/tela19.jpg) |
-
-| Receita Criada Antes de ser Favoritada  | Após ser Favoritada |
-|-----------------------------------------|---------------------|
-| ![ReceitaCriadaAntesdeserFavoritada](assets/README/criarReceita/tela20.jpg) | ![ApósserFavoritada](assets/README/criarReceita/tela21.jpg) |
-
----
-
-## Detalhes das Telas de Telas_de_Receitas de  (`src/components/Telas_de_Receitas`)
-
-Esta pasta contém toda a lógica de receitas do aplicativo, como a separação das receitas por tipo, a filtragem delas e a própria tela de receita em si.
-
-- **Receitas_app_e_usuarios**  
-  As receitas são previamente separadas em Receitas Carnívoras (aplicativo), Receitas Carnívoras (usuários), Receitas Veganas (aplicativo), Receitas Veganas (usuários), Receitas Vegetarianas (aplicativo) e Receitas Vegetarianas (usuários).
-  Além disso, há um indicativo sobre qual é o tipo de receita escolhida pelo usuário, desde que ele se cadastrou.
-
-### Receitas Principais
-| Carnívoro | Vegetariano | Vegano |
-|-----------|-------------|------|
-| ![Carnivoro](assets/README/tela_de_Receitas/tela1.jpg) | ![Vegetariano](assets/README/tela_de_Receitas/tela2.jpg) | ![Vegano](assets/README/tela_de_Receitas/tela3.jpg) |
-
----
-
-- **Receitas Base**  
-  Ao todo, há 6 telas de Receitas Base. Conceitualmente, cada uma teria as próprias receitas e dinâmicas, podendo criar seções exclusivas, como, por exemplo, em época de Natal, criar uma seção para receitas natalinas, ou se o usuário estiver usando o personagem Poseidon ter uma seção exclusiva de receitas do mar, que só aparecem para esse personagem.
-
-### Receita Base Carnívora Aplicativo
-| Receita Base |
+| Recipe Steps |
 |--------------|
-| ![ReceitaBase](assets/README/tela_de_Receitas/tela4.jpg) |
+| ![RecipeSteps](assets/README/criarReceita/tela11.jpg) |
+
+| Recipe Ingredients | Ingredient Measurements |
+|--------------------|-------------------------|
+| ![Ingredients](assets/README/criarReceita/tela12.jpg) | ![Measurements](assets/README/criarReceita/tela13.jpg) |
+
+| Difficulty | Time |
+|------------|------|
+| ![Difficulty](assets/README/criarReceita/tela14.jpg) | ![Time](assets/README/criarReceita/tela15.jpg) |
+
+| Meal | Recipe Type |
+|------|-------------|
+| ![Meal](assets/README/criarReceita/tela16.jpg) | ![RecipeType](assets/README/criarReceita/tela17.jpg) |
+
+| Created Recipe | Rating Created Recipe |
+|----------------|-----------------------|
+| ![CreatedRecipe](assets/README/criarReceita/tela18.jpg) | ![Rating](assets/README/criarReceita/tela19.jpg) |
+
+| Created Recipe Before Favoriting  | After Favoriting |
+|-----------------------------------|------------------|
+| ![BeforeFav](assets/README/criarReceita/tela20.jpg) | ![AfterFav](assets/README/criarReceita/tela21.jpg) |
 
 ---
 
-- **Receitas Carnívoras, Veganas e Vegetarianas**  
-  Todas as receitas são separadas por carnívoras, veganas e vegetarianas.
-  É possível filtrar tais receitas de muitas formas, como receitas para emagrecer, para ganhar músculo; receitas mais fáceis, mais rápidas e com menos calorias.
-  Também é possível filtrá-las por Café da Manhã, Prato Principal (almoço e janta), Sobremesa e Bebida.
-  Os filtros são dinâmicos e funcionam em todas as receitas.
-  Também é possível favoritar as receitas.
+## Details of Recipe Screens (`src/components/Telas_de_Receitas`)
 
-### Receitas
-| Receitas Carnívoras | Filtro | Receitas Vegetarianas | Receitas Veganas |
-|---------------------|--------|-----------------------|------------------|
-| ![ReceitasCarnivoras](assets/README/receitas/tela1.jpg) | ![Filtro](assets/README/receitas/tela2.jpg) | ![ReceitasVegetarianas](assets/README/receitas/tela3.jpg) | ![ReceitasVeganas](assets/README/receitas/tela4.jpg) |
+This folder contains all recipe-related logic: categorization, filtering and the recipe screen itself.
 
----
+- **App and User Recipes**  
+  Recipes are separated into Carnivorous (app), Carnivorous (users), Vegan (app), Vegan (users), Vegetarian (app) and Vegetarian (users).
+  There's also an indicator of the user's chosen diet type since registration.
 
-### Receitas Favoritas
-| Favoritar Receita | Receitas Favoritas 1/2 | Receitas Favoritas 2/2 | Receitas Favoritas Filtradas |
-|-------------------|------------------------|------------------------|------------------------------|
-| ![FavoritarReceita](assets/README/receitas/tela17.jpg) | ![ReceitasFavoritas1/2](assets/README/receitas/tela18.jpg) | ![ReceitasFavoritas2/2](assets/README/receitas/tela19.jpg) | ![ReceitasFavoritasFiltradas](assets/README/receitas/tela20.jpg) |
+### Main Recipes
+| Carnivore | Vegetarian | Vegan |
+|-----------|-----------|------|
+| ![Carnivore](assets/README/tela_de_Receitas/tela1.jpg) | ![Vegetarian](assets/README/tela_de_Receitas/tela2.jpg) | ![Vegan](assets/README/tela_de_Receitas/tela3.jpg) |
 
 ---
 
-### Receitas Criadas
-| Receitas Criadas 1/2 | Receitas Criadas 2/2 |
-|----------------------|----------------------|
-| ![ReceitasCriadas1/2](assets/README/receitas/tela21.jpg) | ![ReceitasCriadas2/2](assets/README/receitas/tela22.jpg) |
+- **Base Recipes**  
+  There are 6 Base Recipe screens. Conceptually each would have its own recipes and dynamics, allowing special sections (e.g., holiday recipes or sea-themed recipes for a Poseidon character).
+
+### Carnivore Base Recipe
+| Base Recipe |
+|-------------|
+| ![BaseRecipe](assets/README/tela_de_Receitas/tela4.jpg) |
 
 ---
 
-- **Receita**  
-  A tela de receita possui muitas mecânicas.
-  De cima para baixo, ela traz a imagem da receita, junto ao título dela, o autor, o tempo de preparo e a avaliação da receita.
-  Depois, os ingredientes e passos.
-  Abaixo dos passos, há um temporizador (sempre com o tempo da própria receita), para o usuário poder usá-lo como parâmetro. O temporizador pode ser pausado.
-  No fundo da receita estão os comentários e as avaliações, além de um botão de concluir receita, para o usuário poder marcar
-  quais receitas ele já concluiu.
-  Os comentários só podem ser acessados por usuários no mínimo ranking Bronze.
-  O usuário pode avaliar ou comentar e avaliar a receita.
+- **Carnivore, Vegan and Vegetarian Recipes**  
+  All recipes are separated by carnivore, vegan and vegetarian.
+  You can filter recipes by goals like lose weight, gain muscle; by difficulty, speed and calories.
+  Filters can also be by Breakfast, Main Dish (lunch and dinner), Dessert and Drink.
+  Filters are dynamic and work across recipes.
+  Favoriting recipes is supported.
 
-### Receita
-| Receita 1/2 | Receita 2/2 |
-|-------------|-------------|
-| ![Receita1/2](assets/README/receitas/tela5.jpg) | ![Receita2/2](assets/README/receitas/tela6.jpg) |
+### Recipes
+| Carnivore Recipes | Filter | Vegetarian Recipes | Vegan Recipes |
+|-------------------|--------|--------------------|---------------|
+| ![CarnivoreRecipes](assets/README/receitas/tela1.jpg) | ![Filter](assets/README/receitas/tela2.jpg) | ![VegetarianRecipes](assets/README/receitas/tela3.jpg) | ![VeganRecipes](assets/README/receitas/tela4.jpg) |
 
 ---
 
-### Temporizador
-| Temporizador Pausar | Temporizador Continuar |
-|---------------------|------------------------|
-| ![TemporizadorPausar](assets/README/receitas/tela7.jpg) | ![TemporizadorContinuar](assets/README/receitas/tela8.jpg) |
+### Favorite Recipes
+| Favorite Recipe | Favorite Recipes 1/2 | Favorite Recipes 2/2 | Favorite Recipes Filtered |
+|-----------------|----------------------|----------------------|---------------------------|
+| ![FavoriteRecipe](assets/README/receitas/tela17.jpg) | ![Fav1/2](assets/README/receitas/tela18.jpg) | ![Fav2/2](assets/README/receitas/tela19.jpg) | ![FavFiltered](assets/README/receitas/tela20.jpg) |
 
 ---
 
-### Concluir Receita
-| Concluir Receita | Receita Concluida |
-|------------------|-------------------|
-| ![ConcluirReceita](assets/README/receitas/tela23.jpg) | ![ReceitaConcluida](assets/README/receitas/tela24.jpg) |
-
----
-
-### Comentários e Avaliações
-| Comentários | Avaliações | Comentários sem Ranking |
-|-------------|------------|-------------------------|
-| ![Comentários](assets/README/receitas/tela9.jpg) | ![Avaliações](assets/README/receitas/tela10.jpg) | ![ComentáriossemRanking](assets/README/receitas/tela11.jpg) |
-
-| Avaliar Receita 1/2 | Avaliar Receita 2/2 | Receita Avaliada |
-|---------------------|---------------------|------------------|
-| ![AvaliarReceita1/2](assets/README/receitas/tela12.jpg) | ![AvaliarReceita2/2](assets/README/receitas/tela13.jpg) | ![ReceitaAvaliada](assets/README/receitas/tela14.jpg) |
-
-| Escrever Comentário | Receita com Comentário |
+### Created Recipes
+| Created Recipes 1/2 | Created Recipes 2/2 |
 |---------------------|---------------------|
-| ![EscreverComentário](assets/README/receitas/tela15.jpg) | ![ReceitacomComentário](assets/README/receitas/tela16.jpg) |
+| ![Created1/2](assets/README/receitas/tela21.jpg) | ![Created2/2](assets/README/receitas/tela22.jpg) |
 
 ---
 
-## Monetização
+- **Recipe**  
+  The recipe screen has many mechanics.
+  From top to bottom: recipe image, title, author, preparation time and rating.
+  Then ingredients and steps.
+  Below steps there is a timer (with the recipe's time) that the user can use; it can be paused.
+  At the bottom are comments and ratings, plus a button to mark the recipe as completed.
+  Comments are available only to users with at least Bronze rank.
+  Users can rate or comment and rate the recipe.
 
-Lógicamente, por ser um aplicativo para portfólio, não o monetizei, mas existem algumas ideias para fazê-lo gerar dinheiro.
-
-- **Anúncios:** uma forma simples e prática de monetizar, mas que transmite a ideia de um aplicativo não-profissional. No
-contexto do meu app, acredito que não seria interessante ter anúncios, com a exceção deles serem muito bem trabalhados, como,
-por exemplo, na tela de gerar receitas com I.A, assim que o usuário clicar para gerar a receita, liberar o anúncio, uma vez que
-a I.A demoraria alguns segundos para gerar a receita.
-- **Assinatura:** forma muito comum de monetização em grandes aplicativos, e creio que seria muito mais prática no Mistura Boa. 
-Inclusive, por mais que seja só um protótipo, o personagem Poseidon teria como requisito ser assinante do app. A assinatura poderia dar diversos benefícios: mais xp, mais receitas criadas por dia, receitas exclusivas para assinantes, personagens, passes de temporada, mais personagens para usar no gerador de receitas e até destaque em suas receitas criadas.
-
-**No geral, tentei adaptar a lógica de produtos "live-service" no aplicativo. Prática que é muito comum em jogos.**
-**A ideia é sempre manter o usuário entretido, criando objetivos para ele alcançar no aplicativo, criando uma pseudo-obrigação**
-**dele em conquistar tais objetivos. O usuário se sente motivado a entrar diariamente no aplicativo, afinal, há prêmios por isso;**
-**O usuário se sente motivado de criar receitas difíceis, afinal, há prêmios por isso; ele busca ganhar o máximo de xp pois quer muito usar um personagem específico e, para liberá-lo, precisa de uma certa quantidade de xp.**
-**Toda a lógica de monetização de aplicativos live-service se concentra em vender assinaturas e micro-produtos, como personagens que você só libera pagando, e o engajamento do público se concentra muito na exclusividade. Se as pessoas decidirem gastar o próprio dinheiro, tem que ser por algo que elas julgam exclusivo.**
-**É evidente que também é preciso haver um bom equilíbrio entre os assinantes terem vantagem o bastante para que a assinatura seja chamativa e que os não-assinantes não se sintam frustrados o bastante para desisntalarem o aplicativo.**
+### Recipe
+| Recipe 1/2 | Recipe 2/2 |
+|------------|------------|
+| ![Recipe1/2](assets/README/receitas/tela5.jpg) | ![Recipe2/2](assets/README/receitas/tela6.jpg) |
 
 ---
 
-## Features extras
+### Timer
+| Timer Pause | Timer Resume |
+|-------------|--------------|
+| ![TimerPause](assets/README/receitas/tela7.jpg) | ![TimerResume](assets/README/receitas/tela8.jpg) |
 
-Aqui embaixo estão algumas features que não estão no aplicativo mas que poderiam estar. Elas servem para mostrar a minha visão sobre o app, como melhorá-lo e uma ideia geral do meu pensamento de como manter uma aplicação boa e rentável.
+---
+
+### Complete Recipe
+| Complete Recipe | Recipe Completed |
+|-----------------|------------------|
+| ![CompleteRecipe](assets/README/receitas/tela23.jpg) | ![RecipeCompleted](assets/README/receitas/tela24.jpg) |
+
+---
+
+### Comments and Ratings
+| Comments | Ratings | Comments without Rank |
+|----------|---------|-----------------------|
+| ![Comments](assets/README/receitas/tela9.jpg) | ![Ratings](assets/README/receitas/tela10.jpg) | ![CommentsNoRank](assets/README/receitas/tela11.jpg) |
+
+| Rate Recipe 1/2 | Rate Recipe 2/2 | Rated Recipe |
+|-----------------|-----------------|--------------|
+| ![Rate1/2](assets/README/receitas/tela12.jpg) | ![Rate2/2](assets/README/receitas/tela13.jpg) | ![RatedRecipe](assets/README/receitas/tela14.jpg) |
+
+| Write Comment | Recipe with Comment |
+|---------------|---------------------|
+| ![WriteComment](assets/README/receitas/tela15.jpg) | ![RecipeWithComment](assets/README/receitas/tela16.jpg) |
+
+---
+
+## Monetization
+
+Since this is a portfolio app, it wasn't monetized, but here are some ideas to monetize it.
+
+- **Ads:** simple and practical but may give an unprofessional impression. In this app, ads could be carefully integrated—for example, in the AI recipe generator: when the user clicks to generate a recipe, show an ad while the AI takes a few seconds to generate the recipe.
+- **Subscription:** common and practical. The Poseidon character could be subscription-only. Subscriptions could offer benefits: more XP, more recipes created per day, exclusive recipes for subscribers, characters, seasonal passes, more generator characters and featured placement for created recipes.
+
+Overall, I tried to adapt live-service product logic. The idea is to keep the user engaged by creating objectives and rewards. The user is motivated to log in daily for prizes; to create difficult recipes for rewards; to earn XP to unlock characters. Monetization focuses on subscriptions and microtransactions (e.g., purchasable characters). Balance is necessary so subscribers feel advantaged while non-subscribers aren’t frustrated.
+
+---
+
+## Extra Features
+
+Below are some features not in the app but that could be added. They show my vision for improving and monetizing the app.
 
 ### Loading
 
-O código possui uma tela de loading que percorre por todo o aplicativo.
-Originalmente, a tela de loading possui uma única variação de imagem (caminhão andando) e diveras variações de texto.
-Entretanto, existe a possibilidade de criar telas de loading exclusivas no aplicativo.
-Por exemplo: uma tela de loading do Poseidon que só aparece se você estiver usando o personagem Poseidon.
+The app has a loading screen used across the app.
+Originally the loading screen has a single image variation (truck moving) and different text variations.
+It’s possible to create exclusive loading screens (e.g., a Poseidon loading screen that appears only when using Poseidon).
 
-| Poseidon | Papai Noel | Fantasma |
-|----------|------------|----------|
-| ![Poseidon](assets/README/readmePrincipal/carregamento2.png) | ![PapaiNoel](assets/README/readmePrincipal/carregamento3.png) | ![Fantasma](assets/README/readmePrincipal/carregamento4.png) |
-
----
-
-### Eventos
-
-Eventos são extremamente comuns em aplicativos hoje em dia, principalmente em apps que seguem a metodologia de engajamento do público.
-No MisturaBoa, os eventos seriam destinados a receitas específicas, como receitas picantes, receitas que demoram 24 horas para serem feitas, as melhores receitas do ano e etc.
-
-| Eventos |
-|----------|
-| ![Eventos](assets/README/readmePrincipal/eventos.png) |
+| Poseidon | Santa | Ghost |
+|----------|-------|-------|
+| ![Poseidon](assets/README/readmePrincipal/carregamento2.png) | ![Santa](assets/README/readmePrincipal/carregamento3.png) | ![Ghost](assets/README/readmePrincipal/carregamento4.png) |
 
 ---
 
-### Receitas Festivas
+### Events
 
-Receitas festivas com certeza movimentariam o aplicativo em datas especiais. Seria bem plausível de esperar que o aumento de usuários (e, portanto, assinantes e produtos comprados) se intesificasse em época de Natal, Halloween, Páscoa e outras datas. Isso gera exclusividade e interesse.
+Events drive engagement. In MisturaBoa, events could highlight specific recipes like spicy recipes, 24-hour recipes, best recipes of the year, etc.
 
-| Halloween e Natal |
+| Events |
+|--------|
+| ![Events](assets/README/readmePrincipal/eventos.png) |
+
+---
+
+### Festive Recipes
+
+Holiday recipes could boost app activity during Christmas, Halloween, Easter and other times, increasing users and potential subscribers.
+
+| Halloween & Christmas |
+|-----------------------|
+| ![Holidays](assets/README/readmePrincipal/receitasDestacadas.png) |
+
+---
+
+### Exclusive Recipes
+
+Exclusive recipes increase user interest. Each character (especially hard-to-unlock ones) could have exclusive recipes, and some characters could be subscription-only or purchasable.
+
+| Poseidon & Dragon |
 |-------------------|
-| ![HalloweeneNatal](assets/README/readmePrincipal/receitasDestacadas.png) |
+| ![Exclusive](assets/README/readmePrincipal/receitasExclusivas.png) |
 
 ---
 
-### Receitas Exclusivas
+### Legendary Recipes
 
-Bem como as receitas festivas, as receitas exclusivas geram exclusividade e, consequentemente, maior interesse e busca. Cada personagem (os mais difíceis de se conquistar, pelo menos) teria suas próprias receitas, o que, somado ao fato de alguns personagens só serem acessíveis por meio de assinatura e por meio de compra, aumentaria consideravelmente a monetização do aplicativo.
+A special "Book" with "Legendary Recipes" could exist. Recipes could be selected via monthly/yearly events and top-rated recipes included. Subscribers might be allowed more entries into competitions.
 
-| Poseidon e Dragão |
+| Legendary Recipes |
 |-------------------|
-| ![PoseidoneDragão](assets/README/readmePrincipal/receitasExclusivas.png) |
+| ![Legendary](assets/README/readmePrincipal/receitasLendarias.png) |
 
 ---
 
-### Receitas Lendárias
+### Ranking System
 
-Essa é uma seção bem especial do aplicativo, onde haveria um "Livro Especial" contendo "Receitas Lendárias". Essencialmente são apenas receitas, mas com um toque artístico.
-Para uma receita ser colocada neste livro, poderia ter um evento todo mês (ou ano) e o vencedor, isso é, a receita melhor avaliada, seria levada até este livro.
-Para os assinantes, eles poderiam colocar até três de suas receitas para competir, enquanto usuários normais só poderiam colocar uma. Todos participam, mas os assinantes possuem mais chance.
-
-| Receitas Lendárias |
-|--------------------|
-| ![ReceitasLendárias](assets/README/readmePrincipal/receitasLendarias.png) |
-
----
-
-### Sistema de Ranking
-
-O sistema de ranking já está implementado no aplicativo, mas há como deixar as recompensas por ranking muito mais abrangentes.
-Por exemplo: para comentar em uma receita é necessário ser, no mínimo, ranking Bronze.
-É possível repetir o padrão para todos os rankings. Segue alguns exemplos:
-- **Ouro:** pode criar e gerar uma receita a mais todo dia.
-- **Diamante:** recebe 1.5x mais de xp.
-- **Esmeralda:** suas receitas ficam em destaque.
-- **Chefe Supremo:** libera receitas e personagens exclusivos.
+The ranking system is implemented, but rewards could be expanded.
+Examples:
+- **Gold:** can create and generate one extra recipe per day.
+- **Diamond:** 1.5x XP gain.
+- **Emerald:** recipes get highlighted.
+- **Supreme Chef:** unlocks exclusive recipes and characters.
 
 | NoRank | Bronze |
 |--------|--------|
 | ![NoRank](assets/README/ranking/noRank.png) | ![Bronze](assets/README/ranking/bronze.png) |
 
-| Ouro | Diamante |
-|------|----------|
-| ![Ouro](assets/README/ranking/ouro.png) | ![Diamante](assets/README/ranking/diamante.png) |
+| Gold | Diamond |
+|------|---------|
+| ![Gold](assets/README/ranking/ouro.png) | ![Diamond](assets/README/ranking/diamante.png) |
 
-| Esmeralda | Chefe Supremo |
-|-----------|---------------|
-| ![Esmeralda](assets/README/ranking/esmeralda.png) | ![ChefeSupremo](assets/README/ranking/chefeSupremo.png) |
-
----
-
-### Árvore de Desafios/Receitas
-
-É possível criar, seja na Tela Principal ou em um componente à parte, uma árvore de desafios ou receitas semelhante ao que o aplciativo Duolingo faz, onde o usuário realiza receitas específicas. Seria possível colocar receitas históricas, como o "Néctar e Ambrosia" dos deuses gregos, o famoso "Ratatouille", "Banquete de Gilgamesh", "Hidromel" e muitas outras, até chegar em uma "receita final".
-
-| Árvore Duolingo | Árvore de Receitas |
-|-----------|---------------|
-| ![ArvoreDuolingo](assets/README/readmePrincipal/arvoreDeReceitas.jpg) | ![ArvoredeReceitas](assets/README/readmePrincipal/arvoreDeReceitasExemplo.png) |
+| Emerald | Supreme Chef |
+|---------|--------------|
+| ![Emerald](assets/README/ranking/esmeralda.png) | ![SupremeChef](assets/README/ranking/chefeSupremo.png) |
 
 ---
 
-### Cursos de Culinária
+### Challenge/Recipe Tree
 
-Cursos de culinária seriam um ótima adição aos assinantes do aplicativo. Uma forma de incentivar a qualidade das receitas e de se aumentar a arrecadação do app.
+A challenge tree like Duolingo could be added where users complete specific recipes (historical or iconic recipes) leading to a final recipe. This increases engagement and gives progression.
 
----
-
-### Sistema de Energia
-
-O sistema de energia está presente em boa parte dos aplicativos mobile, e é uma excelente forma de manter os usuários entretidos e promover a monetização.
-Quando eu era mais jovem, me perguntava por que os jogos mobile (em sua grande maioria) tinham esse sistema de "energia", em que você é limitado a jogar o jogo apenas por algumas vezes ao dia.
-Isso não fazia sentido para mim, afinal, por que não permitir que os usuários jogassem o quanto quisessem?
-Mas, analisando hoje em dia, a lógica é bem simples.
-Com o sistema de energia, os usuários nunca "se esgotam" do aplicativo. Se o app permitisse que eles o desfrutassem à vontade,
-muito provavelmente, ainda nos primeiros dias, os usuários parariam de usá-lo, pois esgotariam toda a sua curiosidade.
-No entanto, mantendo-os "presos", e, somado à atualizações futuras, o interesse é preservado por muito mais tempo.
-Além, é claro, de uma clara estratégia de vender assinaturas, para que o usuário possa desfrutar um pouco mais do alicativo antes da cota de energia acabar.
-**Seria possível introduzir essa mecânica para praticamente tudo do app, desde a criação e geração de receitas, conclusão de receitas e basicamente qualquer outra feature, com um pequeno ajuste, é claro.**
-
-| Exemplo do Sistema de Energia |
-|-------------------------------|
-| ![ExemplodoSistemadeEnergia](assets/README/readmePrincipal/energia.jpg) |
+| Duolingo Tree | Recipe Tree Example |
+|---------------|---------------------|
+| ![DuolingoTree](assets/README/readmePrincipal/arvoreDeReceitas.jpg) | ![RecipeTree](assets/README/readmePrincipal/arvoreDeReceitasExemplo.png) |
 
 ---
 
-## 📬 Contato
+### Cooking Courses
 
-Fique à vontade para entrar em contato para dúvidas, sugestões ou oportunidades profissionais!
+Cooking courses would be a great addition for subscribers, improving recipe quality and increasing revenue.
+
+---
+
+### Energy System
+
+An energy system limits how much users can use features each day, encouraging return visits and monetization (e.g., subscriptions to increase energy).
+This mechanic could apply to creation/generation of recipes, completing recipes, and many other features.
+
+| Energy System Example |
+|-----------------------|
+| ![EnergyExample](assets/README/readmePrincipal/energia.jpg) |
+
+---
+
+## 📬 Contact
+
+Feel free to reach out for questions, suggestions or professional opportunities!
 
 - **LinkedIn:** [LinkedIn](https://www.linkedin.com/in/gabriel-grozinski/)
 - **E-mail:** gabrielgrozinski@gmail.com
 
 ---
 
-Agradeço por visitar meu projeto!  
-Estou aberto a feedbacks e oportunidades de colaboração.
+Thanks for visiting my project!  
+I’m open to feedback and collaboration opportunities.
 
 ---
 
-## Observação
+## Note
 
-**Todos os arquivos possuem anotações próprias, mas sempre no fundo deles há uma anotação geral, abordando sobre ocomponente, possíveis melhorias, ideias para o futuro, o porquê de determinados códigos e etc.**
+**All files include their own annotations, and at the bottom there is a general note describing the component, possible improvements, future ideas, reasons for certain code choices, etc.**
