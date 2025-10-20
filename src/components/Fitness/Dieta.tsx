@@ -31,8 +31,7 @@ export default function Dieta({navigation}: Props) {
 
         if (snapshot.exists()) {
           const dietaData = snapshot.val();
-          setDieta(dietaData.slice(1));
-          console.log('dieta', dietaData.slice(1))
+          setDieta(dietaData.filter(Boolean));
         };
         setLoading(false);
       } catch (erro) {
@@ -42,12 +41,15 @@ export default function Dieta({navigation}: Props) {
 
     return () => usuario();
 
+
   }, [authInstance]);
   {/* Buscando a(s) dieta(s) */}
 
   if (loading) return (
     <LoaderCompleto/>
   );
+
+   
 
   return (
     <ImageBackground
@@ -80,7 +82,7 @@ export default function Dieta({navigation}: Props) {
             </View>
           )}
           ListEmptyComponent={
-            <View className="mb-20">
+            <View className="mb-20 mt-10">
               <Text className="text-3xl font-bold mb-5 text-center">Nenhuma dieta ainda...</Text>
               <Text className="text-2xl opacity-85 mb-5 text-center">Que tal criarmos a sua primeira?</Text>
               <Image className='h-[130px] w-[200px] self-center' source={require('../../../assets/Fitness/SemDieta.png')} />
@@ -96,4 +98,21 @@ export default function Dieta({navigation}: Props) {
       </View>
     </ImageBackground>
   );
+
+{/* 
+  
+  Componente Dieta é uma tela React Native/TypeScript que lista as dietas do usuário no Realtime Database do Firebase; 
+ao montar escuta onAuthStateChanged, codifica o email em Base64 e busca dados em usuarios/{userId}/dieta, armazena 
+o resultado no estado (filtrando valores nulo) e mostra LoaderCompleto enquanto carrega. 
+  
+  A UI usa ImageBackground e um FlatList que exibe cada dieta (nome e tipoDieta) com ícone, um botão para navegar a 
+"CriarDieta" (também mostrado quando a lista está vazia) e o componente Barra fixo no rodapé.
+
+  As dietas são separadas por seu objetivo, e são praticamente obrigatórias no mundo de hoje, tão focado e preocupado
+com a própria alimentação.
+  
+  Observações rápidas: o onPress dos itens é apenas um placeholder, afinal, a estrutura da tela de dietas é um protótipo,
+e pode haver um caso em que loading não seja encerrado se não houver usuário autenticado.
+  
+*/}
 };

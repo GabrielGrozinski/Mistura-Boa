@@ -79,4 +79,11 @@ export default function ReceitasVeganaAppBASE({navigation}: Props) {
 
     </ImageBackground>
   );
+
+{/* 
+  
+  Segue a mesma lógica das receitas carnívoras base.
+ 
+ 
+*/}
 };

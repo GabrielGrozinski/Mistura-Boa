@@ -23,36 +23,34 @@ const db = getDatabase(app);
 
 let recipesCarnivoras: any = [
   {
-    email: '', // Não há email pois é uma receita padrão.
-    id: 1, // Identificador da receita.
-    title: 'Bife Grelhado com Alho', // Título.
-    description: 'Suculento bife temperado com alho e ervas.', // Descrição.
-    dif: 'Fácil de fazer!', // Dificuldade da receita.
-    time: '⏱️ 15 min', // Tempo de preparo da receita.
-    image: require('../../../../assets/Receitas/ReceitasCarnivoras/bifeComAlho.png'), // Imagem da receita.
-    autor: 'Mistura Boa', // Autor da receita. Como é uma receita padrão, o autor é o aplicativo.
-    tipo: 'carnivoro', // Tipo da receita.
-    refeicao: 'prato_principal', // Refeição que a receita se adequa.
+    email: '',
+    id: 1,
+    title: 'Bife Grelhado com Alho',
+    description: 'Suculento bife temperado com alho e ervas.',
+    dif: 'Fácil de fazer!',
+    time: '⏱️ 15 min',
+    image: require('../../../../assets/Receitas/ReceitasCarnivoras/bifeComAlho.png'),
+    autor: 'Mistura Boa',
+    tipo: 'carnivoro',
+    refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Bife de contrafilé', quantidade: '200g', icone: '🥩' },
-      { ing: 'Alho picado', quantidade: '1', icone: '🧄' },
-      { ing: 'Azeite de oliva', quantidade: '20ml', icone: '🫒' },
-      { ing: 'Sal e pimenta', quantidade: '', icone: '🧂' },
-      { ing: 'Ervas frescas', quantidade: '', icone: '🌿' },
-    ], // Ingredientes da receita.
+      { ing: 'Bife de contrafilé', quantidade: '200', medida: 'gramas', id: 1 },
+      { ing: 'Alho picado', quantidade: '1', medida: 'unidades', id: 2 },
+      { ing: 'Azeite de oliva', quantidade: '20', medida: 'mls', id: 3 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'gramas', id: 4 },
+      { ing: 'Ervas frescas', quantidade: '1', medida: 'gramas', id: 5 },
+    ],
     passos: [
       'Tempere os bifes com sal, pimenta e alho.',
       'Aqueça o azeite em uma frigideira.',
       'Grelhe os bifes por 3-4 minutos de cada lado.',
       'Finalize com ervas frescas e sirva.',
-    ], // Passos da receita.
+    ],
     avaliacao: 
-    { nota: 0, contador: 0, media: 0 }, // Sistema de avaliação da receita.
-    
-    // Esses três campos só servem para as receitas fitness.
-    calorias: 320, // Quantidade de calorias da receita.
-    peso: 350, // Peso em gramas ou quilos da receita.
-    proteina: 75, // Quantidade de proteína. Muito importante para ganhar músculo.
+    { nota: 0, contador: 0, media: 0 },
+    calorias: 320,
+    peso: 350,
+    proteina: 75,
   },
   {
     email: '',
@@ -66,11 +64,11 @@ let recipesCarnivoras: any = [
     tipo: 'carnivoro',
     refeicao: 'bebida',
     ingredientes: [
-      { ing: 'Costela bovina', quantidade: '1 kg', icone: '🥩' },
-      { ing: 'Alho amassado', quantidade: '4 dentes', icone: '🧄' },
-      { ing: 'Cebola picada', quantidade: '1', icone: '🧅' },
-      { ing: 'Sal grosso', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Pimenta-do-reino', quantidade: 'a gosto', icone: '🌶️' },
+      { ing: 'Costela bovina', quantidade: '1000', medida: 'gramas', id: 1 },
+      { ing: 'Alho amassado', quantidade: '4', medida: 'unidades', id: 2 },
+      { ing: 'Cebola picada', quantidade: '1', medida: 'unidades', id: 3 },
+      { ing: 'Sal grosso', quantidade: '1', medida: 'gramas', id: 4 }, // "a gosto" não é medida, então use 1 grama para manter padrão
+      { ing: 'Pimenta-do-reino', quantidade: '1', medida: 'gramas', id: 5 }, // idem acima
     ],
     passos: [
       'Tempere a costela com sal, pimenta, alho e cebola.',
@@ -96,11 +94,11 @@ let recipesCarnivoras: any = [
     tipo: 'carnivoro',
     refeicao: 'cafe_da_manha',
     ingredientes: [
-      { ing: 'Carne moída', quantidade: '400g', icone: '🥩' },
-      { ing: 'Sal e pimenta', quantidade: 'a gosto', icone: '🧂' },
-      { ing: 'Pão de hambúrguer', quantidade: '2', icone: '🍞' },
-      { ing: 'Queijo', quantidade: '2 fatias', icone: '🧀' },
-      { ing: 'Alface e tomate', quantidade: 'a gosto', icone: '🥬' },
+      { ing: 'Carne moída', quantidade: '400', medida: 'gramas', id: 1 },
+      { ing: 'Sal e pimenta', quantidade: '1', medida: 'gramas', id: 2 }, // "a gosto" padronizado
+      { ing: 'Pão de hambúrguer', quantidade: '2', medida: 'unidades', id: 3 },
+      { ing: 'Queijo', quantidade: '2', medida: 'unidades', id: 4 }, // fatias = unidade
+      { ing: 'Alface e tomate', quantidade: '1', medida: 'unidades', id: 5 }, // "a gosto" padronizado
     ],
     passos: [
       'Tempere a carne moída com sal e pimenta.',
@@ -126,12 +124,12 @@ let recipesCarnivoras: any = [
     tipo: 'carnivoro',
     refeicao: 'prato_principal',
     ingredientes: [
-      { ing: 'Filé mignon', quantidade: '700g', icone: '🥩' },
-      { ing: 'Massa folhada', quantidade: '1 pacote', icone: '🥐' },
-      { ing: 'Cogumelos', quantidade: '200g', icone: '🍄' },
-      { ing: 'Presunto cru', quantidade: '100g', icone: '🥓' },
-      { ing: 'Mostarda', quantidade: '2 colheres de sopa', icone: '🌭' },
-      { ing: 'Ovo', quantidade: '1', icone: '🥚' },
+      { ing: 'Filé mignon', quantidade: '700', medida: 'gramas', id: 1 },
+      { ing: 'Massa folhada', quantidade: '1', medida: 'unidades', id: 2 }, // pacote = unidade
+      { ing: 'Cogumelos', quantidade: '200', medida: 'gramas', id: 3 },
+      { ing: 'Presunto cru', quantidade: '100', medida: 'gramas', id: 4 },
+      { ing: 'Mostarda', quantidade: '2', medida: 'colher', id: 5 },
+      { ing: 'Ovo', quantidade: '1', medida: 'unidades', id: 6 },
     ],
     passos: [
       'Sele o filé mignon e pincele com mostarda.',
@@ -158,10 +156,10 @@ let recipesCarnivoras: any = [
     tipo: 'carnivoro',
     refeicao: 'sobremesa',
     ingredientes: [
-      { ing: 'Massa de pizza', quantidade: '1 disco', icone: '🍞' },
-      { ing: 'Molho de tomate', quantidade: '4 colheres de sopa', icone: '🍅' },
-      { ing: 'Queijo mussarela', quantidade: '150g', icone: '🧀' },
-      { ing: 'Calabresa fatiada', quantidade: '100g', icone: '🥓' },
+      { ing: 'Massa de pizza', quantidade: '1', medida: 'unidades', id: 1 }, // disco = unidade
+      { ing: 'Molho de tomate', quantidade: '4', medida: 'colher', id: 2 },
+      { ing: 'Queijo mussarela', quantidade: '150', medida: 'gramas', id: 3 },
+      { ing: 'Calabresa fatiada', quantidade: '100', medida: 'gramas', id: 4 },
     ],
     passos: [
       'Espalhe o molho de tomate sobre a massa.',
@@ -190,13 +188,13 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
     // Função que busca todas as receitas carnívoras e cria um nó para cada uma delas.
     dispatch(modificaOrdenacao('Ordenação Padrão'));
     setLoadingReceitas(true);
+    const refReceita = ref(db, `ReceitasApp/carnivoro`);
+    const listenerRefReceita = onValue(refReceita, async (snapshot) => {
+        await buscaReceitas();
+    });
+    
     async function ReceitaFirebase() {
       await buscaReceitas();
-      const refReceita = ref(db, `ReceitasApp/carnivoro`);
-      onValue(refReceita, async (snapshot) => {
-        await buscaReceitas();
-      });
-
       for (let i = 0; i < recipesCarnivoras.length; i++) {
         let refReceita = ref(db, `ReceitasApp/${recipesCarnivoras[i].tipo}/${recipesCarnivoras[i].id}`);
         let snapshot = await get(refReceita);
@@ -207,6 +205,7 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
         };
       };
     };
+
     ReceitaFirebase();
 
     const user = onAuthStateChanged(authInstance, usuario => {
@@ -215,22 +214,28 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
     });
     setLoadingReceitas(false);
 
-    return () => user();
+    return () => {user(); listenerRefReceita();};
   }, [authInstance]);
+  // Busca todas as receitas carnívoras e cria um nó pra elas, além de pegar o email do usuário.
 
   async function buscaReceitas() {
-    const refReceita = ref(db, `ReceitasApp/carnivoro`);
-    const snapshot = await get(refReceita);
-    const dados = snapshot.val();
-    const receitas = dados.slice(1);
-    
-    for (let i = 0; i < recipesCarnivoras.length; i++) {
-      recipesCarnivoras[i] = {
-        ...recipesCarnivoras[i], 
-        avaliacao: receitas[i].avaliacao, 
-        comentarios: receitas[i].comentarios}
-    };
-  };
+    try {
+      const refReceita = ref(db, `ReceitasApp/carnivoro`);
+      const snapshot = await get(refReceita);
+      const dados = snapshot.val();
+      const receitas = dados.filter(Boolean);
+      
+      for (let i = 0; i < recipesCarnivoras.length; i++) {
+        recipesCarnivoras[i] = {
+          ...recipesCarnivoras[i], 
+          avaliacao: receitas[i].avaliacao, 
+          comentarios: receitas[i].comentarios}
+      };
+    } catch (error) {
+      console.log('Erro em buscaReceitas:', error);
+    }
+  }
+  // Função que busca todas as receitas carnívoras do banco e atualiza o array local.
 
   const adicionaFavorito = async (recipe: any) => {
     // Função que adiciona a receita em sua lista de favoritos.
@@ -240,14 +245,9 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
       const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
       onValue(refOriginal, async (snapshot) => {
         if (snapshot.exists()) {
-          const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
+          const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
           const verifica_se_ja_existe = receitasFavoritadas.some((r: any) => r.id === recipe.id && r.tipo === recipe.tipo && r.autor === recipe.autor);
           receitaFavoritada = verifica_se_ja_existe;
-          // Verifica se a receita que está prestes a ser favoritada já existe na lista de favoritos do usuário.
-          // A verificação é feita analisando o id, tipo e autor, pois são os únicos atributos que diferenciam uma receita de outra.
-          // O id pode ser o mesmo se o tipo for diferente, e o autor também pode ser o mesmo se o tipo for diferente.
-          // Por isso é importante verificar os 3 ao mesmo tempo.
-          // Se a receita já foi favoritada, retorna true; senão, false.
         };
     
         if (receitaFavoritada) {
@@ -263,31 +263,58 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
         });
         await buscaReceitasFavoritas(false);
       }, { onlyOnce: true });
-      // O campo idChildren serve para organizar as receitas favoritadas na ordem que o usuário as favoritou.
       Alert.alert('Receita Favoritada', 'A receita foi adicionada aos seus favoritos!');
       
     } catch (erro: any) {
       console.log('Erro:', erro.message)
     };
   };
-
-  onValue(ref(db, `usuarios/${emailB64}/receitasFavoritas`), async snapshot => await buscaReceitasFavoritas(false));
-
-  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
-    setLoadingFavoritas(precisa_de_loading);
-    const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
-    const snapshot = await get(refOriginal);
-    if (snapshot.exists()) {
-      const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
-      const receitasFavoritadasCarnivoras = receitasFavoritadas.filter((r: any) => r.tipo === 'carnivoro' && r.email !== '');
-      setReceita(receitasFavoritadasCarnivoras.map((r: any) => r.id));
-    };
-    setLoadingFavoritas(false);
-  };
+  // Função que adiciona a receita em sua lista de favoritos.
 
   useEffect(() => {
-    buscaReceitasFavoritas(true);
+    try {
+      // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+      if (!emailB64) return;
+
+      const refFavoritos = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const unsubscribeFavoritos = onValue(refFavoritos, async snapshot => {
+        await buscaReceitasFavoritas(false);
+      });
+
+      return () => unsubscribeFavoritos();
+    } catch (error) {
+      console.log('Erro no useEffect de favoritos:', error);
+    }
   }, [emailB64]);
+  // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+
+  async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
+    try {
+      // Função que busca as receitas favoritas.
+      setLoadingFavoritas(precisa_de_loading);
+      const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+      const snapshot = await get(refOriginal);
+      if (snapshot.exists()) {
+        const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
+        const receitasFavoritadasCarnivoras = receitasFavoritadas.filter((r: any) => r.tipo === 'carnivoro' && r.email === '');
+        setReceita(receitasFavoritadasCarnivoras.map((r: any) => r.id));
+      };
+      setLoadingFavoritas(false);
+    } catch (error) {
+      console.log('Erro em buscaReceitasFavoritas:', error);
+    }
+  }
+  // Função que busca as receitas favoritas.
+
+  useEffect(() => {
+    try {
+      buscaReceitasFavoritas(true);
+    } catch (error) {
+      console.log('Erro no useEffect de buscaReceitasFavoritas:', error);
+    }
+  }, [emailB64]);
+  // UseEffect que busca receitas favoritas ao carregar o email.
+
 
   if (loadingFavoritas || loadingReceitas) return (
     <LoaderCompleto/>
@@ -394,4 +421,15 @@ export default function ReceitasCarnivoraApp({navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela ReceitasCarnivoraApp em React Native/TypeScript que exibe lista de receitas carnívoras, integra Firebase Realtime Database e 
+Auth para buscar receitas e favoritos do usuário, cria nós no banco caso não existam, permite favoritar receitas com verificação de
+duplicidade, aplica filtros e ordenações (melhores receitas, calorias, proteína, tempo, dificuldade), utiliza ScrollView e 
+ImageBackground para exibir as receitas com LinearGradient, exibe informações básicas 
+(imagem, título, descrição, tempo, dificuldade), controla estados de loading, gerencia email do usuário em Base64, conecta filtros 
+com Redux e navega para tela individual de receita ao tocar em cada item.
+ 
+*/}
 };

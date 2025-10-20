@@ -15,3 +15,5 @@ const barraSlice = createSlice({
 export const {modificaBarra} = barraSlice.actions;
 
 export default barraSlice.reducer;
+
+// Reducer para gerenciar a barra de progresso.

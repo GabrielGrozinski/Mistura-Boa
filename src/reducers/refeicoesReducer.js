@@ -26,3 +26,5 @@ const refeicoesSlice = createSlice({
 
 export const {modificaAlmoco, modificaCafeDaManha, modificaJantar, modificaSobremesa} = refeicoesSlice.actions;
 export default refeicoesSlice.reducer;
+
+// Reducer de Refeições (Café da Manhã, Almoço, Sobremesa e Jantar).

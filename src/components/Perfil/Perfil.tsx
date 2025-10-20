@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import "../../../global.css";
 import { View, Text, Pressable, ScrollView, Image, ImageBackground, Alert, Modal, StatusBar, TouchableOpacity } from 'react-native';
 import { getApp } from '@react-native-firebase/app';
 import auth, {onAuthStateChanged} from '@react-native-firebase/auth';
 import { 
-  QuantReceitas, DiasLogados_e_UltimoLogin_e_CriadoEm, QuantXP, buscaRequisitosCozinheiros, 
-  QuantSeguidores, QuantSeguindo, NomeUsuario, RankingUsuario } from './buscaDados';
+  QuantReceitas, DiasLogados, CriadoEm, UltimoLogin, QuantXP, buscaRequisitosCozinheiros, 
+  QuantSeguidores, QuantSeguindo, NomeUsuario, RankingUsuario, BuscaImagem } from './buscaDados';
 import { getDatabase, ref, get, update, remove, set } from '@react-native-firebase/database';
 import { Base64 } from 'js-base64';
 import ImmersiveMode from 'react-native-immersive';
@@ -20,7 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
  
 type Props = NativeStackScreenProps<TiposRotas, 'PerfilUsuario'>
- 
+  
 const app = getApp();
 const authInstance = auth(app);
 const db = getDatabase(app);
@@ -81,6 +81,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
   const [status_seguir, setStatus_Seguir] = useState<any>([]);
   const [modalVisivel, setModalVisivel] = useState<boolean>(false);
   const [modalVisivelUser, setModalVisivelUser] = useState<boolean>(false);
+  const [imagemPerfil, setImagemPerfil] = useState<any>('');
 
   const usuariosImagens = [
     {
@@ -201,7 +202,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
   // O status_usuario serve para definir se o perfil visitado é do próprio usuário, de um usuário que ele segue,
   // de um usuário que o segue ou de um usuário que nenhum dos dois se seguem.
   const [state_status_usuario, setStatus_Usuario] = useState<any>(status_usuario);
-  // Transforma o status_usuario em uma variável de estado.
+  // Transforma o status_usuario em uma variável useState.
 
   let { usuarioAtual } = route.params;
   if (!usuarioAtual) usuarioAtual = emailUserAtual;
@@ -322,13 +323,22 @@ export default function PerfilUsuario({route, navigation}: Props) {
       const xp_ = await QuantXP(usuarioAtual);
       setXp(xp_);
 
-      const DiasLogados_e_UltimoLogin_e_CriadoEm_ = await DiasLogados_e_UltimoLogin_e_CriadoEm(usuarioAtual);
-      const diasLogados_ = DiasLogados_e_UltimoLogin_e_CriadoEm_.diasLogados;
-      const criadoEm_ = DiasLogados_e_UltimoLogin_e_CriadoEm_.criadoEm;
-      const ultimoLogin_ = DiasLogados_e_UltimoLogin_e_CriadoEm_.ultimoLogin;
-      setDiasLogados(diasLogados_);
+      const imagemPerfil_ = await BuscaImagem(usuarioAtual);
+      setImagemPerfil(imagemPerfil_);
+
+      const UltimoLogin_ = await UltimoLogin(usuarioAtual);
+      console.log('Ultimo Login', UltimoLogin_)
+      setUltimoLogin(UltimoLogin_);
+
+      const CriadoEmFuncao_ = await CriadoEm(usuarioAtual);
+      console.log('Criado em', CriadoEmFuncao_)
+      const criadoEm_ = CriadoEmFuncao_.criadoEm;
       setCriadoEm(`Cozinheiro desde ${dayjs(criadoEm_).format("MMMM [de] YYYY")}`);
-      setUltimoLogin(`O usuário não cozinha desde ${dayjs(ultimoLogin_).format("MMMM [de] YYYY")}`);
+      console.log('Criado em 2', `Cozinheiro desde ${dayjs(criadoEm_).format("MMMM [de] YYYY")}`)
+
+      const DiasLogados_ = await DiasLogados(usuarioAtual);
+      console.log('Dias Logados', DiasLogados_)
+      setDiasLogados(DiasLogados_);
 
       const ranking_ = await RankingUsuario(usuarioAtual, true);
       setTextoDoRanking(ranking_);
@@ -400,12 +410,9 @@ export default function PerfilUsuario({route, navigation}: Props) {
   useEffect(() => {
     if (!receitasUser || receitasUser.length === 0) {
       setLoadingReceitaMostrar(false);
-      console.log('ruim')
       return;
     };
     const soma = receitasUser.length;
-    console.log('receitas', receitasUser)
-    console.log('soma', soma)
     if (soma >= 3) {
       setReceitasUser(receitasUser.sort((a: any, b: any) => b.avaliacao.nota - a.avaliacao.nota));
       setReceitas_Array(true);
@@ -419,7 +426,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
   }, [receitasUser]);
   {/* Verificando se o usuário têm três receitas ou não */}
 
-  const removerSeguidor = useCallback(async () => {
+  const removerSeguidor = async () => {
     // Função para remover um seguidor.
     // A função é separada em duas partes.
     // A lógica da função é semelhante à função SeguirUsuario, mas ao contrário.
@@ -475,9 +482,10 @@ export default function PerfilUsuario({route, navigation}: Props) {
     } catch (erro) {
         console.log('Erro remover seguidor:', erro);
     };
-  }, [state_status_usuario]);
+  };
+  // Função que remove seguidor.
 
-  const SeguirUsuario = useCallback(async (): Promise<void> => {
+  const SeguirUsuario = async (): Promise<void> => {
       // Função para seguir um usuário.
       // A função é separada em duas partes.
       setStatus_Usuario('Seguindo');
@@ -495,11 +503,19 @@ export default function PerfilUsuario({route, navigation}: Props) {
         const QuantSeguindo = dadosSeguindo?.quantSeguindo;
         const QuantSeguindoNovo = QuantSeguindo + 1;
         // Atualiza a quantidade de usuários que o usuário logado está seguindo.
+
+        const imagemUsuarioRef = ref(db, `usuarios/${usuarioAtual}`);
+        const snapshotImagemUsuario = await get(imagemUsuarioRef);
+        const dadosImagemUsuario = snapshotImagemUsuario.val();
+        const imagemPerfil = dadosImagemUsuario?.imagemPerfil;
+        // Pega a imagem do usuário.
+
     
         if (!snapshot.exists() || snapshot.exists()) {
           set(refSeguindo, {
             nome: nome,
             email: Base64.decode(usuarioAtual),
+            imagemPerfil
           });
         };
     
@@ -540,7 +556,8 @@ export default function PerfilUsuario({route, navigation}: Props) {
       } catch (erro) {
         console.log('Erro seguir usuário:', erro);
       };
-  }, [state_status_usuario]);
+  };
+  // Função que segue um usuário.
 
   useEffect(() => {
     switch (state_status_usuario) {
@@ -628,48 +645,48 @@ export default function PerfilUsuario({route, navigation}: Props) {
         </View>
         {/* Cabeçalho com imagem/ícone do avatar */}
         <View className='w-full h-1/4 items-center justify-center bg-[#d56f39]'>
-        <Pressable onPress={() => setModalVisivel(true)}>
-        <Image 
-        source={require('../../../assets/Perfil/users/homemAdulto.png')}
-        className='w-[260px] h-[260px]'
-        />
-        </Pressable>
+          <Pressable onPress={() => setModalVisivel(true)}>
+          <Image 
+          source={{uri: imagemPerfil}}
+          className='w-[260px] h-[260px]'
+          />
+          </Pressable>
         </View>
 
         <Modal animationType='slide' transparent={false} onRequestClose={() => setModalVisivel(false)} visible={modalVisivel}>
-              <View className="flex-1 bg-[#132022] items-center">
-                <Text className='text-white mt-10 text-3xl font-bold text-center mb-10'>Escolha o seu cozinheiro!</Text>
-                <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'space-around', flexDirection: 'row', flexWrap: 'wrap'}}>
-                  {usuariosImagens.map((user, index) => (
-                    <Pressable
-                      key={index}
-                      onPress={() => {setModalVisivel(false); setModalVisivelUser(true);}}
-                      className="m-4"
-                    >
+                <View className="flex-1 bg-[#132022] items-center">
+                  <Text className='text-white mt-10 text-3xl font-bold text-center mb-10'>Escolha o seu cozinheiro!</Text>
+                  <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'space-around', flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {usuariosImagens.map((user, index) => (
+                      <Pressable
+                        key={index}
+                        onPress={() => {setModalVisivel(false); setModalVisivelUser(true);}}
+                        className="m-4"
+                      >
 
-                      <Image className={`rounded-full self-center h-[120px] w-[120px]`} source={user.icone} />
-                      <Text className={`font-bold text-white text-center self-center text-xl`}>
-                        {user.nome}
-                      </Text>
+                        <Image className={`rounded-full self-center h-[120px] w-[120px]`} source={user.icone} />
+                        <Text className={`font-bold text-white text-center self-center text-xl`}>
+                          {user.nome}
+                        </Text>
 
-                    </Pressable>
-                  ))}
-                </ScrollView>
-              </View>
+                      </Pressable>
+                    ))}
+                  </ScrollView>
+                </View>
         </Modal>
 
         {/* Nome e usuário */}
         <Text style={{fontFamily: "monospace"}} 
-        className="text-xl font-bold text-white text-start ml-8 mt-4">
-          {nome}
+          className="text-xl font-bold text-white text-start ml-8 mt-4">
+            {nome}
         </Text>
         <Text style={{fontFamily: "monospace"}} className="text-lg text-yellow-500 tracking-tight text-start ml-8">
-          {criadoEm}
+            {criadoEm}
         </Text>
 
         {/* Número de seguidores/seguindo/receitas Criadas */}
         <Pressable className="flex-row justify-around mt-8 mb-8"
-        onPress={() => navigation.navigate('AdicionarAmigos', {usuarioAtual, nome})}>
+          onPress={() => navigation.navigate('AdicionarAmigos', {usuarioAtual, nome, AdicionarAmigos_ou_Ver_Seguidores: false})}>
           <Text style={{fontFamily: "monospace"}}  className="text-lg font-bold text-white text-center">
             {seguindo}{'\n'}Segue
           </Text>
@@ -679,70 +696,77 @@ export default function PerfilUsuario({route, navigation}: Props) {
         </Pressable>
 
         {/* Botão adicionar amigos */} 
-        <Pressable style={{backgroundColor: status_seguir.corBG}} 
-        className='bg-sky-500 elevation-1 border-2 border-b-[3.5px] border-black/10 self-start flex-row w-[65%] ml-8 items-center justify-center h-[42px] rounded-xl mb-5' 
-        onPress={() => status_usuario ===  'Seguir de volta!' ? SeguirUsuario() : status_usuario === 'Seguindo' ? removerSeguidor()
-          : status_usuario === 'Não Segue' ? SeguirUsuario() : false}>
-          <Ionicons name={status_seguir.icone} color={status_seguir.iconeCor} size={24} />
-          <Text style={{textShadowColor: 'gray', textShadowRadius: 0.2, color: status_seguir.corTexto}} 
-          className='ml-2 text-xl text-center font-bold' >{status_seguir.texto}</Text>
-        </Pressable>
+        <TouchableOpacity style={{backgroundColor: status_seguir.corBG}} 
+          className='bg-sky-500 elevation-1 border-2 border-b-[3.5px] border-black/10 self-start flex-row w-[65%] ml-8 items-center justify-center h-[42px] rounded-xl mb-5' 
+          onPress={() => 
+            status_usuario ===  'Seguir de volta!' ? SeguirUsuario() 
+            : 
+            status_usuario === 'Seguindo' ? removerSeguidor()
+            : 
+            status_usuario === 'Não Segue' ? SeguirUsuario() 
+            : 
+            navigation.navigate('AdicionarAmigos', {usuarioAtual, nome, AdicionarAmigos_ou_Ver_Seguidores: true})
+            }>
+            <Ionicons name={status_seguir.icone} color={status_seguir.iconeCor} size={24} />
+            <Text style={{textShadowColor: 'gray', textShadowRadius: 0.2, color: status_seguir.corTexto}} 
+            className='ml-2 text-xl text-center font-bold' >{status_seguir.texto}</Text>
+        </TouchableOpacity>
 
         {/* Card de completar perfil*/}
         {cardCompletar && (
-        <View className="bg-[#f1f6ff] p-4 rounded-xl mb-6">
-          <Text className="font-bold text-[16px] text-[#2b3d69] mb-1">Completar perfil</Text>
-          <Text className="text-[#555] text-[13px] mb-3">
-            Complete os passos que faltam pro seu perfil ficar incrível!
-          </Text>
-          <Pressable className="bg-white p-2.5 rounded-lg border border-[#d0d8e0]">
-            <Text className="text-center text-[#2b3d69] font-bold">CONTINUAR</Text>
-          </Pressable>
-          <Pressable className="absolute right-2 top-1" onPress= {() => setCardCompletar(!cardCompletar)}>
-              <Text className="text-[20px]">X</Text>
-          </Pressable>
-        </View>
+          <View className="bg-[#f1f6ff] p-4 rounded-xl mb-6">
+            <Text className="font-bold text-[16px] text-[#2b3d69] mb-1">Completar perfil</Text>
+            <Text className="text-[#555] text-[13px] mb-3">
+              Complete os passos que faltam pro seu perfil ficar incrível!
+            </Text>
+            <Pressable className="bg-white p-2.5 rounded-lg border border-[#d0d8e0]">
+              <Text className="text-center text-[#2b3d69] font-bold">CONTINUAR</Text>
+            </Pressable>
+            <Pressable className="absolute right-2 top-1" onPress= {() => setCardCompletar(!cardCompletar)}>
+                <Text className="text-[20px]">X</Text>
+            </Pressable>
+          </View>
         )} 
 
         {/* Visão geral */}
         <Text className="ml-4 text-2xl font-extrabold opacity-95 text-white mt-6">Visão geral</Text>
         <View className="flex-row justify-around mb-4 mx-1 items-center flex-wrap">
 
-        {info_user.map((info: any, index: number) => (
-          
-          <View key={index} className="mb-6 h-[65px] w-[45%] border-2 border-b-[3.5px] border-[#5f636f8d] rounded-xl flex-row items-center">
+          {info_user.map((info: any, index: number) => (
             
-            {index === 0 && (
-            <Ionicons name={info.icone} color={info.cor} size={30} className="self-start mt-2 -mr-1 ml-2" />
-            )}
-            
-            {index === 1 && (
-            <Ionicons name={info.icone} color={info.cor} size={30} className="self-start mt-2 -mr-1 ml-2" />
-            )}
+            <View key={index} className="mb-6 h-[65px] w-[45%] border-2 border-b-[3.5px] border-[#5f636f8d] rounded-xl flex-row items-center">
+              
+              {index === 0 && (
+              <Ionicons name={info.icone} color={info.cor} size={30} className="self-start mt-2 -mr-1 ml-2" />
+              )}
+              
+              {index === 1 && (
+              <Ionicons name={info.icone} color={info.cor} size={30} className="self-start mt-2 -mr-1 ml-2" />
+              )}
 
-            {index === 2 && (
-              <Text className="font-bold text-2xl self-start mt-1 ml-2">
-                {info.icone}
-              </Text>
-            )}
+              {index === 2 && (
+                <Text className="font-bold text-2xl self-start mt-1 ml-2">
+                  {info.icone}
+                </Text>
+              )}
 
-            {index === 3 && (
-              <Pressable onPress={() => navigation.navigate('Ranking', {usuarioAtual: emailUserAtual})}>
-                <Image source={info.icone} className='h-[90%] w-[35px] self-start mt-1 ml-2' />
-              </Pressable>
-            )}
+              {index === 3 && (
+                <Pressable onPress={() => navigation.navigate('Ranking', {usuarioAtual: emailUserAtual})}>
+                  <Image source={info.icone} className='h-[90%] w-[35px] self-start mt-1 ml-2' />
+                </Pressable>
+              )}
 
-            <View className="ml-2">
-              <Text className="font-bold text-2xl text-white">
-                {info.valor}
-              </Text>
-              <Text style={{color: "#737b7cba"}} className="text-lg">
-                {info.texto}
-              </Text>
+              <View className="ml-2">
+                <Text className="font-bold text-2xl text-white">
+                  {info.valor}
+                </Text>
+                <Text style={{color: "#737b7cba"}} className="text-lg">
+                  {info.texto}
+                </Text>
+              </View>
             </View>
-          </View>
-        
-        ))}
+          
+          ))}
 
         </View>
 
@@ -779,11 +803,11 @@ export default function PerfilUsuario({route, navigation}: Props) {
                 {quantReceitas === 0 && (
                   <Pressable onPress={() => Alert.alert(`É necessário criar mais ${3-quantReceitas} receita${3-quantReceitas !== 1 ? 's' : ''}!`)} className="flex-row">
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
-                    className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
+                    className='rounded-xl w-36 p-3 mr-4 h-[100px]' />
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
-                    className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
+                    className='rounded-xl w-36 p-3 mr-4 h-[100px]' />
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
-                    className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
+                    className='rounded-xl w-36 p-3 mr-4 h-[100px]' />
                   </Pressable>
                 )}
                 {/* Se o usuário tiver nenhuma receita criada, mostra 3 receitas bloqueadas */}
@@ -791,7 +815,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
                 {quantReceitas === 1 && (
                   <Pressable onPress={() => Alert.alert(`É necessário criar mais ${3-quantReceitas} receita${3-quantReceitas !== 1 ? 's' : ''}!`)} className="flex-row">
                     <ImageBackground source={{uri: receitasUser[0].image}} 
-                    className='rounded-lg items-center justify-center w-36 p-3 mr-4 h-[100px]' 
+                    className='rounded-xl items-center justify-center w-36 p-3 mr-4 h-[100px]' 
                     resizeMode='cover'
                     >
                       <LinearGradient
@@ -807,9 +831,9 @@ export default function PerfilUsuario({route, navigation}: Props) {
                     </ImageBackground>
 
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
-                    className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
+                    className='rounded-xl w-36 p-3 mr-4 h-[100px]' />
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
-                    className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
+                    className='rounded-xl w-36 p-3 mr-4 h-[100px]' />
                   </Pressable>
                 )}
                 {/* Se o usuário tiver uma receita criada, mostra 2 receitas bloqueadas e uma liberada */}
@@ -817,7 +841,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
                 {quantReceitas === 2 && (
                   <Pressable onPress={() => Alert.alert(`É necessário criar mais ${3-quantReceitas} receita${3-quantReceitas !== 1 ? 's' : ''}!`)} className="flex-row">
                     <ImageBackground source={{uri: receitasUser[0].image}} 
-                    className='rounded-lg items-center justify-center w-36 p-3 mr-4 h-[100px]' 
+                    className='rounded-xl items-center justify-center w-36 p-3 mr-4 h-[100px]' 
                     resizeMode='cover'
                     >
                       <LinearGradient
@@ -833,7 +857,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
                     </ImageBackground>
                     
                     <ImageBackground source={{uri: receitasUser[1].image}} 
-                    className='rounded-lg items-center justify-center w-36 p-3 mr-4 h-[100px]' 
+                    className='rounded-xl items-center justify-center w-36 p-3 mr-4 h-[100px]' 
                     resizeMode='cover'
                     >
                       <LinearGradient
@@ -849,7 +873,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
                     </ImageBackground>
 
                     <Image source={require('../../../assets/Perfil/receitaBloqueada.png')} 
-                    className='rounded-lg w-36 p-3 mr-4 h-[100px]' />
+                    className='rounded-xl w-36 p-3 mr-4 h-[100px]' />
                   </Pressable>
                 )}
                 {/* Se o usuário tiver duas receitas criadas, mostra 1 receita bloqueada e duas liberadas */}
@@ -864,7 +888,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <Pressable className='rounded-xl items-center justify-center overflow-hidden w-36 p-3 mx-2 h-[100px]'>
                 <ImageBackground source={{uri: receitasUser[0].image}}
-                className='w-36 h-[100px]' 
+                className='w-36 h-[100px] rounded-xl' 
                 resizeMode='cover'
                 > 
                   <LinearGradient
@@ -882,7 +906,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
 
               <Pressable className='rounded-xl items-center justify-center overflow-hidden w-36 p-3 mx-2 h-[100px]'>
                 <ImageBackground source={{uri: receitasUser[1].image}}
-                className='w-36 h-[100px]' 
+                className='w-36 h-[100px] rounded-xl' 
                 resizeMode='cover'
                 > 
                   <LinearGradient
@@ -900,7 +924,7 @@ export default function PerfilUsuario({route, navigation}: Props) {
               
               <Pressable className='rounded-xl items-center justify-center overflow-hidden w-36 p-3 mx-2 h-[100px]'>
                 <ImageBackground source={{uri: receitasUser[2].image}}
-                className='w-36 h-[100px]' 
+                className='w-36 h-[100px] rounded-xl' 
                 resizeMode='cover'
                 > 
                   <LinearGradient
@@ -934,5 +958,23 @@ export default function PerfilUsuario({route, navigation}: Props) {
         </View>
     </View>
   );
+
+{/* 
+  
+  Componente Perfil é uma tela React Native/TypeScript que representa o perfil completo de um usuário dentro do aplicativo. Realiza 
+diversas integrações com Firebase Realtime Database para buscar e atualizar informações como nome, imagem, XP, ranking, conquistas, 
+receitas e relação de seguidores, além de usar Redux para sincronizar dados globais e gerenciar estados locais. Controla o modo 
+imersivo, atualiza o login do usuário e exibe dinamicamente o progresso de cada seção do perfil. 
+
+  A UI combina cards animados, modais de conquistas e cozinheiros desbloqueáveis, botões de seguir/deixar de seguir e navegação 
+para outras telas (como Receitas e Conquistas). Serve como um centro visual e funcional do ecossistema social do app, conectando 
+estatísticas, progressos e interações entre os usuários, além de ser possível mostrar o perfil do usuário logado ou outros perfis.
+
+  Observações: é possível inserir, em algum lugar da tela, a informação do último login do usuário, que já está salva mas não é
+usada; é sempre plausível adicionar ou remover algumas informações conforme o aplciativo se desenvolve e atualiza; a ação de seguir
+usuário, adicionar amigos, seguir de volta e seguindo é controlada pelo status_usuario, mas o ideal é fazer esse controle pelo
+Firebase. Se eu fosse levar o app à diante, com certeza mudaria o gerenciamento de estado.
+
+*/}
 };
  

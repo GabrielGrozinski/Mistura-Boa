@@ -1,23 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  View, Text, TextInput, Modal, TouchableOpacity,
-  ScrollView, Alert, Pressable, Image
-  
+import {
+  View,
+  Text,
+  TextInput,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Pressable,
+  Image
 } from 'react-native';
 import ImmersiveMode from 'react-native-immersive';
 import { getApp } from '@react-native-firebase/app';
-import auth, {onAuthStateChanged} from '@react-native-firebase/auth';
+import auth, { onAuthStateChanged } from '@react-native-firebase/auth';
 import { getDatabase, ref, get, set } from '@react-native-firebase/database';
 import { Base64 } from 'js-base64';
 import * as ImagePicker from 'expo-image-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TiposRotas } from '../../navigation/types';
-import {UnirReceita_ao_Usuario, PassarXP } from '../funcaoAuxiliadora/inserirDados';
+import { UnirReceita_ao_Usuario, PassarXP } from '../funcaoAuxiliadora/inserirDados';
 import Barra from '../Barra/Barra';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import LoaderCompleto from '../loading/loadingCompleto';
-
 
 type Props = NativeStackScreenProps<TiposRotas, 'CriarReceita'>;
 
@@ -32,8 +37,7 @@ const apiImagem = axios.create({
   signal: controller.signal
 });
 
-
-export default function CriarReceita({navigation}: Props) {
+export default function CriarReceita({ navigation }: Props) {
   const tituloInput = useRef<TextInput>(null);
   const descricaoInput = useRef<TextInput>(null);
   const passosInput = useRef<TextInput>(null);
@@ -48,18 +52,18 @@ export default function CriarReceita({navigation}: Props) {
   const tempo = useRef<string>('Defina o Tempo');
   const [modalTipo, setModalTipo] = useState<boolean>(false);
   const tipoOpcoes = [
-    {texto: 'Carnivoro', valor: 'carnivoro'},
-    {texto: 'Vegano', valor: 'vegano'},
-    {texto: 'Vegetariano', valor: 'vegetariano'},
+    { texto: 'Carnivoro', valor: 'carnivoro' },
+    { texto: 'Vegano', valor: 'vegano' },
+    { texto: 'Vegetariano', valor: 'vegetariano' },
   ];
   const tipoTexto = useRef<string>('Ex: Vegano');
   const tipoValor = useRef<string>('');
   const [modalRefeicao, setModalRefeicao] = useState<boolean>(false);
   const refeicaoOpcoes = [
-    {texto: 'Café da Manhã', valor: 'cafe_da_manha'},
-    {texto: 'Prato Principal', valor: 'prato_principal'},
-    {texto: 'Sobremesa', valor: 'sobremesa'},
-    {texto: 'Bebida', valor: 'bebida'},
+    { texto: 'Café da Manhã', valor: 'cafe_da_manha' },
+    { texto: 'Prato Principal', valor: 'prato_principal' },
+    { texto: 'Sobremesa', valor: 'sobremesa' },
+    { texto: 'Bebida', valor: 'bebida' },
   ];
   const refeicaoTexto = useRef<string>('Ex: Almoço');
   const refeicaoValor = useRef<string>('');
@@ -68,21 +72,21 @@ export default function CriarReceita({navigation}: Props) {
   const [descricao, setDescricao] = useState('');
   const [ingredientes, setIngredientes] = useState<any[]>([
     {
-    id: 1,
-    ing: '',
-    quantidade: 0,
-    medida: 'Grama',
+      id: 1,
+      ing: '',
+      quantidade: 0,
+      medida: 'gramas',
     }
   ]);
   const [modalMedida, setModalMedida] = useState<boolean>(false);
   const medidasOpcoes = [
-    'Grama',
-    'Unidade',
-    'Quilo',
-    'Litro',
-    'ML',
-    'Xícara',
-    'Colher',
+    'gramas',
+    'unidades',
+    'quilo',
+    'litro',
+    'mls',
+    'xícara',
+    'colher',
   ];
   const [ingredienteSelecionado, setIngredienteSelecionado] = useState<number | null>(null);
   const [name, setName] = useState<string>('');
@@ -92,27 +96,25 @@ export default function CriarReceita({navigation}: Props) {
   const emailB64 = useRef<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-    
   useEffect(() => {
-      ImmersiveMode.setImmersive(true);
-      const user = onAuthStateChanged(authInstance, usuario => {
-        if (!usuario || !usuario.email || !usuario.displayName) return;
-        setName(usuario.displayName);
-        emailB64.current = Base64.encode(usuario.email);
-        usuarioAtual.current = usuario.email;
-      });
+    ImmersiveMode.setImmersive(true);
+    const user = onAuthStateChanged(authInstance, usuario => {
+      if (!usuario || !usuario.email || !usuario.displayName) return;
+      setName(usuario.displayName);
+      emailB64.current = Base64.encode(usuario.email);
+      usuarioAtual.current = usuario.email;
+    });
 
-      return () => user();
+    return () => user();
   }, []);
 
   const escolherImagem = async () => {
     // Função que escolhe uma imagem do usuário.
-
-    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permissão necessária!');
       return;
-    };
+    }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       quality: 0.5,
@@ -123,8 +125,8 @@ export default function CriarReceita({navigation}: Props) {
     if (result.canceled) {
       Alert.alert('Operação cancelada');
       return;
-    };
- 
+    }
+
     const imagem = result.assets[0];
     imagemEscolhida.current = imagem.uri;
     const imagemB64 = imagem.base64;
@@ -136,37 +138,38 @@ export default function CriarReceita({navigation}: Props) {
     };
     setImagem(imagemUpload);
   };
+  // Função que escolhe uma imagem do usuário.
 
   const EnviarImagem = async (id: number, tipo: string): Promise<boolean> => {
     // Função que envia a imagem escolhida do usuário para o mongoDB.
     try {
-      const imagemUpload = {...imagem, id: id, tipo: tipo};
+      const imagemUpload = { ...imagem, id: id, tipo: tipo };
       await apiImagem.post('/imagemReceitas', imagemUpload);
       console.log('Imagem enviada!');
       return true;
-
     } catch (erro: any) {
       if (erro.response && erro.response.status === 409) {
         console.log('Imagem duplicada');
         return false;
-      };
+      }
       console.log('Erro ao enviar imagem para o mongoDB', erro);
       return false;
-    };
+    }
   };
+  // Função que envia a imagem para o mongoDb.
 
   const RecuperarImagem = async (id: number, tipo: string): Promise<string | boolean> => {
     // Função que recupera a imagem do mongoDb e insere o uri dela no firebase.
     try {
-      const response = await apiImagem.get('/imagemReceitas', {params: {id, tipo}});
+      const response = await apiImagem.get('/imagemReceitas', { params: { id, tipo } });
       const imagem = response.data.imageUrl;
       return imagem;
-
     } catch (erro) {
       console.log('Erro ao recuperar imagem', erro);
       return false;
-    };
+    }
   };
+  // Função que recupera a imagem do mongoDb, para depois inserir ela como uri na receita.
 
   const criarReceita = async () => {
     // Função responsável por criar a receita.
@@ -185,7 +188,7 @@ export default function CriarReceita({navigation}: Props) {
 
       let novosIngredientes = ingredientes;
       novosIngredientes = novosIngredientes.filter((ingrediente) => ingrediente.ing !== '' && ingrediente.quantidade !== 0);
-      novosIngredientes = novosIngredientes.map((ing, index) => ({...ing, id: index+1}));
+      novosIngredientes = novosIngredientes.map((ing, index) => ({ ...ing, id: index + 1 }));
       // Faz a mesma coisa, além de arrumar o id dos ingredientes.
 
       const verificaEnviarImagem = await EnviarImagem(id, tipoValor.current);
@@ -210,7 +213,7 @@ export default function CriarReceita({navigation}: Props) {
         ingredientes: novosIngredientes, // Ingredientes da receita.
         passos: novosPassos, // passos da receita.
         id: id, // Id dinâmico da receita.
-        avaliacao: 
+        avaliacao:
         { nota: 0, contador: 0, media: 0 }, // Sistema de avaliações da receita.
         calorias: 320, // Calorias estimadas por I.A.
         peso: 350, // Peso estimado por I.A.
@@ -222,46 +225,49 @@ export default function CriarReceita({navigation}: Props) {
       const snapshotReceitaID = await get(refReceitaID);
       if (snapshotReceitaID.exists()) return Alert.alert('Ops!', 'Ocorreu um erro. Pode tentar de novo?');
       // Pode acontecer de dois ou mais usuários tentarem criar uma receita ao mesmo tempo, e isso embaralhar o firebase, por isso essa verificação.
-      
+
       await set(refReceitaID, receita);
       // Cria um nó em ReceitasUsuarios, separando a receita pelo tipo dela e o identificador.
 
       await PassarXP(emailB64.current, 25);
       // O usuário recebe 25 de xp por receita criada.
-      
+
       await UnirReceita_ao_Usuario(receita, emailB64.current);
       // Chama uma outra função, responsável por unir a receita ao usuário que está a criando.
-      
+
       setLoading(false);
       proximaTela(receita);
-      
-
     } catch (erro) {
       setLoading(false);
       console.log('Erro ao criar receita:', erro);
-    };
+    }
   };
+  // Função que cria a receita.
 
-  const proximaTela = (receita: any) => { 
+  const proximaTela = (receita: any) => {
     // Função responsável por navegar para a tela da receita que foi criada.
     navigation.reset({
       index: 0,
       routes: [
-        { name: 'Receita', params: {recipe: receita}} 
+        { name: 'Receita', params: { recipe: receita } }
       ],
     });
   };
+  // Função que leva o usuário para a tela da receita criada.
   
   if (loading) return (
-    <LoaderCompleto/>
+    <LoaderCompleto />
   );
 
   return (
     <View className="flex-1 bg-[#0e1317] pb-[90px]">
       <ScrollView>
-        
-        {imagemEscolhida.current === '' && (   
-          <TouchableOpacity onPress={() => escolherImagem()} className="mt-20 bg-[#132022] rounded-xl border-[#444b51] items-center justify-around self-center max-h-[200px] max-w-[240px] min-h-[200px] min-w-[240px]">
+
+        {imagemEscolhida.current === '' && (
+          <TouchableOpacity
+            onPress={() => escolherImagem()}
+            className="mt-20 bg-[#132022] rounded-xl border-[#444b51] items-center justify-around self-center max-h-[200px] max-w-[240px] min-h-[200px] min-w-[240px]"
+          >
             <Ionicons name="image-outline" className="mt-4" size={40} color="#444b51" />
             <Text className='font-bold text-lg mb-4 text-center text-neutral-400'>
               Adicionar imagem da receita
@@ -271,10 +277,13 @@ export default function CriarReceita({navigation}: Props) {
         {/* Adicionar Imagem */}
 
         {imagemEscolhida.current !== '' && (
-          <TouchableOpacity className='mt-20 overflow-hidden rounded-xl self-center max-h-[200px] max-w-[240px] min-h-[200px] min-w-[240px]' onPress={() => escolherImagem()}>
+          <TouchableOpacity
+            className='mt-20 overflow-hidden rounded-xl self-center max-h-[200px] max-w-[240px] min-h-[200px] min-w-[240px]'
+            onPress={() => escolherImagem()}
+          >
             <Image
-            className="w-full h-full"
-            source={{uri: imagemEscolhida.current}}
+              className="w-full h-full"
+              source={{ uri: imagemEscolhida.current }}
             />
           </TouchableOpacity>
         )}
@@ -292,17 +301,18 @@ export default function CriarReceita({navigation}: Props) {
             onChangeText={(texto) => setTitulo(texto)}
             returnKeyType='next'
             onSubmitEditing={() => descricaoInput.current?.focus()}
+            maxLength={30}
           />
         </View>
         {/* Adicionar Título */}
-        
+
         <View className="p-4 w-[90%] mx-4 items-start">
           <Text className="text-2xl text-neutral-300 text-start self-start font-bold mt-2">
             Descrição
           </Text>
           <TextInput
             ref={descricaoInput}
-            className="h-[110px] w-full bg-[#132022] font-bold mt-2 text-center rounded-xl elevation-1 text-lg text-neutral-200"
+            className="h-[100px] w-full bg-[#132022] font-bold mt-2 text-center rounded-xl elevation-1 text-lg text-neutral-200"
             placeholderTextColor="#A3A3A3"
             placeholder="Fale um pouco sobre essa receita..."
             value={descricao}
@@ -310,12 +320,21 @@ export default function CriarReceita({navigation}: Props) {
             textAlignVertical='top'
             onChangeText={(texto) => setDescricao(texto)}
             returnKeyType='done'
+            maxLength={40}
           />
+          <Text
+            className={
+              `self-center text-center text-xl 
+            ${descricao.length < 8 ? 'text-green-500' : descricao.length < 15 ? 'text-green-300' : descricao.length < 25 ? 'text-green-100' : descricao.length < 31 ? 'text-red-200' : 'text-red-400'}
+            `}
+          >
+            {descricao.length < 40 ? `${descricao.length}/40 caracteres` : 'Número máximo de caracteres'}
+          </Text>
         </View>
         {/* Adicionar Descrição */}
 
         <View className='flex-row justify-around mx-4 w-[90%]'>
-          
+
           <View className="items-center w-[45%]">
             <Text className="text-2xl self-center text-neutral-300 text-start self-start font-bold mt-2">
               Dificuldade
@@ -326,7 +345,7 @@ export default function CriarReceita({navigation}: Props) {
               </Text>
             </Pressable>
           </View>
-          
+
           <View className="items-center w-[45%]">
             <Text className="text-2xl self-center text-neutral-300 text-start self-start font-bold mt-2">
               Tempo
@@ -337,7 +356,7 @@ export default function CriarReceita({navigation}: Props) {
               </Text>
             </Pressable>
           </View>
-        
+
         </View>
         {/* Adicionar Dificuldade e Tempo */}
 
@@ -345,10 +364,10 @@ export default function CriarReceita({navigation}: Props) {
           <View className='flex-1 bg-[#132022] justify-center items-center'>
             <View className='h-[380px] w-[90%] rounded-xl justify-center items-center'>
               {dificuldadeOpcoes.map((opcao: string, index: number) => (
-                <Pressable key={index} onPress={() => {setModalDificuldade(false); dificuldade.current = opcao}} className="my-2 justify-center items-center h-[20%] w-full">
-                    <Text className="text-3xl font-bold text-neutral-200 text-center">
-                      {opcao}
-                    </Text>
+                <Pressable key={index} onPress={() => { setModalDificuldade(false); dificuldade.current = opcao }} className="my-2 justify-center items-center h-[20%] w-full">
+                  <Text className="text-3xl font-bold text-neutral-200 text-center">
+                    {opcao}
+                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -360,27 +379,27 @@ export default function CriarReceita({navigation}: Props) {
           <View className='flex-1 bg-[#132022] justify-center items-center'>
             <View className='h-[500px] w-[90%] rounded-xl justify-center items-center'>
               {tempoOpcoes.map((opcao: string, index: number) => (
-                <Pressable key={index} onPress={() => {setModalTempo(false); tempo.current = opcao}} className="my-2 justify-center items-center h-[17.5%] w-full">
-                    <Text className="text-3xl font-bold text-neutral-200 text-center">
-                      {opcao}
-                    </Text>
+                <Pressable key={index} onPress={() => { setModalTempo(false); tempo.current = opcao }} className="my-2 justify-center items-center h-[17.5%] w-full">
+                  <Text className="text-3xl font-bold text-neutral-200 text-center">
+                    {opcao}
+                  </Text>
                 </Pressable>
               ))}
             </View>
           </View>
         </Modal>
         {/* Modal de tempo */}
-        
+
         <View className="mt-10 min-h-[140px] w-[90%] mx-4 items-start">
-          
+
           <Text className="text-2xl text-neutral-300 text-start self-start font-bold mt-2">
             Passos da Receita
           </Text>
-          
+
           <View className='bg-[#132022] mt-2 rounded-xl w-full items-center'>
             {passos.map((passo: any, index: number) => (
               <TextInput
-              key={index}
+                key={index}
                 ref={passosInput}
                 className="min-h-[50px] w-[85%] mb-4 font-bold border-b-2 border-neutral-600 rounded-xl elevation-1 text-lg text-neutral-200"
                 placeholderTextColor="#c9c4c4ff"
@@ -394,6 +413,7 @@ export default function CriarReceita({navigation}: Props) {
                 }}
                 textAlign='left'
                 returnKeyType='done'
+                maxLength={50}
               />
             ))}
 
@@ -401,7 +421,7 @@ export default function CriarReceita({navigation}: Props) {
 
           <TouchableOpacity className="self-center items-center justify-center" disabled={passos.length >= 6} onPress={() => setPassos([...passos, ''])}>
             <Text className={`${passos.length < 6 ? 'text-4xl' : 'text-2xl'} ${passos.length < 6 ? 'text-green-400' : 'text-red-400'} mt-2`}>
-                {passos.length >= 6 ? "Limite de Passos atingidos!" : "+"}  
+              {passos.length >= 6 ? "Limite de Passos atingidos!" : "+"}
             </Text>
           </TouchableOpacity>
 
@@ -409,14 +429,14 @@ export default function CriarReceita({navigation}: Props) {
         {/* Adicionar Passos */}
 
         <View className="items-center mt-10 min-h-[120px] w-[90%] mx-4 items-start">
-          
+
           <Text className="text-2xl text-neutral-300 text-start self-start font-bold mt-2">
             Ingredientes da Receita
           </Text>
-          
+
           <View className='bg-[#132022] rounded-lg mt-2 min-h-[60px] w-full'>
             {ingredientes.map((ingrediente: any, index: number) => (
-              
+
               <View className='flex-row min-h-[50px] w-full rounded-2xl items-center justify-around' key={index}>
                 <TextInput
                   ref={ingredientesInput}
@@ -427,7 +447,7 @@ export default function CriarReceita({navigation}: Props) {
                   multiline
                   onChangeText={(texto) => {
                     let novosIngredientes = [...ingredientes];
-                    novosIngredientes[index] = {...novosIngredientes[index], ing: texto};
+                    novosIngredientes[index] = { ...novosIngredientes[index], ing: texto };
                     setIngredientes(novosIngredientes);
                   }}
                   textAlign='left'
@@ -436,26 +456,27 @@ export default function CriarReceita({navigation}: Props) {
                 />
                 <View className="w-[100px] mb-2 mr-8 justify-around">
                   <TextInput
-                  ref={ingredientesQuantidadeInput}
-                  className="text-neutral-200 font-bold"
-                  placeholder='0'
-                  placeholderTextColor={'#e8e5e5ff'}
-                  textAlign='center'
-                  textAlignVertical='bottom'
-                  returnKeyType='done'
-                  value={ingrediente.quantidade}
-                  onChangeText={(texto) => {
-                    let novasQuantidades = [...ingredientes];
-                    novasQuantidades[index] = {...novasQuantidades[index], quantidade: texto};
-                    setIngredientes(novasQuantidades);
-                  }}
-                  keyboardType='numeric'
+                    ref={ingredientesQuantidadeInput}
+                    className="text-neutral-200 font-bold"
+                    placeholder='0'
+                    placeholderTextColor={'#e8e5e5ff'}
+                    textAlign='center'
+                    textAlignVertical='bottom'
+                    returnKeyType='done'
+                    value={ingrediente.quantidade}
+                    onChangeText={(texto) => {
+                      let novasQuantidades = [...ingredientes];
+                      novasQuantidades[index] = { ...novasQuantidades[index], quantidade: texto };
+                      setIngredientes(novasQuantidades);
+                    }}
+                    keyboardType='numeric'
                   />
-                  
-                  <Pressable 
-                  onPress={() => {setModalMedida(true); setIngredienteSelecionado(index);}} 
-                  className="flex-row -mt-2 border-t border-neutral-700 items-center justify-center mx-1">
-                    
+
+                  <Pressable
+                    onPress={() => { setModalMedida(true); setIngredienteSelecionado(index); }}
+                    className="flex-row -mt-2 border-t border-neutral-700 items-center justify-center mx-1"
+                  >
+
                     <Text className='text-white mt-[2px] mr-1 text-center'>
                       {ingrediente.medida}
                     </Text>
@@ -465,16 +486,16 @@ export default function CriarReceita({navigation}: Props) {
 
                 </View>
               </View>
-              
+
             ))}
 
           </View>
 
-          <TouchableOpacity className="self-center items-center justify-center" disabled={ingredientes.length >= 10} 
-          onPress={() => setIngredientes([...ingredientes, {id: ingredientes.length + 1, ing: '', quantidade: 0, medida: 'Grama'}])}>
+          <TouchableOpacity className="self-center items-center justify-center" disabled={ingredientes.length >= 10}
+            onPress={() => setIngredientes([...ingredientes, { id: ingredientes.length + 1, ing: '', quantidade: 0, medida: 'gramas' }])}>
 
             <Text className={`${ingredientes.length < 10 ? 'text-4xl' : 'text-2xl'} ${ingredientes.length < 10 ? 'text-green-400' : 'text-red-400'} mt-2`}>
-                {ingredientes.length >= 10 ? "Limite de Ingredientes atingidos!" : "+"}  
+              {ingredientes.length >= 10 ? "Limite de Ingredientes atingidos!" : "+"}
             </Text>
 
           </TouchableOpacity>
@@ -486,24 +507,24 @@ export default function CriarReceita({navigation}: Props) {
           <View className='flex-1 bg-[#132022] justify-center items-center'>
             <View className='h-[400px] w-[90%] rounded-xl justify-center items-center'>
               {medidasOpcoes.map((opcao: string, index: number) => (
-                <Pressable key={index} 
-                onPress={() => {
-                  if (ingredienteSelecionado !== null) {
-                    setIngredientes((medidasAtuais) => {
-                      const novasMedidas = [...medidasAtuais];
-                      novasMedidas[ingredienteSelecionado] = {
-                        ...novasMedidas[ingredienteSelecionado],
-                        medida: opcao,
-                      };
-                      return novasMedidas;
-                    });
-                  }
-                  setModalMedida(false);
-                }}
-                className="my-2 justify-center items-center h-[20%] w-full">
-                    <Text className="text-3xl font-bold text-neutral-200 text-center">
-                      {opcao}
-                    </Text>
+                <Pressable key={index}
+                  onPress={() => {
+                    if (ingredienteSelecionado !== null) {
+                      setIngredientes((medidasAtuais) => {
+                        const novasMedidas = [...medidasAtuais];
+                        novasMedidas[ingredienteSelecionado] = {
+                          ...novasMedidas[ingredienteSelecionado],
+                          medida: opcao,
+                        };
+                        return novasMedidas;
+                      });
+                    }
+                    setModalMedida(false);
+                  }}
+                  className="my-2 justify-center items-center h-[20%] w-full">
+                  <Text className="text-3xl font-bold text-neutral-200 text-center">
+                    {opcao}
+                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -512,29 +533,29 @@ export default function CriarReceita({navigation}: Props) {
         {/* Modal de medida dos ingredientes */}
 
         <View className='flex-row justify-around mx-4 w-[90%]'>
-          
+
           <View className="items-center w-[45%]">
             <Text className="text-2xl self-center text-neutral-300 text-start self-start font-bold mt-2">
               Receita
             </Text>
             <Pressable onPress={() => setModalTipo(true)} className="h-[70px] items-center justify-center w-full bg-[#132022] mt-2 rounded-xl elevation-1">
-                <Text className={`font-bold text-lg text-center ${tipoTexto.current === 'Ex: Vegano' ? 'text-neutral-400' : 'text-neutral-100'}`}>
-                  {tipoTexto.current}
-                </Text>
+              <Text className={`font-bold text-lg text-center ${tipoTexto.current === 'Ex: Vegano' ? 'text-neutral-400' : 'text-neutral-100'}`}>
+                {tipoTexto.current}
+              </Text>
             </Pressable>
           </View>
-            
+
           <View className="items-center w-[45%]">
             <Text className="text-2xl self-center text-neutral-300 text-start self-start font-bold mt-2">
               Refeição
             </Text>
             <Pressable onPress={() => setModalRefeicao(true)} className="h-[70px] items-center justify-center w-full bg-[#132022] mt-2 rounded-xl elevation-1">
-                <Text className={`font-bold text-lg text-center ${refeicaoTexto.current === 'Ex: Almoço' ? 'text-neutral-400' : 'text-neutral-100'}`}>
-                  {refeicaoTexto.current}
-                </Text>
+              <Text className={`font-bold text-lg text-center ${refeicaoTexto.current === 'Ex: Almoço' ? 'text-neutral-400' : 'text-neutral-100'}`}>
+                {refeicaoTexto.current}
+              </Text>
             </Pressable>
           </View>
-        
+
         </View>
         {/* Adicionar Tipo e Refeição */}
 
@@ -542,25 +563,25 @@ export default function CriarReceita({navigation}: Props) {
           <View className='flex-1 bg-[#132022] justify-center items-center'>
             <View className='h-[200px] w-[90%] rounded-xl justify-center items-center'>
               {tipoOpcoes.map((opcao: any, index: number) => (
-                <Pressable key={index} onPress={() => {setModalTipo(false); tipoTexto.current = opcao.texto; tipoValor.current = opcao.valor}} className="my-2 justify-center items-center h-[30%] w-full">
-                    <Text className="text-3xl font-bold text-neutral-200 text-center">
-                      {opcao.texto}
-                    </Text>
+                <Pressable key={index} onPress={() => { setModalTipo(false); tipoTexto.current = opcao.texto; tipoValor.current = opcao.valor }} className="my-2 justify-center items-center h-[30%] w-full">
+                  <Text className="text-3xl font-bold text-neutral-200 text-center">
+                    {opcao.texto}
+                  </Text>
                 </Pressable>
               ))}
             </View>
           </View>
         </Modal>
         {/* Modal de tipo */}
-        
+
         <Modal onRequestClose={() => setModalRefeicao(false)} animationType='slide' visible={modalRefeicao}>
           <View className='flex-1 bg-[#132022] justify-center items-center'>
             <View className='h-[200px] w-[90%] rounded-xl justify-center items-center'>
               {refeicaoOpcoes.map((opcao: any, index: number) => (
-                <Pressable key={index} onPress={() => {setModalRefeicao(false); refeicaoTexto.current = opcao.texto; refeicaoValor.current = opcao.valor}} className="my-2 justify-center items-center h-[30%] w-full">
-                    <Text className="text-3xl font-bold text-neutral-200 text-center">
-                      {opcao.texto}
-                    </Text>
+                <Pressable key={index} onPress={() => { setModalRefeicao(false); refeicaoTexto.current = opcao.texto; refeicaoValor.current = opcao.valor }} className="my-2 justify-center items-center h-[30%] w-full">
+                  <Text className="text-3xl font-bold text-neutral-200 text-center">
+                    {opcao.texto}
+                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -568,25 +589,25 @@ export default function CriarReceita({navigation}: Props) {
         </Modal>
         {/* Modal de refeição */}
 
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => {
             dificuldade.current == 'Ex: Fácil de fazer!' ? Alert.alert('Dados faltando!', 'Adicione a dificuldade!')
-            : tempo.current == 'Defina o Tempo' ? Alert.alert('Dados faltando!', 'Adicione o tempo!')
-            : tipoValor.current == '' ? Alert.alert('Dados faltando!', 'Adicione o tipo!')
-            : tipoValor.current == '' ? Alert.alert('Dados faltando!', 'Adicione o tipo!')
-            : titulo == '' ? Alert.alert('Dados faltando!', 'Adicione o título!')
-            : passos[0] == '' && passos.length === 1 ? Alert.alert('Dados faltando!', 'Adicione um passo!')
-            : ingredientes[0].ing == '' && ingredientes.length === 1 ? Alert.alert('Dados faltando!', 'Adicione um ingrediente!')
-            : descricao == '' ? Alert.alert('Dados faltando!', 'Adicione uma descrição!')
-            : imagemEscolhida.current == '' ? Alert.alert('Dados faltando!', 'Adicione uma imagem!')
-            : criarReceita();
+              : tempo.current == 'Defina o Tempo' ? Alert.alert('Dados faltando!', 'Adicione o tempo!')
+                : tipoValor.current == '' ? Alert.alert('Dados faltando!', 'Adicione o tipo!')
+                  : tipoValor.current == '' ? Alert.alert('Dados faltando!', 'Adicione o tipo!')
+                    : titulo == '' ? Alert.alert('Dados faltando!', 'Adicione o título!')
+                      : passos[0] == '' && passos.length === 1 ? Alert.alert('Dados faltando!', 'Adicione um passo!')
+                        : ingredientes[0].ing == '' && ingredientes.length === 1 ? Alert.alert('Dados faltando!', 'Adicione um ingrediente!')
+                          : descricao == '' ? Alert.alert('Dados faltando!', 'Adicione uma descrição!')
+                            : imagemEscolhida.current == '' ? Alert.alert('Dados faltando!', 'Adicione uma imagem!')
+                              : criarReceita();
           }}
           className='p-4 w-[70%] mt-6 rounded-xl h-[55px] items-center justify-center self-center bg-sky-500'>
           <Text className='text-3xl text-neutral-100 font-bold text-center'>
             Criar Receita
           </Text>
         </TouchableOpacity>
-        {/* Criar receita */}       
+        {/* Criar receita */}
 
       </ScrollView>
 

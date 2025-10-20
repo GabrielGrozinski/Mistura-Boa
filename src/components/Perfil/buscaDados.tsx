@@ -1,11 +1,14 @@
 import { getDatabase, ref, get, update} from '@react-native-firebase/database';
 import { getApp } from '@react-native-firebase/app';
 import axios from 'axios';
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
 import { Base64 } from 'js-base64';
 import _ from 'lodash';
 
 const app = getApp();
 const db = getDatabase(app);
+dayjs.locale("pt-br");
 
 const controller = new AbortController();
 const api = axios.create({
@@ -23,17 +26,50 @@ const api = axios.create({
       
       // Pega o tipo de alimentação do usuário.
     };
+    // Busca o tipo de alimentação.
 
-    export async function DiasLogados_e_UltimoLogin_e_CriadoEm(usuarioAtual: string): Promise<any> {
-      try {
-        const email = Base64.decode(usuarioAtual);
-        const response = await api.get('/usuarios', {params: {email}});
-        return response.data;
-      } catch (erro) {
-        return console.log("Erro:", erro);
-      };
-      // Pega o o último login do usuário, os dias logados e quando o usuário foi criado.
+    export async function DiasLogados(usuarioAtual: string): Promise<number> {
+      const refUltimoLogin = ref(db, `usuarios/${usuarioAtual}`);
+      const snapshotUltimoLogin = await get(refUltimoLogin);
+      const dadosLogin = snapshotUltimoLogin.val();
+      const diasLogados: number = dadosLogin.diasLogados;
+      return diasLogados;
     };
+    // Verifica os dias logados do usuário.
+
+    export async function UltimoLogin(usuarioAtual: string): Promise<string> {
+      const refUltimoLogin = ref(db, `usuarios/${usuarioAtual}`);
+      const snapshotUltimoLogin = await get(refUltimoLogin);
+      const dadosLogin = snapshotUltimoLogin.val();
+      const diaAtual_em_milissegundos: number = Date.now();
+      const ultimoLogin: number = dadosLogin.ultimoLogin;
+      if (diaAtual_em_milissegundos - ultimoLogin < 10*60*1000) {
+        return "Online Agora!";
+      } else if (diaAtual_em_milissegundos - ultimoLogin < 15*60*1000) {
+        return "O usuário cozinhou pela última vez há 15 minutos!";
+      } else if (diaAtual_em_milissegundos - ultimoLogin < 30*60*1000) {
+        return "O usuário cozinhou pela última vez há 30 minutos!";
+      } else if (diaAtual_em_milissegundos - ultimoLogin < 60*60*1000) {
+        return "O usuário cozinhou pela última vez há 1 hora!";
+      } else if (diaAtual_em_milissegundos - ultimoLogin < 2*60*60*1000) {
+        return "O usuário cozinhou pela última vez há 2 horas!";
+      } else if (diaAtual_em_milissegundos - ultimoLogin < 24*60*60*1000) {
+        return "O usuário cozinhou pela última vez ontem!";
+      } else if (diaAtual_em_milissegundos - ultimoLogin < 48*60*60*1000) {
+        return "O usuário cozinhou pela última vez dois dias atrás!";
+      } else {
+        return `O usuário não cozinha desde ${dayjs(ultimoLogin).format("D [de] MMMM [de] YYYY")}`;
+      };   
+    };
+    // Verifica o último login do usuário.
+
+    export async function CriadoEm(usuarioAtual: string): Promise<any> {
+      // Pega o o último login do usuário, os dias logados e quando o usuário foi criado.  
+      const email = Base64.decode(usuarioAtual);
+      const response = await api.get('/usuarios', {params: {email}});
+      return response.data;  
+    };
+    // Verifica quando o usuário foi criado.
 
     export async function QuantSeguindo(usuarioAtual: string): Promise<number> {
       const refQuantSeguindo = ref(db, `usuarios/${usuarioAtual}`);
@@ -43,6 +79,7 @@ const api = axios.create({
       return quantSeguindo;
       // Pega a quantidade de pessoas que o usuário está seguindo.
     };
+    // Busca a quantidade de pessoas que seguem o usuário.
 
     export async function QuantSeguidores(usuarioAtual: string): Promise<number> {
       const refQuantSeguidores = ref(db, `usuarios/${usuarioAtual}`);
@@ -52,6 +89,7 @@ const api = axios.create({
       return quantSeguidores;
       // Pega a quantidade de pessoas que estão seguindo o usuário.
     };
+    // Busca a quantidade de pessoas que o usuário segue.
     
     export async function QuantXP(usuarioAtual: string): Promise<number> {
       const refQuantXP = ref(db, `usuarios/${usuarioAtual}`);
@@ -61,6 +99,17 @@ const api = axios.create({
       return quantXP;
       // Pega a quantidade de pessoas que estão seguindo o usuário.
     };
+    // Busca o xp atual do usuário.
+    
+    export async function BuscaImagem(usuarioAtual: string): Promise<number> {
+      const refImagem = ref(db, `usuarios/${usuarioAtual}`);
+      const snapshotImagem = await get(refImagem);
+      const dadosImagem = snapshotImagem.val();
+      const quantImagem = dadosImagem?.imagemPerfil;
+      return quantImagem;
+      // Pega a quantidade de pessoas que estão seguindo o usuário.
+    };
+    // Busca a imagem de perfil do usuário.
     
     export async function NomeUsuario(usuarioAtual: string): Promise<string> {
       const refNome = ref(db, `usuarios/${usuarioAtual}`);
@@ -70,6 +119,7 @@ const api = axios.create({
       return nomeUsuario;
       // Pega o nome do usuário logado.
     };
+    // Busca o nome do usuário.
 
     export async function QuantReceitas(usuarioAtual: string): Promise<number> {
       const refQuantReceita = ref(db, `usuarios/${usuarioAtual}`);
@@ -79,6 +129,7 @@ const api = axios.create({
       return QuantReceitaUsuario;
       // Pega a quantidade de receitas criadas pelo usuário logado.
     };
+    // Busca a quantidade de receitas criadas.
     
     export async function QuantReceitasGeradas(usuarioAtual: string): Promise<number> {
       const refQuantReceitaGeradas = ref(db, `usuarios/${usuarioAtual}`);
@@ -88,11 +139,13 @@ const api = axios.create({
       return QuantReceitaUsuarioGeradas;
       // Pega a quantidade de receitas geradas pelo usuário logado.
     };
+    // Busca a quantidade de receitass geradas.
     
     export async function buscaAssinante(usuarioAtual: string): Promise<boolean> {
       return false
       // Verifica se o usuário é assinante do aplicativo.
     };
+    // Verifica se o usuário é assinante.
 
     export async function buscaRequisitosCozinheiros(usuarioAtual: string, quantConquistas: number): Promise<boolean[]> {
       // Função que busca os requisitos dos cozinheiros do perfil.
@@ -126,7 +179,7 @@ const api = axios.create({
       const snapshotAvalicoesApp = await get(refAvaliacoesApp);
       if (snapshotAvalicoesApp.exists()) {
         let dados: any = Object.values(snapshotAvalicoesApp.val());
-        dados = dados.map((item: any) => item.slice(1));
+        dados = dados.map((item: any) => item.filter(Boolean));
         // Retira o valor null.
         quantAvaliacao = dados.reduce((acumulador: number, valorAtual: any) => acumulador + valorAtual.length, 0);
       };
@@ -134,7 +187,7 @@ const api = axios.create({
       const snapshotAvalicoesUsuario = await get(refAvaliacoesUsuario);
       if (snapshotAvalicoesUsuario.exists()) {
         let dados: any = Object.values(snapshotAvalicoesUsuario.val());
-        dados = dados.map((item: any) => item.slice(1));
+        dados = dados.map((item: any) => item.filter(Boolean));
         quantAvaliacao = dados.reduce((acumulador: number, valorAtual: any) => acumulador + valorAtual.length, 0);
       };
       const requisitoPapaiNoel = quantAvaliacao >= 1000 ? true : false;
@@ -156,6 +209,7 @@ const api = axios.create({
 
       return arrayComOsRequisitos
     };
+    // Busca possíveis requisitos dos ícones de cozinheiros.
     
     export async function RankingUsuario(usuarioAtual: string, ranking_ou_passos: boolean): Promise<any> {
       let passosBronze: any = [];
@@ -193,7 +247,7 @@ const api = axios.create({
       const diamante_ = diamante_avaliacao + diamante_receitaCriada + diamante_nota + diamante_xp;
       const continua_diamante = diamante_ === 1000 + 50 + 10 + 50000 ? true : false;
       passosDiamante = [diamante_avaliacao, diamante_receitaCriada, diamante_nota, diamante_xp];
-
+ 
       let passosEsmeralda: any = [];
       const refEsmeralda = ref(db, `usuarios/${usuarioAtual}/ranking/esmeralda`);
       const snapshotEsmeralda = await get(refEsmeralda);
@@ -246,3 +300,19 @@ const api = axios.create({
         return todosPassos;
       };
     };
+    // Busca o ranking atual e os passos.
+
+{/* 
+  
+  Módulo responsável por buscar e atualizar dados dos usuários no Firebase,
+além de integrar com a API local via Axios. Ele reúne funções que tratam de
+informações de perfil, progresso e conquistas dentro do app.
+
+  As funções acessam dados como tipo de alimentação, dias logados, XP, receitas,
+seguidores e ranking. Também verificam requisitos para desbloquear cozinheiros
+e atualizam o nível atual do usuário (de Bronze até Chefe Supremo).
+
+  A estrutura é direta e modular, permitindo fácil expansão — novas funções podem
+ser adicionadas seguindo o mesmo padrão de acesso ao banco e retorno de valores.
+  
+*/}

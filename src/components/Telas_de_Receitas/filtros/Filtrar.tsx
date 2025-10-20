@@ -191,4 +191,16 @@ export default function Filtrar({corDoFiltro}: any) {
       </Modal>
     </View>
   );
-};
+
+{/* 
+  
+  Componente Filtrar em React Native/TypeScript que exibe barra horizontal de filtros para receitas, permite selecionar ordenação 
+(calorias, tempo de preparo, facilidade, emagrecer, ganhar músculo, melhores receitas) e tipo de refeição 
+(Café da Manhã, Prato Principal, Sobremesa, Bebida), integra Redux para gerenciar estado de ordenação e refeição, aplica estilos 
+condicionais nos botões e nos itens selecionados, usa ScrollView horizontal para rolagem, Modal para escolha de ordenação com 
+ícones, atualiza seleção local e global, e garante experiência interativa de filtragem visual.
+
+  Observações: novos filtros podem ser adicionados.
+  
+*/}
+}; 

@@ -33,19 +33,18 @@ export default function ReceitasVeganaUsuarios({navigation}: Props) {
   const [recipesVeganas, setRecipesVeganas] = useState<any[]>([]);
 
   useEffect(() => {
-    // Função que busca todas as receitas carnívoras e cria um nó para cada uma delas.
+    // Função que busca todas as receitas veganas e cria um nó para cada uma delas.
     dispatch(modificaOrdenacao('Ordenação Padrão'));
     setLoadingReceitas(true);
     
+    const refReceita = ref(db, `ReceitasUsuarios/vegano`);
+    const listenerRefReceita = onValue(refReceita, async (snapshot) => {
+        await buscaReceitas();
+    });
+    
     async function ReceitaFirebase() {
       await buscaReceitas();
-      const refReceita = ref(db, `ReceitasUsuarios/vegano`);
-      onValue(refReceita, async (snapshot) => {
-        await buscaReceitas();
-      });
-      await buscaReceitas();
     };
-
     ReceitaFirebase();
 
     const user = onAuthStateChanged(authInstance, usuario => {
@@ -54,8 +53,10 @@ export default function ReceitasVeganaUsuarios({navigation}: Props) {
     });
     setLoadingReceitas(false);
 
-    return () => user();
+    return () => {user(); listenerRefReceita();};
+
   }, [authInstance]);
+  // Busca todas as receitas carnívoras, além de pegar o email do usuário.
 
   async function buscaReceitas() {
     try {  
@@ -70,6 +71,7 @@ export default function ReceitasVeganaUsuarios({navigation}: Props) {
     };
 
   };
+  // Função que busca todas as receitas carnívoras do banco e atualiza o array local.
 
   const adicionaFavorito = async (recipe: any) => {
     // Função que adiciona a receita em sua lista de favoritos.
@@ -79,7 +81,7 @@ export default function ReceitasVeganaUsuarios({navigation}: Props) {
       const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
       onValue(refOriginal, async (snapshot) => {
         if (snapshot.exists()) {
-          const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
+          const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
           const verifica_se_ja_existe = receitasFavoritadas.some((r: any) => r.id === recipe.id && r.tipo === recipe.tipo && r.autor === recipe.autor);
           receitaFavoritada = verifica_se_ja_existe;
           // Verifica se a receita que está prestes a ser favoritada já existe na lista de favoritos do usuário.
@@ -109,24 +111,38 @@ export default function ReceitasVeganaUsuarios({navigation}: Props) {
       console.log('Erro:', erro.message)
     };
   };
+  // Função que adiciona a receita em sua lista de favoritos.
 
-  onValue(ref(db, `usuarios/${emailB64}/receitasFavoritas`), async snapshot => await buscaReceitasFavoritas(false));
+  useEffect(() => {
+    // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
+    if (!emailB64) return;
+
+    const refFavoritos = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
+    const unsubscribeFavoritos = onValue(refFavoritos, async snapshot => {
+      await buscaReceitasFavoritas(false);
+    });
+
+    return () => unsubscribeFavoritos();
+  }, [emailB64]);
+  // UseEffect que busca receitas favoritas sempre que tem uma mudança no nó ou email.
 
   async function buscaReceitasFavoritas(precisa_de_loading: boolean): Promise<void> {
     setLoadingFavoritas(precisa_de_loading);
     const refOriginal = ref(db, `usuarios/${emailB64}/receitasFavoritas`);
     const snapshot = await get(refOriginal);
     if (snapshot.exists()) {
-      const receitasFavoritadas = Object.values(snapshot.val()).slice(1);
-      const receitasFavoritadasVeganas = receitasFavoritadas.filter((r: any) => r.tipo === 'vegano');
+      const receitasFavoritadas = Object.values(snapshot.val()).filter(Boolean);
+      const receitasFavoritadasVeganas = receitasFavoritadas.filter((r: any) => r.tipo === 'vegano' && r.email !== '');
       setReceita(receitasFavoritadasVeganas.map((r: any) => r.id));
     };
     setLoadingFavoritas(false);
   };
+  // Função que busca as receitas favoritas.
 
   useEffect(() => {
     buscaReceitasFavoritas(true);
   }, [emailB64]);
+  // UseEffect que busca receitas favoritas ao carregar o email.
 
   if (loadingFavoritas || loadingReceitas) return (
     <LoaderCompleto/>
@@ -231,4 +247,10 @@ export default function ReceitasVeganaUsuarios({navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Segue a mesma lógica das receitas carnívoras, mas com receitas veganas.
+ 
+*/} 
 };

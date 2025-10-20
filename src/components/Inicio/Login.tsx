@@ -13,7 +13,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../reducers/hooks';
 import { getApp } from '@react-native-firebase/app';
-import auth, {createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged} from '@react-native-firebase/auth';
+import auth, {createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile} from '@react-native-firebase/auth';
 import { Base64 } from 'js-base64';
 import { getDatabase, ref, set } from '@react-native-firebase/database';
 import { modificaEmail } from '../../reducers/autenticacaoReducer';
@@ -35,7 +35,7 @@ export default function FlipCardLogin({navigation}: Props) {
   const api = axios.create({
     timeout: 15000,
     signal: controller.signal,
-    baseURL: 'http://192.168.1.36:3000'
+    baseURL: 'http://192.168.1.24:3000'
   });
 
   const dispatch = useDispatch();
@@ -56,18 +56,12 @@ export default function FlipCardLogin({navigation}: Props) {
 
 
   useEffect(() => {
-    onAuthStateChanged(authInstance, user => {
-      if (user) navigation.reset({
-        index: 0,
-        routes: [{name: 'TelaPrincipal'}]
-      });
-    });
-    
     const timer = setTimeout(() => {
       setLoading(false)
     }, 2000);
     return () => clearTimeout(timer);
   }, [authInstance]);
+  // Timeout de 2 segundos, apenas pelo visual.
 
   if (loading) return (
     <LoaderCompleto/>
@@ -83,38 +77,44 @@ export default function FlipCardLogin({navigation}: Props) {
       return false
     };
   };
+  // Função que cadastra o usuário no mongoDb.
 
   const Cadastro = async (email: string, senha: string, nome: string): Promise<void> => {
-    const verificaCadastro = await CadastroMongoDB(email);
+    const emailLowerCase = email.toLowerCase();
+    const verificaCadastro = await CadastroMongoDB(emailLowerCase);
     if (!verificaCadastro) return;
     // Cria um usuário no MongoDb para manutenção de dias logados no aplicativo.  
     
     // Função que executa o cadastro da pessoa no firebase.
         try {
           setLoadingAuth(true);
-          const usuario = await createUserWithEmailAndPassword(authInstance, email, senha);
+          const usuario = await createUserWithEmailAndPassword(authInstance, emailLowerCase, senha);
           // Cria um usuário com o email e a senha.
-
-          await usuario.user.updateProfile({ displayName: nome });
+          await updateProfile(usuario.user, { displayName: nome });
+          
           // Define o displayName como o nome do usuário.
 
-          const emailB64: string = Base64.encode(email);
+          const emailB64: string = Base64.encode(emailLowerCase);
           const userRef = ref(db, `usuarios/${emailB64}`);
 
           // Cria o banco de dados com o nome e email (por padrão) do usuário.
           await set(userRef, {
             nome: nome, // Nome do usuário.
-            email: email, // Email do usuário.
+            email: emailLowerCase, // Email do usuário.
             quantReceitas: 0, // Quantidade de receitas criadas pelo usuário.
             quantSeguindo: 0, // Quantidade de pessoas que o usuário segue.
             quantSeguidores: 0, // Quantidade de pessoas que seguem o usuário.
             xp: 0, // Quantidade de xp do usuário.
             rankingAtual: 'NoRank', // Ranking atual do usuário.
             receitasGeradas: 0, // Quantidade de receitas geradas pelo usuário.
+            assinatura: 'nenhuma', // Assinantura do usuário.
             limites: {
               limiteReceitasGeradas: 1,
               limiteReceitasCriadas: 1,
-            }
+            },
+            criadoEm: Date.now(),
+            ultimoLogin: Date.now(),
+            diasLogados: 1,
           });
 
           // Lógica dos rankings e conquistas do usuário.
@@ -200,10 +200,10 @@ export default function FlipCardLogin({navigation}: Props) {
           });
           // Conquistas da posição do usuário em eventos.
 
-            navigation.reset({
+          navigation.reset({
             index: 0,
             routes: [{ name: 'CriarUsuario'}]
-            });
+          });
           // O usuário é levado para a tela de criação do usuário.
 
       } catch (erro: any) {
@@ -233,18 +233,21 @@ export default function FlipCardLogin({navigation}: Props) {
       
       };
   };
+  // Função que cadastra o usuário no Firebase.
   
   const Logar = async (email: string, senha: string): Promise<void> => {
-    // Função que executa o login da pessoa, além de atualizar o banco de dados com o nó logados.    
+    // Função que executa o login da pessoa, além de atualizar o banco de dados com o nó logados.
+    const emailLowerCase = email.toLowerCase();    
         try {
           setLoadingAuth(true);
-          await signInWithEmailAndPassword(authInstance, email, senha);
+          await signInWithEmailAndPassword(authInstance, emailLowerCase, senha);
           // Faz login com o email e a senha que o usuário passou.
 
           navigation.reset({
             index: 0,
             routes: [{ name: 'TelaPrincipal' }],
-          })
+          });
+
         } catch (erro: any) {
             console.log(erro.message);
 
@@ -271,6 +274,7 @@ export default function FlipCardLogin({navigation}: Props) {
             // Salva o erro do login.
         };
   };
+  // Função que cadastra o loga o usuário com o email e a senha dele.
 
   if (login_cadastro) return (
     <View className="flex-1 h-[100%] bg-tela justify-center items-center">
@@ -361,16 +365,18 @@ export default function FlipCardLogin({navigation}: Props) {
             <ActivityIndicator size="small" color="#323232" />
           )} 
           {!loadingAuth && (
-          <TouchableOpacity
-          className="w-[285px] bg-orange-400 h-[60px] items-center justify-center rounded-full"  
-          onPress={() => Cadastro(emailRef.current, senhaRef.current, nomeRef.current)}>
-            <Text 
-            className="text-white font-bold text-3xl text-center"
-            >Fazer Receitas!</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+            className="w-[285px] bg-orange-400 h-[60px] items-center justify-center rounded-full"  
+            onPress={() => Cadastro(emailRef.current, senhaRef.current, nomeRef.current)}>
+              <Text 
+              className="text-white font-bold text-3xl text-center"
+              >
+                Fazer Receitas!
+              </Text>
+            </TouchableOpacity>
           )
-        }
-                  <Image
+          }
+          <Image
           source={require('../../../assets/primeiraTela/Login/forno.png')}
           className="self-center h-[150px] w-[150px]"
           />
@@ -479,5 +485,21 @@ export default function FlipCardLogin({navigation}: Props) {
       </View>
     </View>
 
-);
-};
+  );
+
+{/* 
+  
+  Componente Login é uma tela React Native/TypeScript que fornece fluxo de login e cadastro usando Firebase Auth e gravação 
+inicial no Realtime Database, além de criar o usuário em um backend Mongo via requisição axios. 
+
+  A UI é um card que alterna entre login e cadastro, usa refs para nome/email/senha, sincroniza o email com Redux, mostra 
+LoaderCompleto no carregamento inicial e ActivityIndicator enquanto autentica; no cadastro chama createUserWithEmailAndPassword, 
+updateProfile e popula vários nós de usuário/rankings no Realtime Database, então navega para 'CriarUsuario', enquanto o login usa 
+signInWithEmailAndPassword e reseta a navegação para 'TelaPrincipal'. 
+
+  Erros do Firebase são tratados via Alert e há timeout/visual para carregamento. 
+  
+  Observações rápidas: o AbortController/axios foi instanciado mas não é cancelado.
+  
+*/}
+}; 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, cache } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Pressable, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getDatabase, ref, get, set, update } from '@react-native-firebase/database';
@@ -99,6 +99,12 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
           media: media,
         });
 
+        // Recupera a imagem do usuário.
+        const refUsuario = ref(db, `usuarios/${usuarioAtual}`);
+        const snapshotUsuario = await get(refUsuario);
+        const dadosUsuario = snapshotUsuario.val();
+        const imagemPerfil = dadosUsuario?.imagemPerfil;
+
         // Salva a avaliação no banco de dados da própria receita.
         const refAvaliacao = ref(db, `${No_de_Receita}/${recipe.tipo}/${recipe.id}/avaliacao/quem_avaliou`);
         const snapshotAvaliacao = await get (refAvaliacao);
@@ -107,7 +113,8 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
             1: {
               nome: nome,
               nota: valor,
-              email: usuarioAtual
+              email: usuarioAtual,
+              imagemPerfil: imagemPerfil
             }
           });
 
@@ -118,6 +125,7 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
             nome: nome,
             nota: valor,
             email: usuarioAtual,
+            imagemPerfil: imagemPerfil
           });
         };
 
@@ -183,7 +191,7 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
       const idReceita = recipe.id;
       let refReceitaUsuario = ref(db, `usuarios/${emailUsuarioReceita}/receitas/${tipoUsuarioReceita}`)
       let snapshotReceitaUsuario = await get(refReceitaUsuario);
-      let dadosReceitaUsuario = snapshotReceitaUsuario.val().slice(1);
+      let dadosReceitaUsuario = snapshotReceitaUsuario.val().filter(Boolean);
       let idDaReceita = dadosReceitaUsuario.filter((receita: any) => receita.id === idReceita);
       // Pega a receita com o id correto.
 
@@ -238,6 +246,17 @@ const AvaliacaoReceita = ({nome, usuarioAtual, No_de_Receita, recipe, tamanho}: 
 
     </View>
   );
+
+{/* 
+  
+  Componente AvaliacaoReceita em React Native/TypeScript que exibe estrelas para avaliação de receitas, verifica se o usuário já 
+avaliou usando Firebase Realtime Database, permite avaliar receita apenas uma vez, calcula média e contador de avaliações, 
+atualiza avaliação tanto no nó principal da receita quanto no nó do usuário que criou a receita, integra funções auxiliares para 
+passar XP, atualizar conquistas e ranking, usa Pressable e Ionicons para renderizar estrelas interativas, gerencia estado local 
+de estrelas e avaliação, e trata receitas do app e de usuários.
+  
+*/}
 };
 
 export default AvaliacaoReceita;
+ 

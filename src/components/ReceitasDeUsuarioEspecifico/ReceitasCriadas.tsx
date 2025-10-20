@@ -32,9 +32,9 @@ export default function ReceitasCriadas({route, navigation}: Props) {
       console.error('Usuário não autenticado');
       return;
     };
-    // Função para buscar as receitas criadas.
     buscaReceita();
   }, [usuarioAtual]);
+  // Chama a função buscaReceita.
 
   async function buscaReceita() {
     setLoadingBuscaReceita(false);
@@ -50,6 +50,7 @@ export default function ReceitasCriadas({route, navigation}: Props) {
       console.log('Erro ao buscar receitas criadas', erro);
     };
   };
+  // Função que busca as receitas criadas.
 
   const corDoFiltro = "#ff2323ff";
 
@@ -143,4 +144,13 @@ export default function ReceitasCriadas({route, navigation}: Props) {
       </ScrollView>
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela ReceitasCriadas em React Native/TypeScript que busca receitas criadas do usuário no Firebase, aplica filtros 
+(calorias, proteína, tempo, dificuldade, refeição), mostra lista de receitas com LinearGradient, Image e Text, permite navegar 
+para detalhes da receita, usa LoaderCompleto enquanto carrega e integra filtros via Redux/Filtrar.
+
+*/}
 };
+ 

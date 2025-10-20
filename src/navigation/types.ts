@@ -4,7 +4,7 @@ export type TiposRotas = {
     CriarUsuario: undefined,
     TelaPrincipal: undefined,
     PerfilUsuario: {usuarioAtual: string, status_usuario: string},
-    AdicionarAmigos: {usuarioAtual: string, nome: string},
+    AdicionarAmigos: {usuarioAtual: string, nome: string, AdicionarAmigos_ou_Ver_Seguidores: boolean},
     Ranking: {usuarioAtual: string},
     Dieta: undefined,
     CriarDieta: undefined,

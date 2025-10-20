@@ -13,8 +13,7 @@ export default function DietaCriada({route}: Props) {
     const [restricoesList, setRestricoesList] = useState<any>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => { 
-        
+    useEffect(() => {  
         if (restricoes.includes('nao')) { 
             setRestricoesList('Nenhuma restrição');
         } else {
@@ -24,6 +23,7 @@ export default function DietaCriada({route}: Props) {
         // Se tiver, mostra as restrições, passando uma vírgula entre elas.
 
     }, [restricoes]);
+    // UseEffect que verifica as restrições alimentares.
 
     useEffect(() => {
         // Aqui eu colocaria a lógica da I.A, que analisaria os dados do usuário e criaria uma dieta personalizada.
@@ -37,6 +37,7 @@ export default function DietaCriada({route}: Props) {
         
         // No app real, o loading só acabaria quando a I.A criasse a dieta.
     }, [objetivo, preco, peso, altura, restricoesList]);
+    // UseEffect que teria a lógica da dieta criada.
 
     if (loading) return (
         <LoaderCompleto/>
@@ -229,4 +230,18 @@ export default function DietaCriada({route}: Props) {
                 </View> 
         </ImageBackground>
     );
+
+{/* 
+    
+    Componente DietaCriada é uma tela React Native/TypeScript que recebe via rota os parâmetros 
+(objetivo, preco, peso, altura, restricoes), monta um estado local para aba ativa e lista de restrições 
+(transformando o array em string ou mostrando "Nenhuma restrição") e usa um estado de loading, atualmente finalizado 
+por um setTimeout de 5s que simula a geração da dieta. 
+
+    A interface exibe abas para os dias da semana e cartões de refeições com valores de macronutrientes estáticos; não há 
+lógica de I.A. implementada nem persistência no backend, e a UI está incompleta/ prototípica, servindo apenas como mock 
+visual até a implementação da geração automática e refinamentos de layout.   
+    
+*/}
+
 };

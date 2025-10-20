@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import "../../../global.css";
-import { View, Text, ImageBackground, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, Image } from 'react-native';
 import { getApp } from '@react-native-firebase/app';
-import auth from '@react-native-firebase/auth';
 import { getDatabase, ref, get } from '@react-native-firebase/database';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TiposRotas } from '../../navigation/types';
@@ -18,7 +17,7 @@ const db = getDatabase(app);
 
 export default function Ranking({ route }: Props) {
     const {usuarioAtual} = route.params;
-    // Só será mostrado os rankings do seu usuário.
+    // Só será mostrado o(s) ranking(s) do seu usuário.
     const [passosBronze, setPassosBronze] = useState([]);
     const [passosOuro, setPassosOuro] = useState([]);
     const [passosDiamante, setPassosDiamante] = useState([]);
@@ -74,6 +73,7 @@ export default function Ranking({ route }: Props) {
         buscaRanking();
 
     }, [usuarioAtual]);
+    // UseEffect que recupera o ranking atual e a progressão dos passos dos rankings.   
 
     return (
         <ImageBackground
@@ -652,5 +652,26 @@ export default function Ranking({ route }: Props) {
 
             </ScrollView>
         </ImageBackground>
-);
+    );
+
+{/* 
+    
+    Componente Ranking é uma tela React Native/TypeScript que exibe o ranking detalhado de um usuário dentro do aplicativo. Ele 
+integra Firebase Realtime Database para recuperar informações do ranking atual e progresso do usuário em cada nível 
+(Bronze, Ouro, Diamante, Esmeralda e Chefe Supremo) usando a função RankingUsuario. 
+
+    O componente mantém estados locais para armazenar os passos de cada ranking e a imagem representando o ranking atual. A 
+interface combina ImageBackground, ScrollView e múltiplos cards com bordas arredondadas, cada um representando um nível de ranking, 
+exibindo ícones, barras de progresso (via react-native-progress) e contadores de conquistas específicas como avaliações, criação de 
+receitas e cookies acumulados. 
+
+    Funciona como um painel visual completo para motivar e informar o usuário sobre seu progresso, mostrando de forma clara os 
+objetivos restantes e os avanços já conquistados em cada nível de hierarquia dentro do app.
+  
+    Observações: as recompensas de ranking também poderiam ser introduzidas junto dos requisitos.
+
+    Sugestões: adição de recompensas em cada ranking, como, por exemplo, os comentários das receitas, que só podem ser acessados
+pelos usuários de no mínimo ranking Bronze.  
+    
+*/}
 };

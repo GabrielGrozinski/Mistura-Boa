@@ -18,3 +18,5 @@ const filtrarSlice = createSlice({
 
 export const {modificaOrdenacao, modificaRefeicao} = filtrarSlice.actions;
 export default filtrarSlice.reducer;
+
+// Reducer para gerenciar os filtros de Ordenação e Refeição.

@@ -21,62 +21,57 @@ export default function CriarDieta({navigation}: Props) {
   ]);
 
   useEffect(() => {
-        // Define as opções de acordo com o identificador. 
-        // A lógica é semelhante à de CriarUsuario.
-        if (identificador === 0) {
-            setChoices([
-  { label: 'Ganhar Peso/Músculo', value: 'ganhar_peso_musculo' },
-  { label: 'Perder Peso', value: 'perder_peso' },
-  { label: 'Me Manter Saudável', value: 'manter_saudavel' },
-            ]);
-        } else if (identificador === 1) {
-            setChoices([
-  { label: '20 reais por dia', value: '20_reais' },
-  { label: '50 reais por dia', value: '50_reais' },
-  { label: '100 reais por dia', value: '100_reais' },
-            ]);
-
-        } else if (identificador === 2) {
-            setChoices([
-  { label: '50 quilos ou menos', value: '50_quilos_ou_menos' },
-  { label: '50-60 quilos', value: '60-60_quilos' },
-  { label: '60-70 quilos', value: '60-70_quilos' },
-  { label: '70-80 quilos', value: '70-80_quilos' },
-  { label: '80-90 quilos', value: '80-90_quilos' },
-  { label: '100 quilos ou mais', value: '100_quilos_ou_mais' },
-            ]);
-
-        } else if (identificador === 3) {
-            setChoices([
-  { label: '1.50 ou menos', value: '1.50_ou_menos' },
-  { label: '1.50 - 1.60', value: '1.50-1.60' },
-  { label: '1.60 - 1.70', value: '1.60-1.70' },
-  { label: '1.70 - 1.80', value: '1.70-1.80' },
-  { label: '1.80 - 1.90', value: '1.80-1.90' },
-  { label: '2.00 ou mais', value: '2.00_ou_mais' },
-            ]);
-
-        } else if (identificador === 4) {
-            setChoices([
-  { label: 'Sim', value: 'sim' },
-  { label: 'Não', value: 'nao' },
-            ]);
-        
-        } else if (identificador === 5) {
-            setChoices([
-  { label: 'Não consumo leite animal e derivados', value: 'nao_come_leite' },
-  { label: 'Não consumo carne', value: 'nao_come_carne' },
-  { label: 'Outro', value: 'outro' },
-            ]);
-        
-        } else if (identificador === 6) {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'DietaCriada', params: {objetivo, preco, peso, altura, restricoes}}]
-          });
-        };
-
+    // Define as opções de acordo com o identificador. 
+    // A lógica é semelhante à de CriarUsuario.
+    if (identificador === 0) {
+      setChoices([
+        { label: 'Ganhar Peso/Músculo', value: 'ganhar_peso_musculo' },
+        { label: 'Perder Peso', value: 'perder_peso' },
+        { label: 'Me Manter Saudável', value: 'manter_saudavel' },
+      ]);
+    } else if (identificador === 1) {
+      setChoices([
+        { label: '20 reais por dia', value: '20_reais' },
+        { label: '50 reais por dia', value: '50_reais' },
+        { label: '100 reais por dia', value: '100_reais' },
+      ]);
+    } else if (identificador === 2) {
+      setChoices([
+        { label: '50 quilos ou menos', value: '50_quilos_ou_menos' },
+        { label: '50-60 quilos', value: '60-60_quilos' },
+        { label: '60-70 quilos', value: '60-70_quilos' },
+        { label: '70-80 quilos', value: '70-80_quilos' },
+        { label: '80-90 quilos', value: '80-90_quilos' },
+        { label: '100 quilos ou mais', value: '100_quilos_ou_mais' },
+      ]);
+    } else if (identificador === 3) {
+      setChoices([
+        { label: '1.50 ou menos', value: '1.50_ou_menos' },
+        { label: '1.50 - 1.60', value: '1.50-1.60' },
+        { label: '1.60 - 1.70', value: '1.60-1.70' },
+        { label: '1.70 - 1.80', value: '1.70-1.80' },
+        { label: '1.80 - 1.90', value: '1.80-1.90' },
+        { label: '2.00 ou mais', value: '2.00_ou_mais' },
+      ]);
+    } else if (identificador === 4) {
+      setChoices([
+        { label: 'Sim', value: 'sim' },
+        { label: 'Não', value: 'nao' },
+      ]);
+    } else if (identificador === 5) {
+      setChoices([
+        { label: 'Não consumo leite animal e derivados', value: 'nao_come_leite' },
+        { label: 'Não consumo carne', value: 'nao_come_carne' },
+        { label: 'Outro', value: 'outro' },
+      ]);
+    } else if (identificador === 6) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'DietaCriada', params: {objetivo, preco, peso, altura, restricoes}}]
+      });
+    }
   }, [identificador]);
+  // UseEffect que define as perguntas e respostas.
 
   const BotoesSelecionados = (valor: string): void => {
       // Verifica se o valor já está selecionado.
@@ -90,6 +85,7 @@ export default function CriarDieta({navigation}: Props) {
             setSelected([...selected, valor]);
       };
   };
+  // Função que permite selecionar as opções.
 
   const PassarDados = async () => {
       // Função que passa os dados selecionados para a próxima tela.
@@ -115,6 +111,7 @@ export default function CriarDieta({navigation}: Props) {
           // Incrementa o identificador para passar para a próxima pergunta, e limpa o selected.
           // Se o identificador for 6, navega para a tela CriandoDieta (useEffect já aborda essa lógica).
   };
+  // Função que passa dados da dieta.
         
   return (
     <View className="flex-1 p-[25px] bg-white justify-center">
@@ -179,4 +176,10 @@ export default function CriarDieta({navigation}: Props) {
       possível escolher mais de uma opção. */}
     </View>
   );
+{/* 
+  
+  Componente criarDieta é semelhante ao componente CriarUsuario, com a diferença dos dados sendo passados como props entre os
+componentes, não os armazenando no Firebase.
+  
+*/}
 };

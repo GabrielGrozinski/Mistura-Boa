@@ -17,3 +17,5 @@ const autenticacaoSlice = createSlice({
 export const {modificaEmail} = autenticacaoSlice.actions;
 
 export default autenticacaoSlice.reducer;
+
+// Reducer para gerenciar o Email, Nome e Senha.

@@ -79,4 +79,18 @@ export default function ReceitasCarnivoraAppBASE({navigation}: Props) {
 
     </ImageBackground>
   );
+
+{/* 
+  
+  Tela ReceitasCarnivoraAppBASE em React Native/TypeScript que exibe uma visão geral das receitas do aplicativo, inclui 
+ImageBackground de fundo, título principal com estilo, barra de busca funcional com TextInput e ícone de pesquisa, categorias de 
+receitas exibidas como imagens clicáveis (sobremesas, pratos principais, fitness), ScrollView horizontal com pré-visualização de 
+receitas, botão para navegar para tela completa de receitas, utiliza Pressable para interação com imagens, e inclui barra inferior 
+fixa com componente Barra.
+
+  Observações: além das categorias de receitas mostradas, é possível adicionar outras categorias, como receitas picantes, receitas
+quentes, receitas frias e etc.
+ 
+ 
+*/}
 };
